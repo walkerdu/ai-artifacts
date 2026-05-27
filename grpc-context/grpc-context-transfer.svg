@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 720">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e8ecf0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+  </marker>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+  </marker>
+  <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#fafbfc"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="440" y="32" fill="#1a1a2e" font-size="16" font-weight="700" text-anchor="middle">gRPC 调用时 Context 的跨网络传递机制</text>
+<text x="440" y="52" fill="#6b7280" font-size="9" text-anchor="middle">context 对象无法序列化，gRPC 只传递可编码为字符串/字节的部分信息</text>
+
+<!-- ===== Client Side ===== -->
+<rect x="30" y="70" width="360" height="430" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="210" y="92" fill="#1e3a5f" font-size="12" font-weight="700" text-anchor="middle">Client 进程</text>
+
+<!-- Client context box -->
+<rect x="55" y="108" width="310" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
+<text x="210" y="128" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">ctx (context.Context)</text>
+
+<!-- Item 1: Deadline -->
+<rect x="55" y="150" width="310" height="50" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+<text x="70" y="170" fill="#c2410c" font-size="9" font-weight="600">Deadline / Timeout</text>
+<text x="70" y="188" fill="#6b7280" font-size="8">ctx, cancel := context.WithTimeout(ctx, 5*time.Second)</text>
+
+<!-- Item 2: Metadata -->
+<rect x="55" y="210" width="310" height="50" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+<text x="70" y="230" fill="#c2410c" font-size="9" font-weight="600">Metadata (用户自定义 KV)</text>
+<text x="70" y="248" fill="#6b7280" font-size="8">md := metadata.Pairs("trace-id", "abc-123")</text>
+
+<!-- Item 3: Cancel -->
+<rect x="55" y="270" width="310" height="50" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+<text x="70" y="290" fill="#065f46" font-size="9" font-weight="600">Cancel 信号 (chan struct{})</text>
+<text x="70" y="308" fill="#6b7280" font-size="8">cancel() 被调用 → 通知对端取消</text>
+
+<!-- Item 4: Value (NOT transferable) -->
+<rect x="55" y="330" width="310" height="50" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="70" y="350" fill="#991b1b" font-size="9" font-weight="600">context.Value — *User{指针}</text>
+<text x="70" y="368" fill="#dc2626" font-size="8">本进程内存地址，无法跨网络</text>
+<text x="340" y="350" fill="#dc2626" font-size="9" font-weight="700" text-anchor="end">✗</text>
+
+<!-- Item 5: Value struct -->
+<rect x="55" y="390" width="310" height="50" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="70" y="410" fill="#991b1b" font-size="9" font-weight="600">context.Value — *TBusMsgCtx{结构体}</text>
+<text x="70" y="428" fill="#dc2626" font-size="8">含 channel、interface，不可序列化</text>
+<text x="340" y="410" fill="#dc2626" font-size="9" font-weight="700" text-anchor="end">✗</text>
+
+<!-- Transmit indicator labels on left items -->
+<text x="340" y="170" fill="#059669" font-size="9" font-weight="700" text-anchor="end">✓</text>
+<text x="340" y="230" fill="#059669" font-size="9" font-weight="700" text-anchor="end">✓</text>
+<text x="340" y="290" fill="#059669" font-size="9" font-weight="700" text-anchor="end">✓</text>
+
+<!-- ===== Network Wire ===== -->
+<rect x="330" y="510" width="220" height="44" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="440" y="528" fill="#5b21b6" font-size="10" font-weight="600" text-anchor="middle">HTTP/2 网络传输</text>
+<text x="440" y="544" fill="#7c3aed" font-size="8" text-anchor="middle">HEADERS 帧 + RST_STREAM 帧</text>
+
+<!-- Arrows from client to wire -->
+<path d="M210 500 L210 532 L328 532" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<!-- Arrows from wire to server -->
+<path d="M552 532 L670 532 L670 500" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<!-- ===== Server Side ===== -->
+<rect x="490" y="70" width="360" height="430" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+<text x="670" y="92" fill="#064e3b" font-size="12" font-weight="700" text-anchor="middle">Server 进程</text>
+
+<!-- Server context box -->
+<rect x="515" y="108" width="310" height="30" rx="6" fill="#d1fae5" stroke="#6ee7b7" stroke-width="0.5"/>
+<text x="670" y="128" fill="#065f46" font-size="9" font-weight="600" text-anchor="middle">ctx (新建的 context.Context)</text>
+
+<!-- Server Item 1: Deadline -->
+<rect x="515" y="150" width="310" height="50" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+<text x="530" y="170" fill="#c2410c" font-size="9" font-weight="600">Deadline（同步剩余时间）</text>
+<text x="530" y="188" fill="#6b7280" font-size="8">解析 grpc-timeout header → WithDeadline()</text>
+
+<!-- Server Item 2: Metadata -->
+<rect x="515" y="210" width="310" height="50" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+<text x="530" y="230" fill="#c2410c" font-size="9" font-weight="600">Metadata（原样还原 KV）</text>
+<text x="530" y="248" fill="#6b7280" font-size="8">metadata.FromIncomingContext(ctx) → "abc-123"</text>
+
+<!-- Server Item 3: Cancel -->
+<rect x="515" y="270" width="310" height="50" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+<text x="530" y="290" fill="#065f46" font-size="9" font-weight="600">Cancel（新 channel，RST_STREAM 触发）</text>
+<text x="530" y="308" fill="#6b7280" font-size="8">Client 取消 → RST_STREAM → Server ctx cancel</text>
+
+<!-- Server Item 4: Value empty -->
+<rect x="515" y="330" width="310" height="50" rx="6" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1"/>
+<text x="530" y="350" fill="#4b5563" font-size="9" font-weight="600">context.Value 为空</text>
+<text x="530" y="368" fill="#6b7280" font-size="8">需通过 Metadata 手动序列化/反序列化</text>
+
+<!-- Server Item 5: How to pass struct -->
+<rect x="515" y="390" width="310" height="50" rx="6" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1"/>
+<text x="530" y="410" fill="#4b5563" font-size="9" font-weight="600">如需传结构体 → 手动编码方案</text>
+<text x="530" y="428" fill="#6b7280" font-size="8">Metadata(-bin) / Protobuf Request Body</text>
+
+<!-- ===== Encoding Details Section ===== -->
+<rect x="30" y="570" width="820" height="120" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="440" y="592" fill="#1f2937" font-size="11" font-weight="700" text-anchor="middle">编码细节：什么信息以什么形式过网络</text>
+
+<!-- Row 1 -->
+<rect x="50" y="604" width="180" height="24" rx="4" fill="#fff7ed"/>
+<text x="140" y="620" fill="#c2410c" font-size="9" font-weight="500" text-anchor="middle">Deadline</text>
+<text x="250" y="620" fill="#4b5563" font-size="8">→</text>
+<text x="270" y="620" fill="#1f2937" font-size="8">HTTP/2 Header: "grpc-timeout: 5000m"（字符串）</text>
+
+<!-- Row 2 -->
+<rect x="50" y="634" width="180" height="24" rx="4" fill="#fff7ed"/>
+<text x="140" y="650" fill="#c2410c" font-size="9" font-weight="500" text-anchor="middle">Metadata</text>
+<text x="250" y="650" fill="#4b5563" font-size="8">→</text>
+<text x="270" y="650" fill="#1f2937" font-size="8">HTTP/2 HEADERS 帧 key-value 对（HPACK 压缩）</text>
+
+<!-- Row 3 -->
+<rect x="50" y="664" width="180" height="24" rx="4" fill="#ecfdf5"/>
+<text x="140" y="680" fill="#065f46" font-size="9" font-weight="500" text-anchor="middle">Cancel</text>
+<text x="250" y="680" fill="#4b5563" font-size="8">→</text>
+<text x="270" y="680" fill="#1f2937" font-size="8">HTTP/2 RST_STREAM 帧（错误码 CANCEL）→ 触发对端 ctx.cancel()</text>
+
+<!-- Legend -->
+<rect x="620" y="604" width="12" height="12" rx="2" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+<text x="638" y="614" fill="#4b5563" font-size="8">可自动传递</text>
+
+<rect x="620" y="624" width="12" height="12" rx="2" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="638" y="634" fill="#4b5563" font-size="8">不可传递（内存对象）</text>
+
+<rect x="620" y="644" width="12" height="12" rx="2" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1"/>
+<text x="638" y="654" fill="#4b5563" font-size="8">需手动序列化</text>
+
+<rect x="620" y="664" width="12" height="12" rx="2" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1"/>
+<text x="638" y="674" fill="#4b5563" font-size="8">HTTP/2 传输层</text>
+</svg>

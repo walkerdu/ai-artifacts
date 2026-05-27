@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 680">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+  </marker>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
+  <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+  </marker>
+</defs>
+
+<!-- Background: Light -->
+<rect width="100%" height="100%" fill="#fafbfc"/>
+<!-- Subtle grid -->
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e8ecf0" stroke-width="0.5"/>
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="410" y="35" fill="#1a1a2e" font-size="16" font-weight="700" text-anchor="middle">Go context.Context 设计与值传递机制</text>
+<text x="410" y="55" fill="#6b7280" font-size="9" text-anchor="middle">context.WithValue 形成链式结构，Value() 沿链向上查找匹配 key</text>
+
+<!-- ===== Left Section: Context Chain ===== -->
+
+<!-- Region: Context Chain -->
+<rect x="30" y="75" width="360" height="530" rx="12" fill="none" stroke="#d97706" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="42" y="91" fill="#d97706" font-size="9" font-weight="600">Context 链式结构</text>
+
+<!-- Node 1: context.Background() -->
+<rect x="100" y="110" width="220" height="60" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="210" y="136" fill="#1f2937" font-size="11" font-weight="600" text-anchor="middle">context.Background()</text>
+<text x="210" y="154" fill="#6b7280" font-size="9" text-anchor="middle">根 context，空实现</text>
+
+<!-- Arrow 1→2 -->
+<line x1="210" y1="170" x2="210" y2="210" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="225" y="195" fill="#d97706" font-size="8" font-weight="500">WithValue(key1, val1)</text>
+
+<!-- Node 2: ctx1 with User struct -->
+<rect x="80" y="215" width="260" height="70" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="210" y="238" fill="#1e3a5f" font-size="11" font-weight="600" text-anchor="middle">ctx1 (valueCtx)</text>
+<line x1="80" y1="248" x2="340" y2="248" stroke="#2563eb" stroke-width="0.5" stroke-opacity="0.4"/>
+<text x="95" y="264" fill="#4b5563" font-size="9">key:   userKey{} (未导出类型)</text>
+<text x="95" y="278" fill="#2563eb" font-size="9">val:   *User{Name:"Lin", Role:"admin"}</text>
+
+<!-- Arrow 2→3 -->
+<line x1="210" y1="285" x2="210" y2="325" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="225" y="310" fill="#d97706" font-size="8" font-weight="500">WithValue(key2, val2)</text>
+
+<!-- Node 3: ctx2 with trace -->
+<rect x="80" y="330" width="260" height="70" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+<text x="210" y="353" fill="#064e3b" font-size="11" font-weight="600" text-anchor="middle">ctx2 (valueCtx)</text>
+<line x1="80" y1="363" x2="340" y2="363" stroke="#059669" stroke-width="0.5" stroke-opacity="0.4"/>
+<text x="95" y="379" fill="#4b5563" font-size="9">key:   traceKey{}</text>
+<text x="95" y="393" fill="#059669" font-size="9">val:   "trace-abc-123"</text>
+
+<!-- Arrow 3→4 -->
+<line x1="210" y1="400" x2="210" y2="440" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="225" y="425" fill="#d97706" font-size="8" font-weight="500">WithCancel()</text>
+
+<!-- Node 4: ctx3 cancelCtx -->
+<rect x="80" y="445" width="260" height="70" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="210" y="468" fill="#3b0764" font-size="11" font-weight="600" text-anchor="middle">ctx3 (cancelCtx)</text>
+<line x1="80" y1="478" x2="340" y2="478" stroke="#7c3aed" stroke-width="0.5" stroke-opacity="0.4"/>
+<text x="95" y="494" fill="#4b5563" font-size="9">done:  chan struct{}</text>
+<text x="95" y="508" fill="#7c3aed" font-size="9">调用 ctx3.Value(userKey) →</text>
+
+<!-- Lookup arrow (dashed, going up on right side) -->
+<path d="M340 490 L370 490 L370 250 L340 250" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-red)"/>
+<text x="378" y="355" fill="#dc2626" font-size="8" font-weight="500">向上遍历链</text>
+<text x="378" y="370" fill="#dc2626" font-size="8" font-weight="500">匹配 key 类型</text>
+<text x="378" y="385" fill="#dc2626" font-size="8">O(n) 查找</text>
+
+<!-- Found indicator -->
+<text x="378" y="250" fill="#059669" font-size="9" font-weight="600">✓ 找到!</text>
+
+<!-- ===== Right Section: Key Design Pattern ===== -->
+
+<!-- Region: Best Practice -->
+<rect x="440" y="75" width="350" height="310" rx="12" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="452" y="91" fill="#2563eb" font-size="9" font-weight="600">标准模式：未导出 key + 存取函数</text>
+
+<!-- Code block background -->
+<rect x="460" y="105" width="310" height="265" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+
+<!-- Code content -->
+<text x="475" y="125" fill="#6b7280" font-size="8">// 1. 未导出 key 类型，防止外部碰撞</text>
+<text x="475" y="141" fill="#2563eb" font-size="9" font-weight="500">type userKey struct{}</text>
+
+<text x="475" y="165" fill="#6b7280" font-size="8">// 2. 业务结构体</text>
+<text x="475" y="181" fill="#7c3aed" font-size="9" font-weight="500">type User struct {</text>
+<text x="495" y="197" fill="#1f2937" font-size="9">Name string</text>
+<text x="495" y="213" fill="#1f2937" font-size="9">Role string</text>
+<text x="475" y="229" fill="#7c3aed" font-size="9" font-weight="500">}</text>
+
+<text x="475" y="253" fill="#6b7280" font-size="8">// 3. 存入 — 返回新 ctx</text>
+<text x="475" y="269" fill="#059669" font-size="9" font-weight="500">func WithUser(ctx, u *User) Context {</text>
+<text x="495" y="285" fill="#1f2937" font-size="9">return WithValue(ctx, userKey{}, u)</text>
+<text x="475" y="301" fill="#059669" font-size="9" font-weight="500">}</text>
+
+<text x="475" y="325" fill="#6b7280" font-size="8">// 4. 取出 — 类型安全断言</text>
+<text x="475" y="341" fill="#d97706" font-size="9" font-weight="500">func FromContext(ctx) (*User, bool) {</text>
+<text x="495" y="357" fill="#1f2937" font-size="9">u, ok := ctx.Value(userKey{}).(*User)</text>
+<text x="495" y="373" fill="#1f2937" font-size="9">return u, ok</text>
+<text x="475" y="389" fill="#d97706" font-size="9" font-weight="500">}</text>
+
+<!-- ===== Right Section: Key Comparison ===== -->
+
+<!-- Region: Key type comparison -->
+<rect x="440" y="405" width="350" height="200" rx="12" fill="none" stroke="#ea580c" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="452" y="421" fill="#ea580c" font-size="9" font-weight="600">Key 类型选择对比</text>
+
+<!-- Table header -->
+<rect x="460" y="435" width="310" height="24" rx="4" fill="#fff7ed" stroke="#fed7aa" stroke-width="0.5"/>
+<text x="530" y="451" fill="#ea580c" font-size="8" font-weight="600" text-anchor="middle">方案</text>
+<text x="660" y="451" fill="#ea580c" font-size="8" font-weight="600" text-anchor="middle">封装</text>
+<text x="730" y="451" fill="#ea580c" font-size="8" font-weight="600" text-anchor="middle">性能</text>
+
+<!-- Row 1: string -->
+<text x="470" y="477" fill="#dc2626" font-size="9">string("key")</text>
+<text x="660" y="477" fill="#dc2626" font-size="9" text-anchor="middle">✗ 易碰撞</text>
+<text x="730" y="477" fill="#6b7280" font-size="9" text-anchor="middle">慢</text>
+
+<!-- Row 2: exported named type -->
+<text x="470" y="501" fill="#d97706" font-size="9">type Key string (导出)</text>
+<text x="660" y="501" fill="#d97706" font-size="9" text-anchor="middle">△ 可穿透</text>
+<text x="730" y="501" fill="#6b7280" font-size="9" text-anchor="middle">中</text>
+
+<!-- Row 3: unexported struct (recommended) -->
+<rect x="460" y="510" width="310" height="22" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="0.5"/>
+<text x="470" y="525" fill="#2563eb" font-size="9" font-weight="600">type key struct{} (未导出)</text>
+<text x="660" y="525" fill="#059669" font-size="9" text-anchor="middle">✓ 完全隔离</text>
+<text x="730" y="525" fill="#059669" font-size="9" text-anchor="middle">快</text>
+
+<!-- Recommendation badge -->
+<rect x="460" y="545" width="70" height="18" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/>
+<text x="495" y="557" fill="#2563eb" font-size="8" font-weight="600" text-anchor="middle">推荐</text>
+<text x="540" y="557" fill="#4b5563" font-size="8">零大小类型，比较仅匹配类型无需比值</text>
+
+<!-- Divider -->
+<line x1="460" y1="572" x2="770" y2="572" stroke="#e2e8f0" stroke-width="0.5"/>
+
+<!-- Note about your TBusMsgCtxKey -->
+<text x="470" y="590" fill="#6b7280" font-size="8">你的方案: type TBusMsgCtxKeyType string</text>
+<text x="470" y="606" fill="#d97706" font-size="8">→ 功能可行（命名类型避免碰撞）但导出+string有额外开销</text>
+
+<!-- Legend -->
+<text x="30" y="640" fill="#4b5563" font-size="8" font-weight="600">LEGEND</text>
+<rect x="30" y="652" width="12" height="12" rx="2" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+<text x="48" y="662" fill="#4b5563" font-size="8">根 Context</text>
+<rect x="140" y="652" width="12" height="12" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+<text x="158" y="662" fill="#4b5563" font-size="8">valueCtx 节点</text>
+<rect x="280" y="652" width="12" height="12" rx="2" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1"/>
+<text x="298" y="662" fill="#4b5563" font-size="8">cancelCtx 节点</text>
+<line x1="420" y1="658" x2="450" y2="658" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2"/>
+<text x="458" y="662" fill="#4b5563" font-size="8">Value() 查找路径</text>
+<line x1="580" y1="658" x2="610" y2="658" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="618" y="662" fill="#4b5563" font-size="8">父子派生关系</text>
+</svg>

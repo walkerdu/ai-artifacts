@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 580">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+  </style>
+  <defs>
+    <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+    </pattern>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563EB"/>
+    </marker>
+    <marker id="arr-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Background: white + light grid -->
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <rect width="100%" height="100%" fill="url(#grid2)"/>
+
+  <!-- Title -->
+  <text x="430" y="35" fill="#1e293b" font-size="16" font-weight="700" text-anchor="middle">Git 对象模型 — Merkle DAG</text>
+  <text x="430" y="55" fill="#64748b" font-size="9" text-anchor="middle">Git 的 .git/objects 目录用 SHA-1 哈希寻址，本质是一棵 Merkle 有向无环图</text>
+
+  <!-- ===== LEFT: .git/objects 目录结构 ===== -->
+  <rect x="30" y="75" width="280" height="480" rx="12" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="45" y="95" fill="#475569" font-size="10" font-weight="600">.git/objects/ 目录</text>
+
+  <!-- Directory entries -->
+  <text x="50" y="125" fill="#D97706" font-size="9" font-weight="500">0a/</text>
+  <text x="75" y="125" fill="#475569" font-size="8">086d17... (tree: subdir)</text>
+
+  <text x="50" y="150" fill="#D97706" font-size="9" font-weight="500">26/</text>
+  <text x="75" y="150" fill="#475569" font-size="8">514890... (commit)</text>
+
+  <text x="50" y="175" fill="#D97706" font-size="9" font-weight="500">4d/</text>
+  <text x="75" y="175" fill="#475569" font-size="8">c829e0... (tree: root)</text>
+
+  <text x="50" y="200" fill="#D97706" font-size="9" font-weight="500">79/</text>
+  <text x="75" y="200" fill="#475569" font-size="8">c53955... (blob: file3.txt)</text>
+
+  <text x="50" y="225" fill="#D97706" font-size="9" font-weight="500">cc/</text>
+  <text x="75" y="225" fill="#475569" font-size="8">628ccd... (blob: file2.txt)</text>
+
+  <text x="50" y="250" fill="#D97706" font-size="9" font-weight="500">ce/</text>
+  <text x="75" y="250" fill="#475569" font-size="8">013625... (blob: file1.txt)</text>
+
+  <!-- Explanation box -->
+  <rect x="45" y="275" width="250" height="100" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="60" y="295" fill="#1e293b" font-size="9" font-weight="600">存储规则:</text>
+  <text x="60" y="315" fill="#475569" font-size="8">SHA-1 前 2 字符 → 目录名</text>
+  <text x="60" y="333" fill="#475569" font-size="8">剩余 38 字符 → 文件名</text>
+  <text x="60" y="351" fill="#475569" font-size="8">内容寻址: 相同内容 = 相同哈希</text>
+  <text x="60" y="369" fill="#475569" font-size="8">zlib 压缩存储</text>
+
+  <!-- 3 object types -->
+  <text x="60" y="405" fill="#1e293b" font-size="9" font-weight="600">三种对象类型:</text>
+  <rect x="55" y="415" width="70" height="24" rx="4" fill="#EFF6FF" stroke="#2563EB" stroke-width="1"/>
+  <text x="90" y="431" fill="#1e40af" font-size="9" font-weight="500" text-anchor="middle">commit</text>
+  <rect x="140" y="415" width="55" height="24" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/>
+  <text x="167" y="431" fill="#065F46" font-size="9" font-weight="500" text-anchor="middle">tree</text>
+  <rect x="210" y="415" width="55" height="24" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1"/>
+  <text x="237" y="431" fill="#5B21B6" font-size="9" font-weight="500" text-anchor="middle">blob</text>
+
+  <!-- Merkle note -->
+  <rect x="45" y="455" width="250" height="85" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+  <text x="60" y="475" fill="#1e40af" font-size="9" font-weight="600">与 Merkle Tree 的关系:</text>
+  <text x="60" y="495" fill="#475569" font-size="8">commit 引用 tree → tree 引用 blob/tree</text>
+  <text x="60" y="513" fill="#475569" font-size="8">每层用 SHA-1 哈希标识 (= 内容指纹)</text>
+  <text x="60" y="531" fill="#475569" font-size="8">修改任何文件 → 所有祖先哈希改变</text>
+
+  <!-- ===== RIGHT: Git Object Graph ===== -->
+  <rect x="340" y="75" width="490" height="480" rx="12" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="355" y="95" fill="#475569" font-size="10" font-weight="600">Git 对象图 (Merkle DAG)</text>
+
+  <!-- COMMIT -->
+  <rect x="500" y="115" width="220" height="70" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="610" y="137" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">commit 2651489</text>
+  <text x="610" y="155" fill="#475569" font-size="8" text-anchor="middle">tree: 4dc829e0</text>
+  <text x="610" y="170" fill="#475569" font-size="8" text-anchor="middle">author: walkerdu | "initial commit"</text>
+
+  <!-- ROOT TREE -->
+  <rect x="490" y="235" width="240" height="90" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+  <text x="610" y="257" fill="#065F46" font-size="11" font-weight="600" text-anchor="middle">tree 4dc829e0 (root)</text>
+  <line x1="490" y1="267" x2="730" y2="267" stroke="#059669" stroke-width="0.5" stroke-opacity="0.5"/>
+  <text x="505" y="284" fill="#475569" font-size="8">blob ce0136.. file1.txt</text>
+  <text x="505" y="300" fill="#475569" font-size="8">blob cc628c.. file2.txt</text>
+  <text x="505" y="316" fill="#475569" font-size="8">tree 0a086d.. subdir/</text>
+
+  <!-- SUBDIR TREE -->
+  <rect x="370" y="375" width="200" height="70" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+  <text x="470" y="397" fill="#065F46" font-size="11" font-weight="600" text-anchor="middle">tree 0a086d (subdir)</text>
+  <line x1="370" y1="407" x2="570" y2="407" stroke="#059669" stroke-width="0.5" stroke-opacity="0.5"/>
+  <text x="385" y="424" fill="#475569" font-size="8">blob 79c539.. file3.txt</text>
+
+  <!-- BLOBS -->
+  <!-- file1.txt -->
+  <rect x="625" y="380" width="140" height="50" rx="8" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="695" y="400" fill="#5B21B6" font-size="10" font-weight="600" text-anchor="middle">blob ce0136</text>
+  <text x="695" y="418" fill="#475569" font-size="9" text-anchor="middle">"hello"</text>
+
+  <!-- file2.txt -->
+  <rect x="695" y="460" width="140" height="50" rx="8" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="765" y="480" fill="#5B21B6" font-size="10" font-weight="600" text-anchor="middle">blob cc628c</text>
+  <text x="765" y="498" fill="#475569" font-size="9" text-anchor="middle">"world"</text>
+
+  <!-- file3.txt -->
+  <rect x="380" y="480" width="140" height="50" rx="8" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="450" y="500" fill="#5B21B6" font-size="10" font-weight="600" text-anchor="middle">blob 79c539</text>
+  <text x="450" y="518" fill="#475569" font-size="9" text-anchor="middle">"nested"</text>
+
+  <!-- ===== ARROWS ===== -->
+  <!-- commit -> root tree -->
+  <line x1="610" y1="185" x2="610" y2="233" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <text x="620" y="212" fill="#2563EB" font-size="7">tree</text>
+
+  <!-- root tree -> subdir tree -->
+  <line x1="540" y1="325" x2="490" y2="373" stroke="#059669" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="495" y="348" fill="#059669" font-size="7">subdir/</text>
+
+  <!-- root tree -> file1 blob -->
+  <line x1="650" y1="325" x2="680" y2="378" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="680" y="352" fill="#475569" font-size="7">file1.txt</text>
+
+  <!-- root tree -> file2 blob -->
+  <line x1="680" y1="325" x2="745" y2="458" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="725" y="395" fill="#475569" font-size="7">file2.txt</text>
+
+  <!-- subdir tree -> file3 blob -->
+  <line x1="450" y1="445" x2="450" y2="478" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="460" y="463" fill="#475569" font-size="7">file3.txt</text>
+
+  <!-- Bottom annotation -->
+  <text x="430" y="568" fill="#64748b" font-size="9" text-anchor="middle">Git 不是严格二叉 Merkle Tree，而是 Merkle DAG: tree 可以有任意多子节点，blob 可被多个 tree 共享</text>
+</svg>

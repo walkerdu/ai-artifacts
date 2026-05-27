@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 680">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+  </marker>
+  <marker id="arrow-gold" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#b45309"/>
+  </marker>
+  <marker id="arrow-silver" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+  </marker>
+  <marker id="arrow-bronze" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/>
+  </marker>
+</defs>
+
+<!-- Background: 白底 -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+
+<!-- Title -->
+<text x="30" y="35" fill="#1e293b" font-size="16" font-weight="700">IaaS 广域网金银铜牌流量分级机制</text>
+<text x="30" y="55" fill="#64748b" font-size="9" font-weight="400">基于 DSCP/MPLS 标记 → 隧道隔离 → 差异化 QoS 调度</text>
+
+<!-- ==================== 第一层：数据中心业务打标 ==================== -->
+<rect x="30" y="75" width="860" height="100" rx="12" fill="none" stroke="#0ea5e9" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="45" y="92" fill="#0369a1" font-size="9" font-weight="600">数据中心 (DC) — 业务通过 API 对报文 DSCP 字段打标</text>
+
+<!-- 业务节点 -->
+<rect x="60" y="105" width="150" height="55" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+<text x="135" y="128" fill="#78350f" font-size="11" font-weight="600" text-anchor="middle">支付/交易</text>
+<text x="135" y="145" fill="#92400e" font-size="9" text-anchor="middle">DSCP → EF (金)</text>
+
+<rect x="240" y="105" width="150" height="55" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+<text x="315" y="128" fill="#78350f" font-size="11" font-weight="600" text-anchor="middle">实时音视频</text>
+<text x="315" y="145" fill="#92400e" font-size="9" text-anchor="middle">DSCP → EF (金)</text>
+
+<rect x="420" y="105" width="150" height="55" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="495" y="128" fill="#1f2937" font-size="11" font-weight="600" text-anchor="middle">游戏/API 服务</text>
+<text x="495" y="145" fill="#4b5563" font-size="9" text-anchor="middle">DSCP → AF31 (银)</text>
+
+<rect x="600" y="105" width="150" height="55" rx="6" fill="#f5f3ff" stroke="#9333ea" stroke-width="1.5"/>
+<text x="675" y="128" fill="#581c87" font-size="11" font-weight="600" text-anchor="middle">日志/备份</text>
+<text x="675" y="145" fill="#6b21a8" font-size="9" text-anchor="middle">DSCP → BE (铜)</text>
+
+<!-- 向下箭头到广域网 -->
+<path d="M 135,160 L 135,200" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arrow-gold)"/>
+<path d="M 315,160 L 315,200" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arrow-gold)"/>
+<path d="M 495,160 L 495,200" fill="none" stroke="#6b7280" stroke-width="1.2" marker-end="url(#arrow-silver)"/>
+<path d="M 675,160 L 675,200" fill="none" stroke="#9333ea" stroke-width="1.2" marker-end="url(#arrow-bronze)"/>
+
+<!-- ==================== 第二层：广域网 MPLS TE 隧道 ==================== -->
+<rect x="30" y="200" width="860" height="280" rx="12" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="45" y="218" fill="#92400e" font-size="9" font-weight="600">广域网骨干 (WAN) — MPLS TE 隧道隔离，任意两节点间 12 条隧道</text>
+
+<!-- 节点 A -->
+<rect x="60" y="240" width="100" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+<text x="110" y="262" fill="#1e3a8a" font-size="11" font-weight="600" text-anchor="middle">节点 A</text>
+<text x="110" y="278" fill="#3b82f6" font-size="9" text-anchor="middle">头端</text>
+
+<!-- 节点 B -->
+<rect x="750" y="240" width="100" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+<text x="800" y="262" fill="#1e3a8a" font-size="11" font-weight="600" text-anchor="middle">节点 B</text>
+<text x="800" y="278" fill="#3b82f6" font-size="9" text-anchor="middle">尾端</text>
+
+<!-- 金隧道 ×4 -->
+<rect x="200" y="235" width="510" height="30" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+<text x="455" y="254" fill="#78350f" font-size="10" font-weight="600" text-anchor="middle">金隧道 x 4  |  最优路径  |  优先级 HIGH</text>
+<path d="M 160,250 L 200,250" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arrow-gold)"/>
+<path d="M 710,250 L 750,250" fill="none" stroke="#b45309" stroke-width="1.2" marker-end="url(#arrow-gold)"/>
+
+<!-- 银隧道 ×4 -->
+<rect x="200" y="278" width="510" height="30" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<text x="455" y="297" fill="#374151" font-size="10" font-weight="600" text-anchor="middle">银隧道 x 4  |  次优路径  |  优先级 MID</text>
+<path d="M 160,293 L 200,293" fill="none" stroke="#6b7280" stroke-width="1.2" marker-end="url(#arrow-silver)"/>
+<path d="M 710,293 L 750,293" fill="none" stroke="#6b7280" stroke-width="1.2" marker-end="url(#arrow-silver)"/>
+
+<!-- 铜隧道 ×4 -->
+<rect x="200" y="321" width="510" height="30" rx="4" fill="#f5f3ff" stroke="#9333ea" stroke-width="1.2"/>
+<text x="455" y="340" fill="#581c87" font-size="10" font-weight="600" text-anchor="middle">铜隧道 x 4  |  可绕行  |  优先级 LOW</text>
+<path d="M 160,336 L 200,336" fill="none" stroke="#9333ea" stroke-width="1.2" marker-end="url(#arrow-bronze)"/>
+<path d="M 710,336 L 750,336" fill="none" stroke="#9333ea" stroke-width="1.2" marker-end="url(#arrow-bronze)"/>
+
+<!-- 故障调度说明区域 -->
+<rect x="60" y="375" width="800" height="90" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="80" y="395" fill="#1e293b" font-size="11" font-weight="600">拥塞/故障时差异化调度策略：</text>
+
+<rect x="80" y="405" width="12" height="12" rx="2" fill="#f59e0b"/>
+<text x="100" y="415" fill="#92400e" font-size="10" font-weight="500">金 → 保留最优路径，绝对不被迁移，优先获取带宽资源</text>
+
+<rect x="80" y="425" width="12" height="12" rx="2" fill="#9ca3af"/>
+<text x="100" y="435" fill="#4b5563" font-size="10" font-weight="500">银 → 金流量满足后获取剩余最优资源，部分迁移至备选路径</text>
+
+<rect x="80" y="445" width="12" height="12" rx="2" fill="#a855f7"/>
+<text x="100" y="455" fill="#6b21a8" font-size="10" font-weight="500">铜 → 第一个被迁移到绕行链路，可承受更高延迟，极端情况可丢弃</text>
+
+<!-- ==================== 第三层：SLA 指标对比 ==================== -->
+<rect x="30" y="500" width="860" height="150" rx="12" fill="none" stroke="#10b981" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="45" y="518" fill="#065f46" font-size="9" font-weight="600">服务等级协议 (SLA) 指标对比</text>
+
+<!-- 表头 -->
+<text x="80" y="545" fill="#374151" font-size="9" font-weight="600">指标</text>
+<text x="260" y="545" fill="#b45309" font-size="9" font-weight="600" text-anchor="middle">金牌 (Au)</text>
+<text x="470" y="545" fill="#4b5563" font-size="9" font-weight="600" text-anchor="middle">银牌 (Ag)</text>
+<text x="680" y="545" fill="#7c3aed" font-size="9" font-weight="600" text-anchor="middle">铜牌 (Cu)</text>
+
+<!-- 分隔线 -->
+<line x1="60" y1="552" x2="850" y2="552" stroke="#e2e8f0" stroke-width="1"/>
+
+<!-- 可用性 -->
+<text x="80" y="572" fill="#374151" font-size="9">网络可用性</text>
+<text x="260" y="572" fill="#92400e" font-size="9" text-anchor="middle">≥ 99.9% (年故障 ≤ 8.76h)</text>
+<text x="470" y="572" fill="#4b5563" font-size="9" text-anchor="middle">≥ 99.5% (年故障 ≤ 43.8h)</text>
+<text x="680" y="572" fill="#6b21a8" font-size="9" text-anchor="middle">≥ 99.0% (年故障 ≤ 87.6h)</text>
+
+<!-- 延迟 -->
+<text x="80" y="592" fill="#374151" font-size="9">平均延迟</text>
+<text x="260" y="592" fill="#92400e" font-size="9" text-anchor="middle">≤ 15ms</text>
+<text x="470" y="592" fill="#4b5563" font-size="9" text-anchor="middle">≤ 30ms</text>
+<text x="680" y="592" fill="#6b21a8" font-size="9" text-anchor="middle">≤ 60ms</text>
+
+<!-- 丢包率 -->
+<text x="80" y="612" fill="#374151" font-size="9">丢包率</text>
+<text x="260" y="612" fill="#92400e" font-size="9" text-anchor="middle">≤ 0.1%</text>
+<text x="470" y="612" fill="#4b5563" font-size="9" text-anchor="middle">≤ 0.5%</text>
+<text x="680" y="612" fill="#6b21a8" font-size="9" text-anchor="middle">≤ 1.0%</text>
+
+<!-- 带宽保障 -->
+<text x="80" y="632" fill="#374151" font-size="9">带宽保障</text>
+<text x="260" y="632" fill="#92400e" font-size="9" text-anchor="middle">≥ 合同 95%</text>
+<text x="470" y="632" fill="#4b5563" font-size="9" text-anchor="middle">≥ 合同 90%</text>
+<text x="680" y="632" fill="#6b21a8" font-size="9" text-anchor="middle">≥ 合同 85%</text>
+
+<!-- 底部说明 -->
+<text x="460" y="670" fill="#64748b" font-size="8" text-anchor="middle">正常情况下三级流量体验一致（都走最优路径），关键区别在拥塞/故障时的优先保护等级</text>
+</svg>

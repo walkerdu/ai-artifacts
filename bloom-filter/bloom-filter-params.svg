@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 750">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="40" y="40" fill="#1e293b" font-size="16" font-weight="700">Bloom Filter 参数选择策略</text>
+<text x="40" y="60" fill="#64748b" font-size="9" font-weight="400">给定预期元素数 n 和目标误判率 P，如何确定 m (位数组长度) 和 k (哈希函数个数)</text>
+
+<!-- ====== FORMULA SECTION ====== -->
+<text x="40" y="100" fill="#1e293b" font-size="12" font-weight="600">核心公式</text>
+
+<!-- Formula box 1: FP rate -->
+<rect x="60" y="115" width="380" height="95" rx="8" fill="#ffffff"/>
+<rect x="60" y="115" width="380" height="95" rx="8" fill="rgba(59,130,246,0.06)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="80" y="138" fill="#3b82f6" font-size="10" font-weight="600">误判率 (False Positive Probability)</text>
+<text x="80" y="163" fill="#1e293b" font-size="13" font-weight="500">P ≈ (1 - e^(-kn/m))^k</text>
+<text x="80" y="185" fill="#64748b" font-size="9">n = 已插入元素数</text>
+<text x="80" y="199" fill="#64748b" font-size="9">m = bit 数组长度, k = 哈希函数个数</text>
+
+<!-- Formula box 2: Optimal k -->
+<rect x="480" y="115" width="380" height="95" rx="8" fill="#ffffff"/>
+<rect x="480" y="115" width="380" height="95" rx="8" fill="rgba(16,185,129,0.06)" stroke="#10b981" stroke-width="1.5"/>
+<text x="500" y="138" fill="#10b981" font-size="10" font-weight="600">最优 k 值</text>
+<text x="500" y="163" fill="#1e293b" font-size="13" font-weight="500">k_opt = (m/n) × ln2 ≈ 0.693 × (m/n)</text>
+<text x="500" y="185" fill="#64748b" font-size="9">k 取整后使 P 最小化</text>
+<text x="500" y="199" fill="#64748b" font-size="9">此时恰好约 50% 的位被置为 1</text>
+
+<!-- ====== DESIGN FLOW ====== -->
+<rect x="40" y="230" width="820" height="1" fill="#e2e8f0"/>
+<text x="40" y="260" fill="#1e293b" font-size="12" font-weight="600">设计流程：从需求到参数</text>
+
+<!-- Step 1 -->
+<rect x="60" y="280" width="180" height="70" rx="6" fill="#ffffff"/>
+<rect x="60" y="280" width="180" height="70" rx="6" fill="rgba(139,92,246,0.08)" stroke="#8b5cf6" stroke-width="1.5"/>
+<text x="150" y="305" fill="#8b5cf6" font-size="10" font-weight="600" text-anchor="middle">① 确定需求</text>
+<text x="150" y="323" fill="#1e293b" font-size="9" text-anchor="middle">n = 预期元素数量</text>
+<text x="150" y="338" fill="#1e293b" font-size="9" text-anchor="middle">P = 可接受误判率</text>
+
+<!-- Arrow -->
+<line x1="240" y1="315" x2="290" y2="315" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 2 -->
+<rect x="295" y="280" width="220" height="70" rx="6" fill="#ffffff"/>
+<rect x="295" y="280" width="220" height="70" rx="6" fill="rgba(59,130,246,0.08)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="405" y="305" fill="#3b82f6" font-size="10" font-weight="600" text-anchor="middle">② 计算 m (位数组长度)</text>
+<text x="405" y="323" fill="#1e293b" font-size="11" font-weight="500" text-anchor="middle">m = -n×ln(P) / (ln2)²</text>
+<text x="405" y="340" fill="#64748b" font-size="9" text-anchor="middle">≈ -1.44 × n × log₂(P)</text>
+
+<!-- Arrow -->
+<line x1="515" y1="315" x2="565" y2="315" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 3 -->
+<rect x="570" y="280" width="220" height="70" rx="6" fill="#ffffff"/>
+<rect x="570" y="280" width="220" height="70" rx="6" fill="rgba(16,185,129,0.08)" stroke="#10b981" stroke-width="1.5"/>
+<text x="680" y="305" fill="#10b981" font-size="10" font-weight="600" text-anchor="middle">③ 计算 k (哈希函数数)</text>
+<text x="680" y="323" fill="#1e293b" font-size="11" font-weight="500" text-anchor="middle">k = (m/n) × ln2</text>
+<text x="680" y="340" fill="#64748b" font-size="9" text-anchor="middle">取最近整数</text>
+
+<!-- ====== PRACTICAL TABLE ====== -->
+<rect x="40" y="370" width="820" height="1" fill="#e2e8f0"/>
+<text x="40" y="400" fill="#1e293b" font-size="12" font-weight="600">实用速查表 (n = 100 万元素)</text>
+
+<!-- Table header -->
+<rect x="60" y="415" width="800" height="30" rx="4" fill="rgba(71,85,105,0.08)"/>
+<text x="120" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">目标误判率 P</text>
+<text x="260" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">m (位数组)</text>
+<text x="390" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">内存占用</text>
+<text x="510" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">k (哈希数)</text>
+<text x="660" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">每元素 bits</text>
+<text x="790" y="434" fill="#1e293b" font-size="9" font-weight="600" text-anchor="middle">场景</text>
+
+<!-- Row 1: 10% -->
+<rect x="60" y="450" width="800" height="28" rx="0" fill="#ffffff"/>
+<text x="120" y="468" fill="#1e293b" font-size="9" text-anchor="middle">10% (0.1)</text>
+<text x="260" y="468" fill="#1e293b" font-size="9" text-anchor="middle">4.79 M bits</text>
+<text x="390" y="468" fill="#1e293b" font-size="9" text-anchor="middle">~585 KB</text>
+<text x="510" y="468" fill="#10b981" font-size="9" font-weight="600" text-anchor="middle">k = 3</text>
+<text x="660" y="468" fill="#1e293b" font-size="9" text-anchor="middle">4.8 bits</text>
+<text x="790" y="468" fill="#64748b" font-size="8" text-anchor="middle">粗筛</text>
+
+<!-- Row 2: 1% -->
+<rect x="60" y="480" width="800" height="28" rx="0" fill="rgba(59,130,246,0.03)"/>
+<text x="120" y="498" fill="#1e293b" font-size="9" text-anchor="middle">1% (0.01)</text>
+<text x="260" y="498" fill="#1e293b" font-size="9" text-anchor="middle">9.59 M bits</text>
+<text x="390" y="498" fill="#1e293b" font-size="9" text-anchor="middle">~1.14 MB</text>
+<text x="510" y="498" fill="#10b981" font-size="9" font-weight="600" text-anchor="middle">k = 7</text>
+<text x="660" y="498" fill="#1e293b" font-size="9" text-anchor="middle">9.6 bits</text>
+<text x="790" y="498" fill="#64748b" font-size="8" text-anchor="middle">通用</text>
+
+<!-- Row 3: 0.1% -->
+<rect x="60" y="510" width="800" height="28" rx="0" fill="#ffffff"/>
+<text x="120" y="528" fill="#1e293b" font-size="9" text-anchor="middle">0.1% (0.001)</text>
+<text x="260" y="528" fill="#1e293b" font-size="9" text-anchor="middle">14.38 M bits</text>
+<text x="390" y="528" fill="#1e293b" font-size="9" text-anchor="middle">~1.71 MB</text>
+<text x="510" y="528" fill="#10b981" font-size="9" font-weight="600" text-anchor="middle">k = 10</text>
+<text x="660" y="528" fill="#1e293b" font-size="9" text-anchor="middle">14.4 bits</text>
+<text x="790" y="528" fill="#64748b" font-size="8" text-anchor="middle">缓存防穿透</text>
+
+<!-- Row 4: 0.01% -->
+<rect x="60" y="540" width="800" height="28" rx="0" fill="rgba(59,130,246,0.03)"/>
+<text x="120" y="558" fill="#1e293b" font-size="9" text-anchor="middle">0.01% (0.0001)</text>
+<text x="260" y="558" fill="#1e293b" font-size="9" text-anchor="middle">19.17 M bits</text>
+<text x="390" y="558" fill="#1e293b" font-size="9" text-anchor="middle">~2.28 MB</text>
+<text x="510" y="558" fill="#10b981" font-size="9" font-weight="600" text-anchor="middle">k = 13</text>
+<text x="660" y="558" fill="#1e293b" font-size="9" text-anchor="middle">19.2 bits</text>
+<text x="790" y="558" fill="#64748b" font-size="8" text-anchor="middle">安全过滤</text>
+
+<!-- Table border -->
+<rect x="60" y="415" width="800" height="155" rx="4" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+
+<!-- ====== KEY INSIGHTS ====== -->
+<rect x="40" y="590" width="820" height="1" fill="#e2e8f0"/>
+<text x="40" y="620" fill="#1e293b" font-size="12" font-weight="600">关键决策要点</text>
+
+<!-- Insight 1 -->
+<rect x="60" y="635" width="250" height="95" rx="6" fill="#ffffff"/>
+<rect x="60" y="635" width="250" height="95" rx="6" fill="rgba(239,68,68,0.05)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="80" y="658" fill="#ef4444" font-size="10" font-weight="600">m 太小的后果</text>
+<text x="80" y="678" fill="#1e293b" font-size="9">• 位数组快速饱和 (大量1)</text>
+<text x="80" y="694" fill="#1e293b" font-size="9">• 误判率急剧上升</text>
+<text x="80" y="710" fill="#1e293b" font-size="9">• 退化为"总是返回存在"</text>
+<text x="80" y="722" fill="#64748b" font-size="8">⚠ m/n &lt; 4 时几乎不可用</text>
+
+<!-- Insight 2 -->
+<rect x="340" y="635" width="250" height="95" rx="6" fill="#ffffff"/>
+<rect x="340" y="635" width="250" height="95" rx="6" fill="rgba(245,158,11,0.05)" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="360" y="658" fill="#f59e0b" font-size="10" font-weight="600">k 的平衡点</text>
+<text x="360" y="678" fill="#1e293b" font-size="9">• k 太小 → 区分度不够</text>
+<text x="360" y="694" fill="#1e293b" font-size="9">• k 太大 → 位数组填充太快</text>
+<text x="360" y="710" fill="#1e293b" font-size="9">• 最优: k = 0.693 × (m/n)</text>
+<text x="360" y="722" fill="#64748b" font-size="8">实践中 k ∈ [3, 15] 最常见</text>
+
+<!-- Insight 3 -->
+<rect x="620" y="635" width="250" height="95" rx="6" fill="#ffffff"/>
+<rect x="620" y="635" width="250" height="95" rx="6" fill="rgba(16,185,129,0.05)" stroke="#10b981" stroke-width="1.5"/>
+<text x="640" y="658" fill="#10b981" font-size="10" font-weight="600">工程经验法则</text>
+<text x="640" y="678" fill="#1e293b" font-size="9">• P=1% 时 m≈10n (每元素10位)</text>
+<text x="640" y="694" fill="#1e293b" font-size="9">• 每降一个数量级 P</text>
+<text x="640" y="710" fill="#1e293b" font-size="9">  → m 增加约 4.8n 位</text>
+<text x="640" y="722" fill="#64748b" font-size="8">✓ 用 1.2MB 存 100 万, P&lt;1%</text>
+
+</svg>

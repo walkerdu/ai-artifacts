@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BusyBox image 用途图解</title>
+  <desc id="desc">展示 BusyBox image 作为极简 Linux 工具箱镜像，在 Docker 和 Kubernetes 中用于临时调试、脚本任务、initContainer 和简单工具容器的典型数据与控制流。</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9,4 L1,7" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9,4 L1,7" fill="none" stroke="#059669" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9,4 L1,7" fill="none" stroke="#d97706" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9,4 L1,7" fill="none" stroke="#7c3aed" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+      .title { fill: #111827; font-size: 24px; font-weight: 700; }
+      .subtitle { fill: #4b5563; font-size: 13px; font-weight: 400; }
+      .section { fill: #374151; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+      .label { fill: #111827; font-size: 15px; font-weight: 700; }
+      .small { fill: #4b5563; font-size: 12px; font-weight: 400; }
+      .tiny { fill: #6b7280; font-size: 10px; font-weight: 400; }
+      .arrowLabel { fill: #374151; font-size: 11px; font-weight: 600; }
+      .note { fill: #334155; font-size: 12px; font-weight: 400; }
+      .box { stroke-width: 1.6; rx: 14; }
+      .dash { stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="720" fill="#ffffff"/>
+  <rect x="26" y="24" width="1048" height="672" rx="24" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <text x="50" y="68" class="title">BusyBox image 是干什么的？</text>
+  <text x="50" y="94" class="subtitle">一句话：一个很小的 Linux 命令工具箱镜像，用来在容器环境里快速执行 sh、ls、cat、grep、wget、sleep 等基础命令。</text>
+
+  <rect x="50" y="128" width="260" height="500" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="72" y="158" class="section">输入侧：为什么需要它</text>
+
+  <rect x="82" y="188" width="196" height="72" rx="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="216" class="label" text-anchor="middle">镜像体积小</text>
+  <text x="180" y="239" class="small" text-anchor="middle">拉取快，启动快</text>
+
+  <rect x="82" y="294" width="196" height="72" rx="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="322" class="label" text-anchor="middle">命令足够用</text>
+  <text x="180" y="345" class="small" text-anchor="middle">基础 shell 工具集合</text>
+
+  <rect x="82" y="400" width="196" height="72" rx="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="428" class="label" text-anchor="middle">环境干净</text>
+  <text x="180" y="451" class="small" text-anchor="middle">适合一次性任务</text>
+
+  <rect x="82" y="506" width="196" height="72" rx="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="534" class="label" text-anchor="middle">依赖少</text>
+  <text x="180" y="557" class="small" text-anchor="middle">不适合复杂诊断</text>
+
+  <rect x="370" y="174" width="360" height="248" rx="22" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="550" y="210" class="section" text-anchor="middle">核心：busybox image</text>
+  <rect x="420" y="238" width="260" height="122" rx="18" fill="#ffffff" stroke="#10b981" stroke-width="1.8"/>
+  <text x="550" y="272" class="label" text-anchor="middle">busybox:latest</text>
+  <text x="550" y="298" class="small" text-anchor="middle">极简 rootfs + BusyBox 二进制</text>
+  <text x="550" y="323" class="tiny" text-anchor="middle">sh / ls / cat / cp / grep / wget / sleep / nslookup</text>
+
+  <rect x="398" y="380" width="304" height="26" rx="13" fill="#d1fae5" stroke="#34d399" stroke-width="1"/>
+  <text x="550" y="398" class="tiny" text-anchor="middle">它不是业务服务本体，而是临时工具环境</text>
+
+  <path d="M278 224 C320 224, 328 268, 370 268" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="332" y="244" class="arrowLabel" text-anchor="middle">快速拉起</text>
+
+  <path d="M278 330 C320 330, 328 310, 370 310" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="326" y="347" class="arrowLabel" text-anchor="middle">提供命令</text>
+
+  <path d="M278 436 C326 436, 328 354, 370 354" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="326" y="406" class="arrowLabel" text-anchor="middle">一次性执行</text>
+
+  <rect x="790" y="128" width="260" height="500" rx="18" fill="#fff7ed" stroke="#d97706" stroke-width="1.6"/>
+  <text x="812" y="158" class="section">输出侧：典型使用场景</text>
+
+  <rect x="822" y="188" width="196" height="72" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="920" y="216" class="label" text-anchor="middle">临时调试 Pod</text>
+  <text x="920" y="239" class="small" text-anchor="middle">kubectl run -it</text>
+
+  <rect x="822" y="294" width="196" height="72" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="920" y="322" class="label" text-anchor="middle">脚本任务</text>
+  <text x="920" y="345" class="small" text-anchor="middle">sh -c / sleep / wget</text>
+
+  <rect x="822" y="400" width="196" height="72" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="920" y="428" class="label" text-anchor="middle">initContainer</text>
+  <text x="920" y="451" class="small" text-anchor="middle">启动前检查或准备</text>
+
+  <rect x="822" y="506" width="196" height="72" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="920" y="534" class="label" text-anchor="middle">简单工具容器</text>
+  <text x="920" y="557" class="small" text-anchor="middle">辅助执行轻量命令</text>
+
+  <path d="M730 262 C768 262, 772 224, 822 224" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="772" y="244" class="arrowLabel" text-anchor="middle">检查网络/DNS</text>
+
+  <path d="M730 310 C768 310, 772 330, 822 330" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="770" y="316" class="arrowLabel" text-anchor="middle">执行命令</text>
+
+  <path d="M730 350 C768 350, 772 436, 822 436" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="772" y="400" class="arrowLabel" text-anchor="middle">启动前置动作</text>
+
+  <path d="M680 360 C724 410, 760 542, 822 542" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="742" y="500" class="arrowLabel" text-anchor="middle">轻量辅助</text>
+
+  <rect x="370" y="468" width="360" height="160" rx="18" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+  <text x="392" y="498" class="section">边界：什么时候不要只用 BusyBox</text>
+  <line x1="398" y1="522" x2="702" y2="522" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="410" y="552" class="note">需要完整包管理器：</text>
+  <text x="568" y="552" class="note">优先 Alpine / Ubuntu</text>
+  <text x="410" y="582" class="note">需要复杂网络诊断：</text>
+  <text x="568" y="582" class="note">优先 netshoot</text>
+  <text x="410" y="612" class="note">静态编译单二进制：</text>
+  <text x="568" y="612" class="note">可考虑 scratch</text>
+
+  <path d="M550 422 L550 468" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <text x="585" y="450" class="arrowLabel">能力边界</text>
+
+  <rect x="50" y="650" width="1000" height="30" rx="15" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <circle cx="76" cy="665" r="5" fill="#2563eb"/>
+  <text x="90" y="669" class="tiny">输入：体积小、命令够用、环境干净</text>
+  <circle cx="334" cy="665" r="5" fill="#059669"/>
+  <text x="348" y="669" class="tiny">核心：极简 Linux 工具箱镜像</text>
+  <circle cx="600" cy="665" r="5" fill="#d97706"/>
+  <text x="614" y="669" class="tiny">输出：调试、脚本、initContainer、工具容器</text>
+  <circle cx="924" cy="665" r="5" fill="#7c3aed"/>
+  <text x="938" y="669" class="tiny">边界：复杂诊断换更完整镜像</text>
+</svg>

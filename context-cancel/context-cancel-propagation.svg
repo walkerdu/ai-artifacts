@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 700">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e8ecf0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+  </marker>
+  <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+  </marker>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#fafbfc"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="430" y="32" fill="#1f2937" font-size="16" font-weight="700" text-anchor="middle">Context 取消信号传播机制</text>
+<text x="430" y="52" fill="#6b7280" font-size="9" text-anchor="middle">核心原理：close(chan struct{}) 是 Go 中的广播机制 — 一次关闭，N 个 goroutine 同时感知</text>
+
+<!-- ===== Phase 1: Before cancel ===== -->
+<rect x="30" y="70" width="800" height="250" rx="12" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="42" y="86" fill="#2563eb" font-size="9" font-weight="600">阶段 1：正常运行（cancel 前）</text>
+
+<!-- Parent cancelCtx -->
+<rect x="280" y="100" width="300" height="80" rx="6" fill="#fafbfc"/>
+<rect x="280" y="100" width="300" height="80" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="430" y="122" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">parentCtx (cancelCtx)</text>
+<line x1="280" y1="132" x2="580" y2="132" stroke="#2563eb" stroke-width="0.5" stroke-opacity="0.4"/>
+<text x="295" y="150" fill="#4b5563" font-size="9">done:     make(chan struct{})  ← 未关闭，阻塞中</text>
+<text x="295" y="166" fill="#2563eb" font-size="9">children: map[child1, child2, child3]</text>
+
+<!-- Lines to children -->
+<line x1="330" y1="180" x2="145" y2="220" stroke="#6b7280" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="430" y1="180" x2="430" y2="220" stroke="#6b7280" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="530" y1="180" x2="715" y2="220" stroke="#6b7280" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- Child 1 -->
+<rect x="55" y="225" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="55" y="225" width="180" height="70" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+<text x="145" y="250" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Worker 1</text>
+<text x="145" y="268" fill="#4b5563" font-size="8" text-anchor="middle">select {</text>
+<text x="145" y="282" fill="#059669" font-size="8" text-anchor="middle">case &lt;-ctx.Done(): ← 阻塞</text>
+
+<!-- Child 2 -->
+<rect x="340" y="225" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="340" y="225" width="180" height="70" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+<text x="430" y="250" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Worker 2</text>
+<text x="430" y="268" fill="#4b5563" font-size="8" text-anchor="middle">select {</text>
+<text x="430" y="282" fill="#059669" font-size="8" text-anchor="middle">case &lt;-ctx.Done(): ← 阻塞</text>
+
+<!-- Child 3 -->
+<rect x="625" y="225" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="625" y="225" width="180" height="70" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+<text x="715" y="250" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Worker 3</text>
+<text x="715" y="268" fill="#4b5563" font-size="8" text-anchor="middle">select {</text>
+<text x="715" y="282" fill="#059669" font-size="8" text-anchor="middle">case &lt;-ctx.Done(): ← 阻塞</text>
+
+<!-- ===== Cancel Event ===== -->
+<line x1="30" y1="340" x2="830" y2="340" stroke="#dc2626" stroke-width="1" stroke-dasharray="6,3"/>
+<rect x="340" y="330" width="180" height="22" rx="4" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="430" y="345" fill="#dc2626" font-size="9" font-weight="600" text-anchor="middle">cancel() 被调用</text>
+
+<!-- ===== Phase 2: After cancel ===== -->
+<rect x="30" y="365" width="800" height="300" rx="12" fill="none" stroke="#dc2626" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="42" y="381" fill="#dc2626" font-size="9" font-weight="600">阶段 2：取消传播（cancel 后）</text>
+
+<!-- Parent after cancel -->
+<rect x="280" y="395" width="300" height="95" rx="6" fill="#fafbfc"/>
+<rect x="280" y="395" width="300" height="95" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="430" y="417" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">parentCtx（已取消）</text>
+<line x1="280" y1="427" x2="580" y2="427" stroke="#dc2626" stroke-width="0.5" stroke-opacity="0.4"/>
+<text x="295" y="445" fill="#dc2626" font-size="9" font-weight="500">① close(c.done)  ← channel 关闭!</text>
+<text x="295" y="462" fill="#991b1b" font-size="9">② for child := range children {</text>
+<text x="310" y="478" fill="#991b1b" font-size="9">child.cancel() // 递归取消</text>
+
+<!-- Broadcast arrows -->
+<line x1="330" y1="490" x2="145" y2="540" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+<line x1="430" y1="490" x2="430" y2="540" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+<line x1="530" y1="490" x2="715" y2="540" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+<!-- Labels on arrows -->
+<text x="210" y="510" fill="#dc2626" font-size="7">close(done)</text>
+<text x="440" y="520" fill="#dc2626" font-size="7">close(done)</text>
+<text x="610" y="510" fill="#dc2626" font-size="7">close(done)</text>
+
+<!-- Child 1 wakes up -->
+<rect x="55" y="545" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="55" y="545" width="180" height="70" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="145" y="567" fill="#991b1b" font-size="10" font-weight="600" text-anchor="middle">Worker 1 唤醒</text>
+<text x="145" y="585" fill="#dc2626" font-size="8" text-anchor="middle">&lt;-ctx.Done() 返回!</text>
+<text x="145" y="601" fill="#4b5563" font-size="8" text-anchor="middle">ctx.Err() = Canceled</text>
+
+<!-- Child 2 wakes up -->
+<rect x="340" y="545" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="340" y="545" width="180" height="70" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="430" y="567" fill="#991b1b" font-size="10" font-weight="600" text-anchor="middle">Worker 2 唤醒</text>
+<text x="430" y="585" fill="#dc2626" font-size="8" text-anchor="middle">&lt;-ctx.Done() 返回!</text>
+<text x="430" y="601" fill="#4b5563" font-size="8" text-anchor="middle">ctx.Err() = Canceled</text>
+
+<!-- Child 3 wakes up -->
+<rect x="625" y="545" width="180" height="70" rx="6" fill="#fafbfc"/>
+<rect x="625" y="545" width="180" height="70" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="715" y="567" fill="#991b1b" font-size="10" font-weight="600" text-anchor="middle">Worker 3 唤醒</text>
+<text x="715" y="585" fill="#dc2626" font-size="8" text-anchor="middle">&lt;-ctx.Done() 返回!</text>
+<text x="715" y="601" fill="#4b5563" font-size="8" text-anchor="middle">ctx.Err() = Canceled</text>
+
+<!-- Key insight box -->
+<rect x="130" y="640" width="600" height="40" rx="6" fill="#fff7ed" stroke="#d97706" stroke-width="1"/>
+<text x="430" y="657" fill="#92400e" font-size="9" font-weight="500" text-anchor="middle">Go 语言特性：close(ch) 让所有阻塞在 &lt;-ch 的 goroutine 同时收到零值返回</text>
+<text x="430" y="673" fill="#92400e" font-size="9" text-anchor="middle">这就是 context 能"一对多广播"的根本原因 — 不是发 N 条消息，而是关 1 个 channel</text>
+</svg>
