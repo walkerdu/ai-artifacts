@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>悠悠生日快乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            overflow: hidden;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            width: 90vw;
+            max-width: 1400px;
+        }
+
+        .avatar {
+            width: clamp(120px, 18vw, 220px);
+            height: clamp(120px, 18vw, 220px);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 30px rgba(254, 202, 87, 0.5), 0 0 60px rgba(255, 107, 107, 0.3);
+            animation: avatarGlow 3s ease-in-out infinite alternate, float 4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes avatarGlow {
+            0% { box-shadow: 0 0 20px rgba(254, 202, 87, 0.4), 0 0 40px rgba(255, 107, 107, 0.2); }
+            100% { box-shadow: 0 0 40px rgba(84, 160, 255, 0.6), 0 0 80px rgba(255, 159, 243, 0.4); }
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .line1, .line2 {
+            font-weight: 900;
+            letter-spacing: 4px;
+            position: relative;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .line1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            background: linear-gradient(
+                90deg,
+                #ff6b6b, #feca57, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite, float 3s ease-in-out infinite;
+        }
+
+        .line2 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            background: linear-gradient(
+                90deg,
+                #feca57, #ff6b6b, #54a0ff, #ff9ff3, #48dbfb, #feca57
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite 0.5s, float 3s ease-in-out infinite 0.3s;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Sparkle particles */
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleAnim 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        /* Glowing text shadow effect */
+        .line1::after, .line2::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            background: inherit;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(12px);
+            opacity: 0.6;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.4; filter: blur(10px); }
+            100% { opacity: 0.8; filter: blur(20px); }
+        }
+
+        /* Floating background particles */
+        .bg-particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rise linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes rise {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* Star burst effect */
+        .star {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.5) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+        }
+
+        /* Music button */
+        .music-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .music-btn.playing {
+            animation: pulse 1s ease-in-out infinite;
+            border-color: #feca57;
+            box-shadow: 0 0 30px rgba(254, 202, 87, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .music-hint {
+            position: fixed;
+            bottom: 115px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            animation: fadeInOut 3s ease-in-out infinite;
+            z-index: 100;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="avatar" src="photo1.jpg" alt="悠悠">
+        <div class="text-content">
+            <div class="line1" data-text="祝悠悠生日快乐！">祝悠悠生日快乐！</div>
+            <div class="line2" data-text="我们五岁啦！">我们五岁啦！</div>
+        </div>
+        <img class="avatar" src="photo2.jpg" alt="悠悠">
+    </div>
+
+    <!-- Music button -->
+    <div class="music-hint">点击播放音乐 🎵</div>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+
+    <script>
+        // Generate Happy Birthday melody using Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let isPlaying = false;
+        let scheduledNotes = [];
+        let currentTimeout = null;
+
+        // Happy Birthday melody notes (frequency in Hz, duration in seconds)
+        const melody = [
+            // Happy birthday to you
+            { freq: 264, dur: 0.3 }, { freq: 264, dur: 0.15 }, { freq: 297, dur: 0.5 }, { freq: 264, dur: 0.5 }, { freq: 352, dur: 0.5 }, { freq: 330, dur: 0.9 },
+            // Happy birthday to you
+            { freq: 264, dur: 0.3 }, { freq: 264, dur: 0.15 }, { freq: 297, dur: 0.5 }, { freq: 264, dur: 0.5 }, { freq: 396, dur: 0.5 }, { freq: 352, dur: 0.9 },
+            // Happy birthday dear...
+            { freq: 264, dur: 0.3 }, { freq: 264, dur: 0.15 }, { freq: 528, dur: 0.5 }, { freq: 440, dur: 0.5 }, { freq: 352, dur: 0.5 }, { freq: 330, dur: 0.5 }, { freq: 297, dur: 0.9 },
+            // Happy birthday to you
+            { freq: 470, dur: 0.3 }, { freq: 470, dur: 0.15 }, { freq: 440, dur: 0.5 }, { freq: 352, dur: 0.5 }, { freq: 396, dur: 0.5 }, { freq: 352, dur: 0.9 },
+        ];
+
+        function playNote(freq, startTime, duration) {
+            if (!audioCtx) return;
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            // Use a warmer sound
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(freq, startTime);
+
+            // Add a second oscillator for richness
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(freq, startTime);
+            gain2.gain.setValueAtTime(0.3, startTime);
+
+            // Envelope
+            gainNode.gain.setValueAtTime(0, startTime);
+            gainNode.gain.linearRampToValueAtTime(0.4, startTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+
+            gain2.gain.setValueAtTime(0, startTime);
+            gain2.gain.linearRampToValueAtTime(0.15, startTime + 0.05);
+            gain2.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+
+            // Low-pass filter for warmth
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2000, startTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(filter);
+            filter.connect(audioCtx.destination);
+
+            osc2.connect(gain2);
+            gain2.connect(filter);
+
+            oscillator.start(startTime);
+            oscillator.stop(startTime + duration + 0.1);
+            osc2.start(startTime);
+            osc2.stop(startTime + duration + 0.1);
+
+            scheduledNotes.push(oscillator, osc2);
+        }
+
+        function playMelody() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+
+            let time = audioCtx.currentTime + 0.1;
+            const gap = 0.08;
+
+            melody.forEach(note => {
+                playNote(note.freq, time, note.dur);
+                time += note.dur + gap;
+            });
+
+            // Loop the melody
+            const totalDuration = melody.reduce((sum, n) => sum + n.dur + gap, 0);
+            currentTimeout = setTimeout(() => {
+                if (isPlaying) {
+                    playMelody();
+                }
+            }, totalDuration * 1000);
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            const hint = document.querySelector('.music-hint');
+
+            if (!isPlaying) {
+                isPlaying = true;
+                btn.textContent = '🎶';
+                btn.classList.add('playing');
+                hint.style.display = 'none';
+                playMelody();
+            } else {
+                isPlaying = false;
+                btn.textContent = '🎵';
+                btn.classList.remove('playing');
+                if (currentTimeout) clearTimeout(currentTimeout);
+                if (audioCtx) {
+                    audioCtx.close();
+                    audioCtx = null;
+                }
+                scheduledNotes = [];
+            }
+        }
+    </script>
+
+    <script>
+        // Create sparkles around text
+        function createSparkles() {
+            const container = document.querySelector('.container');
+            const rect = container.getBoundingClientRect();
+
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * rect.width + 'px';
+                sparkle.style.top = Math.random() * rect.height + 'px';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                sparkle.style.animationDuration = (1 + Math.random()) + 's';
+
+                const colors = ['#ff6b6b', '#feca57', '#ff9ff3', '#54a0ff', '#48dbfb', '#fff'];
+                sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                sparkle.style.boxShadow = `0 0 6px ${sparkle.style.background}`;
+
+                container.appendChild(sparkle);
+            }
+        }
+
+        // Create floating background particles
+        function createBgParticles() {
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+
+                const size = 4 + Math.random() * 8;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+
+                const colors = ['#ff6b6b', '#feca57', '#ff9ff3', '#54a0ff', '#48dbfb'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 ${size}px ${particle.style.background}`;
+
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Create twinkling stars
+        function createStars() {
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+
+                const size = 8 + Math.random() * 16;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+
+                document.body.appendChild(star);
+            }
+        }
+
+        createSparkles();
+        createBgParticles();
+        createStars();
+    </script>
+</body>
+</html>

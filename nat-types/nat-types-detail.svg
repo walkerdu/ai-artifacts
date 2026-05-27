@@ -1,0 +1,316 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1680">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+  </marker>
+  <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#0891b2"/>
+  </marker>
+  <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+  </marker>
+  <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#e11d48"/>
+  </marker>
+  <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#d97706"/>
+  </marker>
+</defs>
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="550" y="45" fill="#0f172a" font-size="18" font-weight="700" text-anchor="middle">四种 NAT 类型详解 — 数据走向与过滤限制</text>
+<text x="550" y="68" fill="#64748b" font-size="10" text-anchor="middle">RFC 3489 / RFC 4787 定义的 NAT 行为分类</text>
+
+<!-- ============================================= -->
+<!-- TYPE 1: Full Cone NAT -->
+<!-- ============================================= -->
+<rect x="30" y="90" width="1040" height="340" rx="12" fill="none" stroke="#0891b2" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="50" y="112" fill="#0891b2" font-size="12" font-weight="700">Type 1: Full Cone NAT (完全锥形)</text>
+<text x="50" y="130" fill="#64748b" font-size="9">映射规则: 内网 src 固定映射一个外网端口 | 过滤规则: 无任何限制</text>
+
+<!-- Internal Host A -->
+<rect x="60" y="160" width="140" height="55" rx="6" fill="white"/>
+<rect x="60" y="160" width="140" height="55" rx="6" fill="rgba(8,145,178,0.08)" stroke="#0891b2" stroke-width="1.5"/>
+<text x="130" y="183" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">内网主机 A</text>
+<text x="130" y="200" fill="#64748b" font-size="9" text-anchor="middle">192.168.1.5:8000</text>
+
+<!-- NAT Device -->
+<rect x="320" y="145" width="200" height="100" rx="8" fill="white"/>
+<rect x="320" y="145" width="200" height="100" rx="8" fill="rgba(217,119,6,0.08)" stroke="#d97706" stroke-width="1.5"/>
+<text x="420" y="172" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">NAT 设备</text>
+<text x="420" y="192" fill="#64748b" font-size="9" text-anchor="middle">映射表:</text>
+<text x="420" y="207" fill="#b45309" font-size="9" text-anchor="middle">192.168.1.5:8000</text>
+<text x="420" y="222" fill="#b45309" font-size="9" text-anchor="middle">↔ 1.2.3.4:45000</text>
+<text x="420" y="237" fill="#64748b" font-size="8" text-anchor="middle">(固定映射, 不随目标改变)</text>
+
+<!-- External Hosts -->
+<rect x="660" y="145" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="145" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="167" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网主机 B</text>
+<text x="730" y="183" fill="#64748b" font-size="9" text-anchor="middle">5.6.7.8:80</text>
+
+<rect x="660" y="215" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="215" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="237" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网主机 C</text>
+<text x="730" y="253" fill="#64748b" font-size="9" text-anchor="middle">9.9.9.9:443</text>
+
+<rect x="660" y="285" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="285" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="307" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">任意外网主机 X</text>
+<text x="730" y="323" fill="#64748b" font-size="9" text-anchor="middle">x.x.x.x:any</text>
+
+<!-- Arrows: outbound -->
+<path d="M200,187 L318,187" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+<text x="255" y="180" fill="#0891b2" font-size="8">出站</text>
+
+<path d="M520,170 L658,170" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+
+<!-- Arrows: inbound (all allowed) -->
+<path d="M660,240 L522,210" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="580" y="218" fill="#059669" font-size="8">入站 (允许)</text>
+
+<path d="M660,310 L522,225" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="575" y="275" fill="#059669" font-size="8">入站 (允许)</text>
+
+<!-- Result box -->
+<rect x="60" y="280" width="440" height="60" rx="6" fill="rgba(5,150,105,0.06)" stroke="#059669" stroke-width="0.5"/>
+<text x="80" y="300" fill="#047857" font-size="10" font-weight="600">结论: 一旦建立映射，外网任何主机 (无论是否通信过)</text>
+<text x="80" y="318" fill="#047857" font-size="10" font-weight="600">都可以通过 1.2.3.4:45000 主动向内网 A 发送数据</text>
+<text x="80" y="334" fill="#64748b" font-size="9">最宽松，P2P 穿透最容易。等同于静态端口映射。</text>
+
+<!-- Difficulty badge -->
+<rect x="900" y="160" width="140" height="40" rx="20" fill="rgba(5,150,105,0.1)" stroke="#059669" stroke-width="1"/>
+<text x="970" y="185" fill="#059669" font-size="11" font-weight="600" text-anchor="middle">穿透难度: 极低</text>
+
+<!-- ============================================= -->
+<!-- TYPE 2: Restricted Cone NAT -->
+<!-- ============================================= -->
+<rect x="30" y="450" width="1040" height="350" rx="12" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="50" y="472" fill="#2563eb" font-size="12" font-weight="700">Type 2: Restricted Cone NAT (限制锥形 / IP限制)</text>
+<text x="50" y="490" fill="#64748b" font-size="9">映射规则: 同 Full Cone (固定映射) | 过滤规则: 只允许内网曾主动联系过的 IP 回传</text>
+
+<!-- Internal Host A -->
+<rect x="60" y="520" width="140" height="55" rx="6" fill="white"/>
+<rect x="60" y="520" width="140" height="55" rx="6" fill="rgba(8,145,178,0.08)" stroke="#0891b2" stroke-width="1.5"/>
+<text x="130" y="543" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">内网主机 A</text>
+<text x="130" y="560" fill="#64748b" font-size="9" text-anchor="middle">192.168.1.5:8000</text>
+
+<!-- NAT Device -->
+<rect x="320" y="505" width="200" height="110" rx="8" fill="white"/>
+<rect x="320" y="505" width="200" height="110" rx="8" fill="rgba(217,119,6,0.08)" stroke="#d97706" stroke-width="1.5"/>
+<text x="420" y="528" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">NAT 设备</text>
+<text x="420" y="548" fill="#64748b" font-size="9" text-anchor="middle">映射: 同 Full Cone</text>
+<text x="420" y="565" fill="#b45309" font-size="9" text-anchor="middle">过滤规则检查:</text>
+<text x="420" y="580" fill="#b45309" font-size="9" text-anchor="middle">src_IP ∈ 已通信IP列表?</text>
+<text x="420" y="598" fill="#64748b" font-size="8" text-anchor="middle">已通信: [5.6.7.8]</text>
+
+<!-- External Hosts -->
+<rect x="660" y="500" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="500" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="522" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网主机 B</text>
+<text x="730" y="538" fill="#64748b" font-size="9" text-anchor="middle">5.6.7.8:80</text>
+
+<rect x="660" y="570" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="570" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="592" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">B 的另一端口</text>
+<text x="730" y="608" fill="#64748b" font-size="9" text-anchor="middle">5.6.7.8:9999</text>
+
+<rect x="660" y="645" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="645" width="140" height="50" rx="6" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1.5"/>
+<text x="730" y="667" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网主机 C</text>
+<text x="730" y="683" fill="#e11d48" font-size="9" text-anchor="middle">9.9.9.9:443 (未通信)</text>
+
+<!-- Arrows -->
+<path d="M200,547 L318,547" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+<text x="255" y="540" fill="#0891b2" font-size="8">A 主动联系 B</text>
+
+<path d="M520,525 L658,525" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+
+<!-- B:80 inbound (allowed) -->
+<path d="M660,525 L522,545" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="575" y="540" fill="#059669" font-size="8">允许 (IP匹配)</text>
+
+<!-- B:9999 inbound (allowed - same IP different port) -->
+<path d="M660,595 L522,570" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="565" y="590" fill="#059669" font-size="8">允许 (同IP不同端口)</text>
+
+<!-- C inbound (rejected) -->
+<path d="M660,670 L522,590" fill="none" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+<text x="565" y="645" fill="#e11d48" font-size="8">拒绝 (IP不在列表)</text>
+<text x="570" y="660" fill="#e11d48" font-size="14">✗</text>
+
+<!-- Result box -->
+<rect x="60" y="640" width="440" height="60" rx="6" fill="rgba(37,99,235,0.06)" stroke="#2563eb" stroke-width="0.5"/>
+<text x="80" y="660" fill="#1d4ed8" font-size="10" font-weight="600">过滤条件: 仅检查源 IP</text>
+<text x="80" y="678" fill="#1d4ed8" font-size="10">B 曾被 A 联系过 → B 的任意端口都能回传</text>
+<text x="80" y="694" fill="#64748b" font-size="9">C 从未被联系 → C 的所有入站包被丢弃</text>
+
+<!-- Difficulty badge -->
+<rect x="900" y="515" width="140" height="40" rx="20" fill="rgba(37,99,235,0.1)" stroke="#2563eb" stroke-width="1"/>
+<text x="970" y="540" fill="#2563eb" font-size="11" font-weight="600" text-anchor="middle">穿透难度: 中等</text>
+
+<!-- ============================================= -->
+<!-- TYPE 3: Port Restricted Cone NAT -->
+<!-- ============================================= -->
+<rect x="30" y="820" width="1040" height="350" rx="12" fill="none" stroke="#d97706" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="50" y="842" fill="#d97706" font-size="12" font-weight="700">Type 3: Port Restricted Cone NAT (端口限制锥形)</text>
+<text x="50" y="860" fill="#64748b" font-size="9">映射规则: 同 Full Cone (固定映射) | 过滤规则: 只允许内网曾主动联系过的 IP:Port 回传</text>
+
+<!-- Internal Host A -->
+<rect x="60" y="890" width="140" height="55" rx="6" fill="white"/>
+<rect x="60" y="890" width="140" height="55" rx="6" fill="rgba(8,145,178,0.08)" stroke="#0891b2" stroke-width="1.5"/>
+<text x="130" y="913" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">内网主机 A</text>
+<text x="130" y="930" fill="#64748b" font-size="9" text-anchor="middle">192.168.1.5:8000</text>
+
+<!-- NAT Device -->
+<rect x="320" y="875" width="200" height="110" rx="8" fill="white"/>
+<rect x="320" y="875" width="200" height="110" rx="8" fill="rgba(217,119,6,0.08)" stroke="#d97706" stroke-width="1.5"/>
+<text x="420" y="898" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">NAT 设备</text>
+<text x="420" y="918" fill="#64748b" font-size="9" text-anchor="middle">映射: 同 Full Cone</text>
+<text x="420" y="935" fill="#b45309" font-size="9" text-anchor="middle">过滤规则检查:</text>
+<text x="420" y="950" fill="#b45309" font-size="9" text-anchor="middle">src_IP:Port ∈ 已通信列表?</text>
+<text x="420" y="968" fill="#64748b" font-size="8" text-anchor="middle">已通信: [5.6.7.8:80]</text>
+
+<!-- External Hosts -->
+<rect x="660" y="870" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="870" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="730" y="892" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网 B:80</text>
+<text x="730" y="908" fill="#64748b" font-size="9" text-anchor="middle">5.6.7.8:80</text>
+
+<rect x="660" y="940" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="940" width="140" height="50" rx="6" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1.5"/>
+<text x="730" y="962" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网 B:9999</text>
+<text x="730" y="978" fill="#e11d48" font-size="9" text-anchor="middle">5.6.7.8:9999</text>
+
+<rect x="660" y="1010" width="140" height="50" rx="6" fill="white"/>
+<rect x="660" y="1010" width="140" height="50" rx="6" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1.5"/>
+<text x="730" y="1032" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网主机 C</text>
+<text x="730" y="1048" fill="#e11d48" font-size="9" text-anchor="middle">9.9.9.9:443</text>
+
+<!-- Arrows -->
+<path d="M200,917 L318,917" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+<text x="248" y="910" fill="#0891b2" font-size="8">A → B:80</text>
+
+<path d="M520,895 L658,895" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+
+<!-- B:80 inbound (allowed) -->
+<path d="M660,895 L522,915" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="575" y="908" fill="#059669" font-size="8">允许 (IP:Port 精确匹配)</text>
+
+<!-- B:9999 inbound (rejected!) -->
+<path d="M660,965 L522,945" fill="none" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+<text x="560" y="960" fill="#e11d48" font-size="8">拒绝 (同IP但端口不匹配)</text>
+<text x="570" y="975" fill="#e11d48" font-size="14">✗</text>
+
+<!-- C inbound (rejected) -->
+<path d="M660,1035 L522,965" fill="none" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+<text x="560" y="1015" fill="#e11d48" font-size="8">拒绝 (IP不匹配)</text>
+<text x="570" y="1030" fill="#e11d48" font-size="14">✗</text>
+
+<!-- Result box -->
+<rect x="60" y="1010" width="440" height="60" rx="6" fill="rgba(217,119,6,0.06)" stroke="#d97706" stroke-width="0.5"/>
+<text x="80" y="1030" fill="#b45309" font-size="10" font-weight="600">过滤条件: 检查源 IP + 源 Port (比Type2更严)</text>
+<text x="80" y="1048" fill="#b45309" font-size="10">A 只联系了 B:80 → 只有 B:80 能回传</text>
+<text x="80" y="1064" fill="#64748b" font-size="9">同一台 B 的其他端口 (如 B:9999) 也被拒绝</text>
+
+<!-- Difficulty badge -->
+<rect x="900" y="885" width="140" height="40" rx="20" fill="rgba(217,119,6,0.1)" stroke="#d97706" stroke-width="1"/>
+<text x="970" y="910" fill="#d97706" font-size="11" font-weight="600" text-anchor="middle">穿透难度: 较高</text>
+
+<!-- ============================================= -->
+<!-- TYPE 4: Symmetric NAT -->
+<!-- ============================================= -->
+<rect x="30" y="1190" width="1040" height="430" rx="12" fill="none" stroke="#e11d48" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="50" y="1212" fill="#e11d48" font-size="12" font-weight="700">Type 4: Symmetric NAT (对称NAT)</text>
+<text x="50" y="1230" fill="#64748b" font-size="9">映射规则: 每个不同目标分配不同外网端口 (非固定映射!) | 过滤规则: 同 Port Restricted</text>
+
+<!-- Internal Host A -->
+<rect x="60" y="1270" width="140" height="55" rx="6" fill="white"/>
+<rect x="60" y="1270" width="140" height="55" rx="6" fill="rgba(8,145,178,0.08)" stroke="#0891b2" stroke-width="1.5"/>
+<text x="130" y="1293" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">内网主机 A</text>
+<text x="130" y="1310" fill="#64748b" font-size="9" text-anchor="middle">192.168.1.5:8000</text>
+
+<!-- NAT Device - bigger to show multiple mappings -->
+<rect x="290" y="1250" width="250" height="150" rx="8" fill="white"/>
+<rect x="290" y="1250" width="250" height="150" rx="8" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1.5"/>
+<text x="415" y="1273" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">NAT 设备 (关键区别: 多映射!)</text>
+<text x="415" y="1295" fill="#64748b" font-size="9" text-anchor="middle">映射表 (每个目标独立映射):</text>
+<text x="415" y="1315" fill="#be123c" font-size="9" text-anchor="middle">→ B:80  映射为 1.2.3.4:45000</text>
+<text x="415" y="1335" fill="#be123c" font-size="9" text-anchor="middle">→ C:443 映射为 1.2.3.4:45001</text>
+<text x="415" y="1355" fill="#be123c" font-size="9" text-anchor="middle">→ D:22  映射为 1.2.3.4:45002</text>
+<text x="415" y="1380" fill="#b45309" font-size="8" text-anchor="middle">同一源端口 → 不同目标 = 不同外网端口!</text>
+
+<!-- External Hosts -->
+<rect x="680" y="1255" width="140" height="50" rx="6" fill="white"/>
+<rect x="680" y="1255" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="750" y="1277" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网 B:80</text>
+<text x="750" y="1293" fill="#64748b" font-size="9" text-anchor="middle">5.6.7.8:80</text>
+
+<rect x="680" y="1320" width="140" height="50" rx="6" fill="white"/>
+<rect x="680" y="1320" width="140" height="50" rx="6" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1.5"/>
+<text x="750" y="1342" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">外网 C:443</text>
+<text x="750" y="1358" fill="#64748b" font-size="9" text-anchor="middle">9.9.9.9:443</text>
+
+<rect x="680" y="1390" width="140" height="50" rx="6" fill="white"/>
+<rect x="680" y="1390" width="140" height="50" rx="6" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1.5"/>
+<text x="750" y="1412" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">STUN Server</text>
+<text x="750" y="1428" fill="#e11d48" font-size="9" text-anchor="middle">探测到的端口不可复用</text>
+
+<!-- Arrows outbound -->
+<path d="M200,1290 L288,1290" fill="none" stroke="#0891b2" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+<text x="240" y="1283" fill="#0891b2" font-size="8">出站</text>
+
+<path d="M540,1280 L678,1280" fill="none" stroke="#0891b2" stroke-width="1.2" marker-end="url(#arrow-cyan)"/>
+<text x="600" y="1273" fill="#64748b" font-size="7">:45000</text>
+
+<path d="M540,1340 L678,1340" fill="none" stroke="#0891b2" stroke-width="1.2" marker-end="url(#arrow-cyan)"/>
+<text x="600" y="1333" fill="#64748b" font-size="7">:45001</text>
+
+<!-- B inbound to :45000 (allowed) -->
+<path d="M680,1290 L542,1305" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="600" y="1303" fill="#059669" font-size="7">B→:45000 允许</text>
+
+<!-- C trying to use B's port (rejected) -->
+<path d="M680,1350 L542,1320" fill="none" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+<text x="595" y="1350" fill="#e11d48" font-size="7">C→:45000 拒绝(映射隔离)</text>
+
+<!-- STUN problem -->
+<path d="M680,1415 L542,1380" fill="none" stroke="#e11d48" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+
+<!-- Result box -->
+<rect x="60" y="1430" width="530" height="85" rx="6" fill="rgba(225,29,72,0.05)" stroke="#e11d48" stroke-width="0.5"/>
+<text x="80" y="1450" fill="#be123c" font-size="10" font-weight="600">核心问题: 外网端口随目标变化，STUN探测到的端口无法直接使用!</text>
+<text x="80" y="1470" fill="#be123c" font-size="10">STUN告诉对方 "我的外网地址是 1.2.3.4:45003"</text>
+<text x="80" y="1490" fill="#be123c" font-size="10">但对方连过来时 NAT 分配了另一个端口 :45004 → 完全对不上</text>
+<text x="80" y="1510" fill="#64748b" font-size="9">P2P打洞几乎不可能，必须依赖 TURN 中继服务器转发流量</text>
+
+<!-- Difficulty badge -->
+<rect x="900" y="1260" width="140" height="40" rx="20" fill="rgba(225,29,72,0.1)" stroke="#e11d48" stroke-width="1"/>
+<text x="970" y="1285" fill="#e11d48" font-size="11" font-weight="600" text-anchor="middle">穿透难度: 极高</text>
+
+<!-- ============================================= -->
+<!-- Legend -->
+<!-- ============================================= -->
+<rect x="30" y="1635" width="1040" height="35" rx="6" fill="rgba(241,245,249,0.9)" stroke="#cbd5e1" stroke-width="0.5"/>
+<line x1="60" y1="1652" x2="90" y2="1652" stroke="#0891b2" stroke-width="2"/>
+<text x="95" y="1656" fill="#475569" font-size="9">出站流量</text>
+<line x1="200" y1="1652" x2="230" y2="1652" stroke="#059669" stroke-width="2"/>
+<text x="235" y="1656" fill="#475569" font-size="9">入站允许</text>
+<line x1="340" y1="1652" x2="370" y2="1652" stroke="#e11d48" stroke-width="2" stroke-dasharray="5,3"/>
+<text x="375" y="1656" fill="#475569" font-size="9">入站拒绝</text>
+<rect x="500" y="1642" width="16" height="16" rx="3" fill="rgba(217,119,6,0.1)" stroke="#d97706" stroke-width="1"/>
+<text x="522" y="1656" fill="#475569" font-size="9">NAT设备</text>
+<rect x="640" y="1642" width="16" height="16" rx="3" fill="rgba(5,150,105,0.08)" stroke="#059669" stroke-width="1"/>
+<text x="662" y="1656" fill="#475569" font-size="9">外网主机(允许)</text>
+<rect x="800" y="1642" width="16" height="16" rx="3" fill="rgba(225,29,72,0.06)" stroke="#e11d48" stroke-width="1"/>
+<text x="822" y="1656" fill="#475569" font-size="9">外网主机(拒绝)</text>
+</svg>
