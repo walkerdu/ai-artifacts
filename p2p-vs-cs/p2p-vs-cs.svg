@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+    </pattern>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrow-emerald" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <text x="410" y="40" fill="#1e293b" font-size="18" font-weight="700" text-anchor="middle">P2P 网络 vs Client-Server 架构对比</text>
+
+  <!-- Divider -->
+  <line x1="410" y1="60" x2="410" y2="480" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6,4"/>
+
+  <!-- ===== LEFT: Client-Server ===== -->
+  <text x="200" y="80" fill="#475569" font-size="14" font-weight="600" text-anchor="middle">Client-Server 模型</text>
+
+  <!-- Central Server -->
+  <rect x="145" y="200" width="110" height="70" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="200" y="232" fill="#1e40af" font-size="12" font-weight="700" text-anchor="middle">Server</text>
+  <text x="200" y="252" fill="#64748b" font-size="9" text-anchor="middle">中央服务器</text>
+
+  <!-- Client 1 (top-left) -->
+  <rect x="50" y="100" width="90" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="95" y="128" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Client A</text>
+
+  <!-- Client 2 (top-right) -->
+  <rect x="260" y="100" width="90" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="305" y="128" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Client B</text>
+
+  <!-- Client 3 (bottom-left) -->
+  <rect x="40" y="330" width="90" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="85" y="358" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Client C</text>
+
+  <!-- Client 4 (bottom-right) -->
+  <rect x="270" y="330" width="90" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="315" y="358" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Client D</text>
+
+  <!-- Client 5 (bottom-center) -->
+  <rect x="155" y="390" width="90" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="200" y="418" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Client E</text>
+
+  <!-- Arrows: Clients → Server (bidirectional) -->
+  <line x1="120" y1="150" x2="170" y2="200" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="280" y1="150" x2="230" y2="200" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="110" y1="330" x2="165" y2="270" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="290" y1="330" x2="235" y2="270" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="200" y1="390" x2="200" y2="270" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- C/S characteristics -->
+  <rect x="40" y="455" width="320" height="50" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="200" y="475" fill="#64748b" font-size="9" font-weight="500" text-anchor="middle">• 单点故障 (SPOF)  • 服务器承载全部负载</text>
+  <text x="200" y="493" fill="#64748b" font-size="9" font-weight="500" text-anchor="middle">• 客户端之间不直接通信  • 易于管控</text>
+
+  <!-- ===== RIGHT: P2P ===== -->
+  <text x="620" y="80" fill="#475569" font-size="14" font-weight="600" text-anchor="middle">Peer-to-Peer 模型</text>
+
+  <!-- Peer nodes in a pentagon/circle layout -->
+  <!-- Peer 1 (top) -->
+  <rect x="575" y="110" width="90" height="50" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="620" y="138" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">Peer A</text>
+
+  <!-- Peer 2 (top-right) -->
+  <rect x="700" y="190" width="90" height="50" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="745" y="218" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">Peer B</text>
+
+  <!-- Peer 3 (bottom-right) -->
+  <rect x="680" y="320" width="90" height="50" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="725" y="348" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">Peer C</text>
+
+  <!-- Peer 4 (bottom-left) -->
+  <rect x="470" y="320" width="90" height="50" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="515" y="348" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">Peer D</text>
+
+  <!-- Peer 5 (left) -->
+  <rect x="450" y="190" width="90" height="50" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="495" y="218" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">Peer E</text>
+
+  <!-- P2P connections: mesh topology (all to all) -->
+  <!-- A-B -->
+  <line x1="665" y1="140" x2="700" y2="200" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- A-C -->
+  <line x1="640" y1="160" x2="700" y2="320" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- A-D -->
+  <line x1="595" y1="160" x2="530" y2="320" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- A-E -->
+  <line x1="575" y1="140" x2="540" y2="200" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- B-C -->
+  <line x1="745" y1="240" x2="730" y2="320" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- B-D -->
+  <line x1="700" y1="225" x2="560" y2="335" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- B-E -->
+  <line x1="700" y1="215" x2="540" y2="215" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- C-D -->
+  <line x1="680" y1="345" x2="560" y2="345" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- C-E -->
+  <line x1="680" y1="335" x2="520" y2="230" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+  <!-- D-E -->
+  <line x1="495" y1="320" x2="495" y2="240" stroke="#a855f7" stroke-width="1" stroke-opacity="0.6"/>
+
+  <!-- Bidirectional indicator dots on connections -->
+  <circle cx="682" cy="170" r="3" fill="#a855f7" opacity="0.8"/>
+  <circle cx="558" cy="170" r="3" fill="#a855f7" opacity="0.8"/>
+  <circle cx="620" cy="215" r="3" fill="#a855f7" opacity="0.8"/>
+
+  <!-- P2P characteristics -->
+  <rect x="450" y="455" width="340" height="50" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="620" y="475" fill="#64748b" font-size="9" font-weight="500" text-anchor="middle">• 无单点故障  • 负载分散到所有节点</text>
+  <text x="620" y="493" fill="#64748b" font-size="9" font-weight="500" text-anchor="middle">• 节点对等互联  • 扩展性强但难以管控</text>
+
+  <!-- VS label -->
+  <circle cx="410" cy="270" r="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="410" y="275" fill="#92400e" font-size="11" font-weight="700" text-anchor="middle">VS</text>
+</svg>
