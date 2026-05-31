@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="450" y="40" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">NAT 四分类模型 (RFC 3489)</text>
+<text x="450" y="58" fill="#64748b" font-size="9" text-anchor="middle">映射行为 × 过滤行为 — 决定 P2P 打洞是否可行</text>
+
+<!-- Full Cone -->
+<rect x="40" y="80" width="400" height="130" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="60" y="105" fill="#166534" font-size="12" font-weight="700">1. Full Cone NAT（完全锥形）</text>
+<text x="60" y="126" fill="#475569" font-size="9">映射: 内部 (iAddr:iPort) → 固定外部 (eAddr:ePort)</text>
+<text x="60" y="144" fill="#475569" font-size="9">过滤: 无限制 — 任何外部主机都能发包到 eAddr:ePort</text>
+<rect x="60" y="158" width="360" height="24" rx="4" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+<text x="240" y="174" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">STUN ✓ | P2P 打洞 ✓ (最简单) | 现实中少见</text>
+<text x="60" y="198" fill="#64748b" font-size="8">示例: 家用路由器的"DMZ主机"模式</text>
+
+<!-- Restricted Cone -->
+<rect x="460" y="80" width="400" height="130" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="480" y="105" fill="#1e40af" font-size="12" font-weight="700">2. Restricted Cone NAT（受限锥形）</text>
+<text x="480" y="126" fill="#475569" font-size="9">映射: 同 Full Cone — 相同外部端口</text>
+<text x="480" y="144" fill="#475569" font-size="9">过滤: 检查源 IP — 必须曾向该 IP 发过包</text>
+<rect x="480" y="158" width="360" height="24" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="660" y="174" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">STUN ✓ | P2P 打洞 ✓ (需先发包"打孔")</text>
+<text x="480" y="198" fill="#64748b" font-size="8">双方同时向对方发包即可建立通道</text>
+
+<!-- Port Restricted Cone -->
+<rect x="40" y="230" width="400" height="130" rx="8" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="60" y="255" fill="#92400e" font-size="12" font-weight="700">3. Port Restricted Cone（端口受限）</text>
+<text x="60" y="276" fill="#475569" font-size="9">映射: 同 Full Cone — 相同外部端口</text>
+<text x="60" y="294" fill="#475569" font-size="9">过滤: 检查源 IP + 源 Port — 必须匹配曾发包的目标</text>
+<rect x="60" y="308" width="360" height="24" rx="4" fill="#fffbeb" stroke="#fde047" stroke-width="1"/>
+<text x="240" y="324" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">STUN ✓ | P2P 打洞 ✓ (双方需精确配合端口)</text>
+<text x="60" y="348" fill="#64748b" font-size="8">最常见的家用路由器类型</text>
+
+<!-- Symmetric NAT -->
+<rect x="460" y="230" width="400" height="130" rx="8" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="480" y="255" fill="#991b1b" font-size="12" font-weight="700">4. Symmetric NAT（对称 NAT）</text>
+<text x="480" y="276" fill="#475569" font-size="9">映射: 不同目标 → 不同外部端口!</text>
+<text x="480" y="294" fill="#475569" font-size="9">过滤: 仅原始目标可回复 (最严格)</text>
+<rect x="480" y="308" width="360" height="24" rx="4" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="660" y="324" fill="#991b1b" font-size="9" font-weight="600" text-anchor="middle">STUN ✗ | P2P 打洞 ✗ | 必须 TURN 中继</text>
+<text x="480" y="348" fill="#64748b" font-size="8">企业级 NAT/防火墙 | 运营商级 NAT (CGNAT)</text>
+
+<!-- Key insight box -->
+<rect x="40" y="390" width="820" height="100" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="450" y="415" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">关键区分: 映射行为决定 STUN 是否有效</text>
+
+<text x="60" y="440" fill="#16a34a" font-size="9" font-weight="600">前三种 (Cone 类):</text>
+<text x="200" y="440" fill="#475569" font-size="9">同一 (内部IP:Port) → 始终映射到相同的 (外部IP:Port)</text>
+<text x="200" y="456" fill="#475569" font-size="9">→ STUN 获取的反射地址对任何 Peer 都有效</text>
+
+<text x="60" y="478" fill="#dc2626" font-size="9" font-weight="600">Symmetric:</text>
+<text x="200" y="478" fill="#475569" font-size="9">同一 (内部IP:Port) 到不同目标 → 映射到不同 (外部IP:Port)</text>
+<text x="200" y="494" fill="#dc2626" font-size="9">→ STUN 看到的端口 ≠ Peer 收到的端口，反射地址无效!</text>
+
+<!-- Why the model is flawed -->
+<rect x="40" y="510" width="820" height="130" rx="8" fill="#fefce8" stroke="#fde047" stroke-width="1"/>
+<text x="450" y="535" fill="#854d0e" font-size="11" font-weight="700" text-anchor="middle">为什么这个四分类后来被废弃 (RFC 4787 替代)</text>
+
+<text x="60" y="560" fill="#475569" font-size="9">1. 现实 NAT 的映射行为和过滤行为是独立的两个维度，不是简单的四分类</text>
+<text x="60" y="578" fill="#475569" font-size="9">2. 存在 "Endpoint-Independent Mapping + Address-Dependent Filtering" 等交叉组合</text>
+<text x="60" y="596" fill="#475569" font-size="9">3. 同一 NAT 对不同协议/端口范围可能表现不同行为</text>
+<text x="60" y="614" fill="#475569" font-size="9">4. 负载均衡 NAT 可能随机分配端口 (非递增)，打破端口预测假设</text>
+<text x="60" y="632" fill="#dc2626" font-size="9" font-weight="600">结论: 不要试图分类 NAT，直接用 ICE 框架全部试一遍 — 先直连 → 再 STUN → 再 TURN</text>
+
+<!-- Legend -->
+<rect x="40" y="650" width="820" height="24" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="450" y="666" fill="#64748b" font-size="8" text-anchor="middle">RFC 4787 新分类: 映射行为(EIM/ADM/APDM) × 过滤行为(EIF/ADF/APDF) = 9 种组合 — 比四分类更精确</text>
+</svg>

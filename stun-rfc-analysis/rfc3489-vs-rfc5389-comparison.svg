@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 700">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="460" y="40" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">RFC 3489 vs RFC 5389 — 关键差异对比</text>
+
+<!-- RFC 3489 Region -->
+<rect x="30" y="70" width="420" height="590" rx="12" fill="none" stroke="#dc2626" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="50" y="92" fill="#dc2626" font-size="10" font-weight="600">RFC 3489 (2003) — 已废弃</text>
+<text x="50" y="106" fill="#dc2626" font-size="8" font-weight="400">Simple Traversal of UDP Through NATs</text>
+
+<!-- RFC 5389 Region -->
+<rect x="470" y="70" width="420" height="590" rx="12" fill="none" stroke="#16a34a" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="490" y="92" fill="#16a34a" font-size="10" font-weight="600">RFC 5389 (2008) — 取代 3489</text>
+<text x="490" y="106" fill="#16a34a" font-size="8" font-weight="400">Session Traversal Utilities for NAT</text>
+
+<!-- Row 1: Positioning -->
+<rect x="50" y="120" width="380" height="50" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="142" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">定位: 完整 NAT 穿透方案</text>
+<text x="240" y="158" fill="#64748b" font-size="9" text-anchor="middle">"我能帮你穿透 NAT"</text>
+
+<rect x="490" y="120" width="380" height="50" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="142" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">定位: NAT 穿透工具</text>
+<text x="680" y="158" fill="#64748b" font-size="9" text-anchor="middle">"我只提供反射地址，穿透交给 ICE"</text>
+
+<!-- Row 2: Message Header -->
+<rect x="50" y="190" width="380" height="70" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="212" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">消息头: 20 字节</text>
+<text x="240" y="230" fill="#64748b" font-size="9" text-anchor="middle">Type(16b) + Length(16b) + TxnID(128b)</text>
+<text x="240" y="248" fill="#dc2626" font-size="9" text-anchor="middle">无 Magic Cookie | 无法多路复用</text>
+
+<rect x="490" y="190" width="380" height="70" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="212" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">消息头: 20 字节</text>
+<text x="680" y="230" fill="#64748b" font-size="9" text-anchor="middle">00(2b)+Type(14b)+Len(16b)+Cookie(32b)+TxnID(96b)</text>
+<text x="680" y="248" fill="#16a34a" font-size="9" text-anchor="middle">Magic Cookie=0x2112A442 | 可与 RTP 复用</text>
+
+<!-- Row 3: NAT Type Detection -->
+<rect x="50" y="280" width="380" height="70" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="302" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">NAT 类型检测: 有</text>
+<text x="240" y="320" fill="#64748b" font-size="9" text-anchor="middle">四分类: Full Cone / Restricted / Port Restricted / Symmetric</text>
+<text x="240" y="338" fill="#dc2626" font-size="9" text-anchor="middle">CHANGE-REQUEST + 4地址服务器 | 分类不可靠</text>
+
+<rect x="490" y="280" width="380" height="70" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="302" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">NAT 类型检测: 移除</text>
+<text x="680" y="320" fill="#64748b" font-size="9" text-anchor="middle">不再分类 NAT 类型</text>
+<text x="680" y="338" fill="#16a34a" font-size="9" text-anchor="middle">服务器只需 1 个 IP:Port | 交给 ICE 试探</text>
+
+<!-- Row 4: Address Attribute -->
+<rect x="50" y="370" width="380" height="70" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="392" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">地址属性: MAPPED-ADDRESS (明文)</text>
+<text x="240" y="410" fill="#64748b" font-size="9" text-anchor="middle">直接传输 IP:Port</text>
+<text x="240" y="428" fill="#dc2626" font-size="9" text-anchor="middle">可被 NAT ALG 篡改!</text>
+
+<rect x="490" y="370" width="380" height="70" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="392" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">地址属性: XOR-MAPPED-ADDRESS</text>
+<text x="680" y="410" fill="#64748b" font-size="9" text-anchor="middle">Port XOR Cookie[0:2] | IP XOR Cookie</text>
+<text x="680" y="428" fill="#16a34a" font-size="9" text-anchor="middle">防 ALG 篡改 ✓</text>
+
+<!-- Row 5: Authentication -->
+<rect x="50" y="460" width="380" height="70" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="482" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">认证: Shared Secret (TLS/TCP)</text>
+<text x="240" y="500" fill="#64748b" font-size="9" text-anchor="middle">先 TLS 获取临时 USERNAME+PASSWORD</text>
+<text x="240" y="518" fill="#dc2626" font-size="9" text-anchor="middle">有效期 10-30 分钟 | 额外 TCP 连接开销</text>
+
+<rect x="490" y="460" width="380" height="70" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="482" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">认证: 短期凭证 / 长期凭证</text>
+<text x="680" y="500" fill="#64748b" font-size="9" text-anchor="middle">短期: SDP预交换 | 长期: 401挑战+NONCE</text>
+<text x="680" y="518" fill="#16a34a" font-size="9" text-anchor="middle">移除 Shared Secret | 更灵活</text>
+
+<!-- Row 6: Retransmission -->
+<rect x="50" y="550" width="380" height="50" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="240" y="572" fill="#991b1b" font-size="11" font-weight="600" text-anchor="middle">重传: 初始 100ms, 9次, 总超时 9.5s</text>
+<text x="240" y="588" fill="#dc2626" font-size="9" text-anchor="middle">过于激进，容易造成重传风暴</text>
+
+<rect x="490" y="550" width="380" height="50" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="680" y="572" fill="#166534" font-size="11" font-weight="600" text-anchor="middle">重传: 初始 >500ms, Rc=7, RTO×16</text>
+<text x="680" y="588" fill="#16a34a" font-size="9" text-anchor="middle">更保守，适应实际网络延迟</text>
+
+<!-- Row 7: Removed Attributes -->
+<rect x="50" y="620" width="380" height="30" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="240" y="639" fill="#991b1b" font-size="9" font-weight="500" text-anchor="middle">独有属性: RESPONSE-ADDRESS | CHANGE-REQUEST | CHANGED-ADDRESS | SOURCE-ADDRESS</text>
+
+<rect x="490" y="620" width="380" height="30" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+<text x="680" y="639" fill="#166534" font-size="9" font-weight="500" text-anchor="middle">新增属性: XOR-MAPPED-ADDRESS | FINGERPRINT | SOFTWARE | ALTERNATE-SERVER</text>
+
+<!-- Bottom summary -->
+<rect x="30" y="670" width="860" height="24" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="460" y="686" fill="#475569" font-size="9" font-weight="400" text-anchor="middle">核心转变: "分类NAT然后穿透" → "只获取反射地址，让ICE框架用候选地址+连通性检查解决穿透" — 不要猜，直接试</text>
+</svg>
