@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 980">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 2200">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
   text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
@@ -10,11 +10,17 @@
   <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
     <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
   </marker>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
   <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
     <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
   </marker>
   <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
     <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+  </marker>
+  <marker id="arrow-violet" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
   </marker>
 </defs>
 
@@ -22,138 +28,349 @@
 <rect width="100%" height="100%" fill="#ffffff"/>
 <rect width="100%" height="100%" fill="url(#grid)"/>
 
-<!-- Title -->
-<text x="450" y="40" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">RFC 3489 NAT 类型发现算法</text>
-<text x="450" y="60" fill="#64748b" font-size="9" text-anchor="middle">三步测试法 | 服务器需绑定 4 个 (IP, Port) 组合: (A1,P1) (A2,P1) (A1,P2) (A2,P2)</text>
+<!-- ============ TITLE ============ -->
+<text x="550" y="40" fill="#0f172a" font-size="18" font-weight="700" text-anchor="middle">RFC 3489 NAT 类型发现算法 — 详细版</text>
 
-<!-- Test I: Start -->
-<rect x="350" y="90" width="200" height="50" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
-<text x="450" y="112" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">Test I</text>
-<text x="450" y="128" fill="#64748b" font-size="9" text-anchor="middle">发送到 (A1,P1), 无标志</text>
+<!-- ============ PREREQUISITES ============ -->
+<rect x="40" y="60" width="1020" height="160" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="60" y="85" fill="#0f172a" font-size="12" font-weight="700">前置条件 — 服务器配置</text>
 
-<!-- Arrow down -->
-<line x1="450" y1="140" x2="450" y2="170" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<text x="60" y="110" fill="#475569" font-size="10">STUN 服务器必须在 4 个不同的 (IP, Port) 组合上同时监听:</text>
+<rect x="80" y="120" width="200" height="30" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="180" y="139" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">(A1, P1) = 主地址:主端口</text>
+<rect x="300" y="120" width="200" height="30" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="400" y="139" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">(A2, P1) = 备用IP:主端口</text>
+<rect x="520" y="120" width="200" height="30" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="620" y="139" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">(A1, P2) = 主IP:备用端口</text>
+<rect x="740" y="120" width="200" height="30" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="840" y="139" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">(A2, P2) = 备用IP:备用端口</text>
 
-<!-- Decision 1: Response? -->
-<polygon points="450,170 510,205 450,240 390,205" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="450" y="209" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">收到响应?</text>
+<text x="60" y="172" fill="#475569" font-size="10">客户端只知道一个本地 socket (绑定到 localIP:localPort)，所有测试都从这同一个 socket 发出</text>
+<text x="60" y="190" fill="#475569" font-size="10">示例: Client = 192.168.1.100:5000 | A1=203.0.113.1 A2=203.0.113.2 P1=3478 P2=3479</text>
+<text x="60" y="208" fill="#dc2626" font-size="10" font-weight="600">关键: 客户端全程使用同一个 socket (同一个本地端口)，否则测试结果无效!</text>
 
-<!-- No: UDP blocked -->
-<line x1="510" y1="205" x2="680" y2="205" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="560" y="197" fill="#dc2626" font-size="8" font-weight="500">否</text>
-<rect x="680" y="185" width="160" height="40" rx="20" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-<text x="760" y="209" fill="#dc2626" font-size="10" font-weight="600" text-anchor="middle">UDP 被阻止</text>
+<!-- ============ TEST I ============ -->
+<rect x="40" y="240" width="1020" height="280" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<rect x="40" y="240" width="1020" height="30" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="550" y="260" fill="#1e40af" font-size="12" font-weight="700" text-anchor="middle">Test I — 基线测试: 获取 MAPPED-ADDRESS</text>
 
-<!-- Yes: continue -->
-<line x1="450" y1="240" x2="450" y2="270" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="462" y="258" fill="#16a34a" font-size="8" font-weight="500">是</text>
+<!-- Test I details -->
+<text x="60" y="290" fill="#0f172a" font-size="10" font-weight="600">发送方: Client (192.168.1.100:5000)</text>
+<text x="60" y="308" fill="#0f172a" font-size="10" font-weight="600">目的地: Server 主地址 (A1:P1 = 203.0.113.1:3478)</text>
+<text x="60" y="326" fill="#0f172a" font-size="10" font-weight="600">CHANGE-REQUEST 标志: 无 (不设置任何标志)</text>
 
-<!-- Decision 2: MAPPED = Local? -->
-<polygon points="450,270 520,310 450,350 380,310" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="450" y="306" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">MAPPED-ADDR</text>
-<text x="450" y="319" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">= 本地地址?</text>
+<!-- Packet flow diagram for Test I -->
+<rect x="80" y="345" width="140" height="40" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="150" y="369" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Client</text>
+<text x="150" y="382" fill="#64748b" font-size="7" text-anchor="middle">192.168.1.100:5000</text>
 
-<!-- Yes branch (left): No NAT -->
-<line x1="380" y1="310" x2="200" y2="310" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="320" y="302" fill="#16a34a" font-size="8" font-weight="500">是 (无NAT)</text>
+<rect x="320" y="345" width="100" height="40" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="370" y="365" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">NAT</text>
 
-<!-- Left: Test II -->
-<rect x="100" y="340" width="200" height="50" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
-<text x="200" y="362" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">Test II</text>
-<text x="200" y="378" fill="#64748b" font-size="9" text-anchor="middle">CHANGE IP + CHANGE PORT</text>
-<line x1="200" y1="310" x2="200" y2="340" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="520" y="345" width="180" height="40" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="610" y="365" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Server (A1:P1)</text>
+<text x="610" y="378" fill="#64748b" font-size="7" text-anchor="middle">203.0.113.1:3478</text>
 
-<!-- Left Decision: Response? -->
-<line x1="200" y1="390" x2="200" y2="420" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
-<polygon points="200,420 260,455 200,490 140,455" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="200" y="459" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">响应?</text>
+<!-- Request arrow -->
+<line x1="220" y1="358" x2="318" y2="358" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<text x="270" y="350" fill="#2563eb" font-size="7" text-anchor="middle">Binding Request</text>
 
-<!-- Left Yes: Open Internet -->
-<line x1="260" y1="455" x2="360" y2="455" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="295" y="447" fill="#16a34a" font-size="8" font-weight="500">是</text>
-<rect x="360" y="435" width="140" height="40" rx="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-<text x="430" y="459" fill="#16a34a" font-size="10" font-weight="600" text-anchor="middle">开放网络</text>
+<line x1="420" y1="358" x2="518" y2="358" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<text x="470" y="350" fill="#92400e" font-size="7" text-anchor="middle">NAT映射后</text>
 
-<!-- Left No: Symmetric UDP Firewall -->
-<line x1="200" y1="490" x2="200" y2="520" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="212" y="508" fill="#dc2626" font-size="8" font-weight="500">否</text>
-<rect x="100" y="520" width="200" height="40" rx="20" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
-<text x="200" y="544" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">对称 UDP 防火墙</text>
+<!-- Response arrow -->
+<line x1="518" y1="375" x2="420" y2="375" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="470" y="392" fill="#16a34a" font-size="7" text-anchor="middle">从(A1:P1)响应</text>
 
-<!-- Right branch: Has NAT -->
-<line x1="520" y1="310" x2="680" y2="310" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="570" y="302" fill="#dc2626" font-size="8" font-weight="500">否 (有NAT)</text>
+<line x1="318" y1="375" x2="220" y2="375" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="270" y="392" fill="#16a34a" font-size="7" text-anchor="middle">Binding Response</text>
 
-<!-- Right: Test II -->
-<rect x="580" y="340" width="200" height="50" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
-<text x="680" y="362" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">Test II</text>
-<text x="680" y="378" fill="#64748b" font-size="9" text-anchor="middle">CHANGE IP + CHANGE PORT</text>
-<line x1="680" y1="310" x2="680" y2="340" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<!-- Server behavior -->
+<text x="60" y="420" fill="#0f172a" font-size="10" font-weight="600">服务器行为:</text>
+<text x="200" y="420" fill="#475569" font-size="10">收到请求后，记录数据包的源IP:Port (即 NAT 映射后的公网地址)</text>
+<text x="60" y="438" fill="#0f172a" font-size="10" font-weight="600">响应从哪发:</text>
+<text x="200" y="438" fill="#475569" font-size="10">从 (A1, P1) 原路发回 (无 CHANGE-REQUEST 所以不换地址)</text>
+<text x="60" y="456" fill="#0f172a" font-size="10" font-weight="600">响应内容:</text>
+<text x="200" y="456" fill="#475569" font-size="10">MAPPED-ADDRESS = 服务器看到的源地址 (客户端经NAT后的公网IP:Port)</text>
+<text x="200" y="474" fill="#475569" font-size="10">CHANGED-ADDRESS = (A2, P2) 告知客户端备用地址</text>
 
-<!-- Right Decision: Response? -->
-<line x1="680" y1="390" x2="680" y2="420" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
-<polygon points="680,420 740,455 680,490 620,455" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="680" y="459" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">响应?</text>
+<!-- Decision -->
+<text x="60" y="500" fill="#dc2626" font-size="10" font-weight="600">判断逻辑:</text>
+<text x="200" y="500" fill="#475569" font-size="10">Client 比较 MAPPED-ADDRESS 和自己的 localIP:localPort</text>
+<text x="200" y="515" fill="#16a34a" font-size="9">相同 → 没有 NAT (走左分支继续 Test II 验证是否有防火墙)</text>
+<text x="200" y="530" fill="#dc2626" font-size="9">不同 → 有 NAT (走右分支继续 Test II 判断NAT类型)</text>
 
-<!-- Right Yes: Full Cone -->
-<line x1="740" y1="455" x2="820" y2="455" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="775" y="447" fill="#16a34a" font-size="8" font-weight="500">是</text>
-<rect x="720" y="435" width="150" height="40" rx="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-<text x="795" y="459" fill="#16a34a" font-size="10" font-weight="600" text-anchor="middle">Full Cone NAT</text>
+<!-- ============ TEST II ============ -->
+<rect x="40" y="540" width="1020" height="310" rx="10" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<rect x="40" y="540" width="1020" height="30" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="550" y="560" fill="#166534" font-size="12" font-weight="700" text-anchor="middle">Test II — 全变测试: 服务器换 IP + 换 Port 响应</text>
 
-<!-- Right No: continue to Test I' -->
-<line x1="680" y1="490" x2="680" y2="530" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="692" y="513" fill="#dc2626" font-size="8" font-weight="500">否</text>
+<!-- Test II details -->
+<text x="60" y="590" fill="#0f172a" font-size="10" font-weight="600">发送方: Client (同一个 socket, 192.168.1.100:5000)</text>
+<text x="60" y="608" fill="#0f172a" font-size="10" font-weight="600">目的地: Server 主地址 (A1:P1 = 203.0.113.1:3478) — 目的地不变!</text>
+<text x="60" y="626" fill="#0f172a" font-size="10" font-weight="600">CHANGE-REQUEST 标志: "change IP" + "change port" (A位=1, B位=1)</text>
 
-<!-- Test I': Send to CHANGED-ADDRESS -->
-<rect x="550" y="530" width="260" height="50" rx="6" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
-<text x="680" y="552" fill="#5b21b6" font-size="11" font-weight="600" text-anchor="middle">Test I' (重复Test I)</text>
-<text x="680" y="568" fill="#64748b" font-size="9" text-anchor="middle">同源端口 → CHANGED-ADDRESS</text>
+<!-- Packet flow diagram for Test II -->
+<rect x="80" y="645" width="140" height="40" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="150" y="665" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Client</text>
+<text x="150" y="678" fill="#64748b" font-size="7" text-anchor="middle">192.168.1.100:5000</text>
 
-<!-- Arrow down -->
-<line x1="680" y1="580" x2="680" y2="620" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="320" y="645" width="100" height="40" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="370" y="665" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">NAT</text>
 
-<!-- Decision: MAPPED changed? -->
-<polygon points="680,620 750,660 680,700 610,660" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="680" y="656" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">MAPPED</text>
-<text x="680" y="669" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">变化了?</text>
+<rect x="520" y="635" width="180" height="25" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="610" y="651" fill="#64748b" font-size="8" text-anchor="middle">Server (A1:P1) 收到请求</text>
 
-<!-- Yes: Symmetric NAT -->
-<line x1="750" y1="660" x2="830" y2="660" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="785" y="652" fill="#dc2626" font-size="8" font-weight="500">是</text>
-<rect x="730" y="640" width="160" height="40" rx="20" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-<text x="810" y="664" fill="#dc2626" font-size="10" font-weight="600" text-anchor="middle">Symmetric NAT</text>
+<rect x="520" y="668" width="180" height="25" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="610" y="685" fill="#166534" font-size="8" font-weight="600" text-anchor="middle">Server 从 (A2:P2) 响应!</text>
 
-<!-- No: continue to Test III -->
-<line x1="610" y1="660" x2="450" y2="660" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="540" y="652" fill="#16a34a" font-size="8" font-weight="500">否 (端口不变)</text>
+<!-- Request arrow -->
+<line x1="220" y1="658" x2="318" y2="658" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<line x1="420" y1="648" x2="518" y2="648" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<text x="470" y="640" fill="#2563eb" font-size="7" text-anchor="middle">Request → (A1:P1)</text>
+
+<!-- Response from different address -->
+<line x1="518" y1="680" x2="420" y2="680" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="470" y="698" fill="#16a34a" font-size="7" text-anchor="middle">Response ← (A2:P2)</text>
+
+<line x1="318" y1="680" x2="220" y2="680" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<!-- Server behavior -->
+<text x="60" y="718" fill="#0f172a" font-size="10" font-weight="600">服务器行为:</text>
+<text x="200" y="718" fill="#475569" font-size="10">在 (A1:P1) 收到请求，看到 CHANGE-REQUEST 要求换IP+换Port</text>
+<text x="200" y="736" fill="#475569" font-size="10">于是从 (A2:P2) = 203.0.113.2:3479 发送响应 (完全不同的IP和Port)</text>
+
+<text x="60" y="760" fill="#0f172a" font-size="10" font-weight="600">本质:</text>
+<text x="200" y="760" fill="#475569" font-size="10">测试 NAT 是否允许一个"从未通信过的 IP:Port"向客户端发包</text>
+<text x="200" y="778" fill="#475569" font-size="10">因为客户端只给 (A1:P1) 发过包，没给 (A2:P2) 发过</text>
+
+<text x="60" y="802" fill="#dc2626" font-size="10" font-weight="600">判断逻辑 (有NAT的情况下):</text>
+<text x="200" y="802" fill="#16a34a" font-size="9">收到响应 → Full Cone NAT (任何外部地址都能穿透)</text>
+<text x="200" y="820" fill="#dc2626" font-size="9">超时无响应 → NAT 阻止了来自未知地址的包，继续 Test I'</text>
+
+<text x="60" y="842" fill="#7c3aed" font-size="10" font-weight="600">判断逻辑 (无NAT的情况下):</text>
+<text x="200" y="842" fill="#16a34a" font-size="9">收到响应 → 完全开放网络 (无NAT无防火墙)</text>
+<text x="200" y="858" fill="#dc2626" font-size="9">超时无响应 → 对称UDP防火墙 (有防火墙但无NAT)</text>
+
+<!-- ============ TEST I' ============ -->
+<rect x="40" y="870" width="1020" height="340" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+<rect x="40" y="870" width="1020" height="30" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="550" y="890" fill="#5b21b6" font-size="12" font-weight="700" text-anchor="middle">Test I' — 映射一致性测试: 同一源端口访问不同服务器地址</text>
+
+<!-- Test I' details -->
+<text x="60" y="920" fill="#0f172a" font-size="10" font-weight="600">发送方: Client (同一个 socket, 192.168.1.100:5000) ← 关键: 必须同一个socket!</text>
+<text x="60" y="938" fill="#0f172a" font-size="10" font-weight="600">目的地: Server 备用地址 (A2:P1 = 203.0.113.2:3478) ← 换了目标IP!</text>
+<text x="60" y="956" fill="#0f172a" font-size="10" font-weight="600">CHANGE-REQUEST 标志: 无 (普通请求，只是发给另一个地址)</text>
+
+<!-- Packet flow diagram for Test I' -->
+<rect x="80" y="975" width="140" height="40" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="150" y="995" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Client</text>
+<text x="150" y="1008" fill="#64748b" font-size="7" text-anchor="middle">192.168.1.100:5000</text>
+
+<rect x="320" y="975" width="100" height="40" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="370" y="995" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">NAT</text>
+
+<rect x="520" y="975" width="180" height="40" rx="6" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="610" y="995" fill="#5b21b6" font-size="9" font-weight="600" text-anchor="middle">Server (A2:P1)</text>
+<text x="610" y="1008" fill="#64748b" font-size="7" text-anchor="middle">203.0.113.2:3478</text>
+
+<!-- Request arrow -->
+<line x1="220" y1="988" x2="318" y2="988" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow-violet)"/>
+<text x="270" y="980" fill="#7c3aed" font-size="7" text-anchor="middle">Binding Request</text>
+
+<line x1="420" y1="988" x2="518" y2="988" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow-violet)"/>
+<text x="470" y="980" fill="#92400e" font-size="7" text-anchor="middle">NAT映射后</text>
+
+<!-- Response arrow -->
+<line x1="518" y1="1005" x2="420" y2="1005" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<line x1="318" y1="1005" x2="220" y2="1005" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+<text x="470" y="1022" fill="#16a34a" font-size="7" text-anchor="middle">从(A2:P1)响应</text>
+
+<!-- Explanation -->
+<text x="60" y="1050" fill="#0f172a" font-size="10" font-weight="600">服务器行为:</text>
+<text x="200" y="1050" fill="#475569" font-size="10">在 (A2:P1) 收到请求，无 CHANGE-REQUEST，从 (A2:P1) 原路响应</text>
+<text x="200" y="1068" fill="#475569" font-size="10">响应中包含新的 MAPPED-ADDRESS (服务器看到的客户端公网地址)</text>
+
+<text x="60" y="1092" fill="#0f172a" font-size="10" font-weight="600">本质:</text>
+<text x="200" y="1092" fill="#475569" font-size="10">同一个本地端口(5000)，在 Test I 中发给 203.0.113.1:3478</text>
+<text x="200" y="1110" fill="#475569" font-size="10">现在发给 203.0.113.2:3478 (不同目标IP)</text>
+<text x="200" y="1128" fill="#dc2626" font-size="10" font-weight="600">问题: NAT 给这两次通信分配的外部端口是否相同?</text>
+
+<text x="60" y="1155" fill="#dc2626" font-size="10" font-weight="600">判断逻辑:</text>
+<text x="200" y="1155" fill="#475569" font-size="10">比较 Test I 的 MAPPED-ADDRESS 和 Test I' 的 MAPPED-ADDRESS:</text>
+<text x="200" y="1175" fill="#dc2626" font-size="9" font-weight="600">不同 → Symmetric NAT (不同目标导致不同映射，STUN无法穿透!)</text>
+<text x="200" y="1195" fill="#16a34a" font-size="9" font-weight="600">相同 → Cone 类 NAT (映射不随目标变化，继续 Test III 细分)</text>
+
+<!-- ============ TEST III ============ -->
+<rect x="40" y="1220" width="1020" height="310" rx="10" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<rect x="40" y="1220" width="1020" height="30" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="550" y="1240" fill="#92400e" font-size="12" font-weight="700" text-anchor="middle">Test III — 过滤精细度测试: 服务器仅换 Port 响应</text>
+
+<!-- Test III details -->
+<text x="60" y="1270" fill="#0f172a" font-size="10" font-weight="600">发送方: Client (同一个 socket, 192.168.1.100:5000)</text>
+<text x="60" y="1288" fill="#0f172a" font-size="10" font-weight="600">目的地: Server 主地址 (A1:P1 = 203.0.113.1:3478) — 和 Test I 目的地相同!</text>
+<text x="60" y="1306" fill="#0f172a" font-size="10" font-weight="600">CHANGE-REQUEST 标志: 仅 "change port" (A位=0, B位=1)</text>
+
+<!-- Packet flow diagram for Test III -->
+<rect x="80" y="1325" width="140" height="40" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="150" y="1345" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Client</text>
+<text x="150" y="1358" fill="#64748b" font-size="7" text-anchor="middle">192.168.1.100:5000</text>
+
+<rect x="320" y="1325" width="100" height="40" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="370" y="1345" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">NAT</text>
+
+<rect x="520" y="1315" width="180" height="25" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,2"/>
+<text x="610" y="1331" fill="#64748b" font-size="8" text-anchor="middle">Server (A1:P1) 收到请求</text>
+
+<rect x="520" y="1348" width="180" height="25" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="610" y="1365" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">Server 从 (A1:P2) 响应!</text>
+
+<!-- Request arrow -->
+<line x1="220" y1="1338" x2="318" y2="1338" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<line x1="420" y1="1328" x2="518" y2="1328" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+<text x="470" y="1320" fill="#2563eb" font-size="7" text-anchor="middle">Request → (A1:P1)</text>
+
+<!-- Response from same IP different port -->
+<line x1="518" y1="1360" x2="420" y2="1360" stroke="#d97706" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="470" y="1378" fill="#d97706" font-size="7" text-anchor="middle">Response ← (A1:P2)</text>
+
+<line x1="318" y1="1360" x2="220" y2="1360" stroke="#d97706" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Explanation -->
+<text x="60" y="1398" fill="#0f172a" font-size="10" font-weight="600">服务器行为:</text>
+<text x="200" y="1398" fill="#475569" font-size="10">在 (A1:P1) 收到请求，看到 CHANGE-REQUEST 要求换Port (不换IP)</text>
+<text x="200" y="1416" fill="#475569" font-size="10">于是从 (A1:P2) = 203.0.113.1:3479 发送响应 (同IP，不同Port)</text>
+
+<text x="60" y="1440" fill="#0f172a" font-size="10" font-weight="600">本质:</text>
+<text x="200" y="1440" fill="#475569" font-size="10">客户端之前只给 A1:P1 发过包 (Test I)，现在收到来自 A1:P2 的包</text>
+<text x="200" y="1458" fill="#475569" font-size="10">响应的 IP 相同(A1)但 Port 不同(P2)</text>
+<text x="200" y="1476" fill="#dc2626" font-size="10" font-weight="600">问题: NAT 的过滤规则是否检查来源的端口号?</text>
+
+<text x="60" y="1503" fill="#dc2626" font-size="10" font-weight="600">判断逻辑:</text>
+<text x="200" y="1503" fill="#16a34a" font-size="9" font-weight="600">收到响应 → Restricted Cone NAT (过滤只检查IP，不检查Port)</text>
+<text x="200" y="1521" fill="#dc2626" font-size="9" font-weight="600">超时无响应 → Port Restricted Cone NAT (过滤同时检查IP和Port)</text>
+
+<!-- ============ COMPLETE DECISION TREE ============ -->
+<rect x="40" y="1550" width="1020" height="620" rx="10" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+<rect x="40" y="1550" width="1020" height="30" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+<text x="550" y="1570" fill="#0f172a" font-size="12" font-weight="700" text-anchor="middle">完整决策树 (带详细条件)</text>
+
+<!-- Start -->
+<rect x="400" y="1600" width="260" height="44" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="530" y="1618" fill="#1e40af" font-size="10" font-weight="600" text-anchor="middle">Test I: Client→(A1:P1), 无标志</text>
+<text x="530" y="1634" fill="#64748b" font-size="8" text-anchor="middle">Server从(A1:P1)响应</text>
+
+<line x1="530" y1="1644" x2="530" y2="1668" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+<!-- Decision 1 -->
+<polygon points="530,1668 590,1693 530,1718 470,1693" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="530" y="1697" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">收到?</text>
+
+<!-- No response -->
+<line x1="590" y1="1693" x2="740" y2="1693" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="650" y="1686" fill="#dc2626" font-size="7">否(超时)</text>
+<rect x="740" y="1678" width="140" height="30" rx="15" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="810" y="1697" fill="#dc2626" font-size="9" font-weight="600" text-anchor="middle">UDP 被阻止</text>
+
+<!-- Yes -->
+<line x1="530" y1="1718" x2="530" y2="1742" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="542" y="1733" fill="#16a34a" font-size="7">是</text>
+
+<!-- Decision 2 -->
+<polygon points="530,1742 610,1772 530,1802 450,1772" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="530" y="1769" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">MAPPED</text>
+<text x="530" y="1781" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">=本地?</text>
+
+<!-- Left: No NAT -->
+<line x1="450" y1="1772" x2="250" y2="1772" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="350" y="1764" fill="#16a34a" font-size="7">是(无NAT)</text>
+
+<!-- Left Test II -->
+<rect x="120" y="1790" width="260" height="36" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="250" y="1806" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Test II: Client→(A1:P1), 换IP+换Port</text>
+<text x="250" y="1820" fill="#64748b" font-size="7" text-anchor="middle">Server从(A2:P2)响应</text>
+<line x1="250" y1="1772" x2="250" y2="1790" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+<line x1="250" y1="1826" x2="250" y2="1848" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<polygon points="250,1848 300,1868 250,1888 200,1868" fill="#ffffff" stroke="#d97706" stroke-width="1.2"/>
+<text x="250" y="1872" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">收到?</text>
+
+<line x1="300" y1="1868" x2="390" y2="1868" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="340" y="1860" fill="#16a34a" font-size="7">是</text>
+<rect x="390" y="1855" width="100" height="26" rx="13" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="440" y="1872" fill="#16a34a" font-size="8" font-weight="600" text-anchor="middle">开放网络</text>
+
+<line x1="250" y1="1888" x2="250" y2="1910" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="262" y="1902" fill="#dc2626" font-size="7">否</text>
+<rect x="160" y="1910" width="180" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="250" y="1927" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">对称UDP防火墙</text>
+
+<!-- Right: Has NAT -->
+<line x1="610" y1="1772" x2="790" y2="1772" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="690" y="1764" fill="#dc2626" font-size="7">否(有NAT)</text>
+
+<!-- Right Test II -->
+<rect x="660" y="1790" width="260" height="36" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="790" y="1806" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Test II: Client→(A1:P1), 换IP+换Port</text>
+<text x="790" y="1820" fill="#64748b" font-size="7" text-anchor="middle">Server从(A2:P2)响应</text>
+<line x1="790" y1="1772" x2="790" y2="1790" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+<line x1="790" y1="1826" x2="790" y2="1848" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<polygon points="790,1848 840,1868 790,1888 740,1868" fill="#ffffff" stroke="#d97706" stroke-width="1.2"/>
+<text x="790" y="1872" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">收到?</text>
+
+<!-- Full Cone -->
+<line x1="840" y1="1868" x2="940" y2="1868" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="880" y="1860" fill="#16a34a" font-size="7">是</text>
+<rect x="940" y="1855" width="110" height="26" rx="13" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="995" y="1872" fill="#16a34a" font-size="8" font-weight="600" text-anchor="middle">Full Cone</text>
+
+<!-- Continue to Test I' -->
+<line x1="790" y1="1888" x2="790" y2="1910" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="802" y="1902" fill="#dc2626" font-size="7">否</text>
+
+<!-- Test I' -->
+<rect x="640" y="1910" width="300" height="36" rx="6" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="790" y="1926" fill="#5b21b6" font-size="9" font-weight="600" text-anchor="middle">Test I': Client→(A2:P1), 无标志, 同socket</text>
+<text x="790" y="1940" fill="#64748b" font-size="7" text-anchor="middle">Server从(A2:P1)响应, 比较新旧MAPPED-ADDRESS</text>
+
+<line x1="790" y1="1946" x2="790" y2="1968" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<polygon points="790,1968 850,1990 790,2012 730,1990" fill="#ffffff" stroke="#d97706" stroke-width="1.2"/>
+<text x="790" y="1993" fill="#92400e" font-size="7" font-weight="600" text-anchor="middle">MAPPED变?</text>
+
+<!-- Symmetric -->
+<line x1="850" y1="1990" x2="940" y2="1990" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="890" y="1982" fill="#dc2626" font-size="7">变了</text>
+<rect x="940" y="1977" width="110" height="26" rx="13" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="995" y="1994" fill="#dc2626" font-size="8" font-weight="600" text-anchor="middle">Symmetric</text>
+
+<!-- Continue to Test III -->
+<line x1="730" y1="1990" x2="620" y2="1990" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="670" y="1982" fill="#16a34a" font-size="7">没变</text>
 
 <!-- Test III -->
-<rect x="350" y="690" width="200" height="50" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
-<text x="450" y="712" fill="#1e40af" font-size="11" font-weight="600" text-anchor="middle">Test III</text>
-<text x="450" y="728" fill="#64748b" font-size="9" text-anchor="middle">仅 CHANGE PORT</text>
-<line x1="450" y1="660" x2="450" y2="690" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="430" y="2010" width="300" height="36" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="580" y="2026" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">Test III: Client→(A1:P1), 仅换Port</text>
+<text x="580" y="2040" fill="#64748b" font-size="7" text-anchor="middle">Server从(A1:P2)响应 — 同IP不同Port</text>
+<line x1="580" y1="1990" x2="580" y2="2010" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
 
-<!-- Arrow down -->
-<line x1="450" y1="740" x2="450" y2="780" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="580" y1="2046" x2="580" y2="2068" stroke="#475569" stroke-width="1.2" marker-end="url(#arrow)"/>
+<polygon points="580,2068 630,2088 580,2108 530,2088" fill="#ffffff" stroke="#d97706" stroke-width="1.2"/>
+<text x="580" y="2092" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">收到?</text>
 
-<!-- Decision: Response? -->
-<polygon points="450,780 510,815 450,850 390,815" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
-<text x="450" y="819" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">响应?</text>
+<!-- Restricted -->
+<line x1="630" y1="2088" x2="740" y2="2088" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
+<text x="680" y="2080" fill="#16a34a" font-size="7">是</text>
+<rect x="740" y="2075" width="150" height="26" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="815" y="2092" fill="#1e40af" font-size="8" font-weight="600" text-anchor="middle">Restricted Cone</text>
 
-<!-- Yes: Restricted Cone -->
-<line x1="510" y1="815" x2="640" y2="815" stroke="#16a34a" stroke-width="1.2" marker-end="url(#arrow-green)"/>
-<text x="555" y="807" fill="#16a34a" font-size="8" font-weight="500">是</text>
-<rect x="540" y="795" width="200" height="40" rx="20" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
-<text x="640" y="819" fill="#1e40af" font-size="10" font-weight="600" text-anchor="middle">Restricted Cone NAT</text>
+<!-- Port Restricted -->
+<line x1="580" y1="2108" x2="580" y2="2130" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
+<text x="592" y="2122" fill="#dc2626" font-size="7">否</text>
+<rect x="480" y="2130" width="200" height="26" rx="13" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="580" y="2147" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">Port Restricted Cone</text>
 
-<!-- No: Port Restricted Cone -->
-<line x1="450" y1="850" x2="450" y2="890" stroke="#dc2626" stroke-width="1.2" marker-end="url(#arrow-red)"/>
-<text x="462" y="873" fill="#dc2626" font-size="8" font-weight="500">否</text>
-<rect x="330" y="890" width="240" height="40" rx="20" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
-<text x="450" y="914" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">Port Restricted Cone NAT</text>
-
-<!-- Legend -->
-<rect x="40" y="940" width="820" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
-<text x="60" y="959" fill="#64748b" font-size="9" font-weight="400">CHANGE-REQUEST: A位=换IP  B位=换Port | Test II 服务器从 (A2,P2) 响应 | Test III 服务器从 (A1,P2) 响应 | Test I' 验证映射是否随目标变化</text>
+<!-- Final legend -->
+<rect x="40" y="2170" width="1020" height="24" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="550" y="2186" fill="#64748b" font-size="8" text-anchor="middle">整个过程客户端使用同一个 UDP socket | 所有 Binding Request 都发往 Server 主地址(A1:P1)，除了 Test I' 发往备用IP(A2:P1) | 服务器根据 CHANGE-REQUEST 决定从哪个地址响应</text>
 </svg>
