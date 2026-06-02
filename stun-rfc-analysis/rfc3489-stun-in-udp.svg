@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="450" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">STUN 消息在 UDP 报文中的位置</text>
+<text x="450" y="52" fill="#64748b" font-size="9" text-anchor="middle">STUN 直接作为 UDP 的 payload，没有额外封装层</text>
+
+<!-- ===== 嵌套封装图 ===== -->
+<!-- IP packet outer -->
+<rect x="60" y="80" width="780" height="220" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="80" y="104" fill="#1e40af" font-size="11" font-weight="700">IP 报文 (IPv4 / IPv6)</text>
+
+<!-- IP header -->
+<rect x="80" y="116" width="150" height="168" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="155" y="142" fill="#1e40af" font-size="10" font-weight="600" text-anchor="middle">IP 头</text>
+<text x="155" y="160" fill="#64748b" font-size="8" text-anchor="middle">20字节(v4)</text>
+<text x="155" y="178" fill="#64748b" font-size="8" text-anchor="middle">源IP / 目的IP</text>
+<text x="155" y="196" fill="#64748b" font-size="8" text-anchor="middle">Protocol=17</text>
+<text x="155" y="214" fill="#94a3b8" font-size="7" text-anchor="middle">(17 = UDP)</text>
+
+<!-- UDP packet -->
+<rect x="250" y="116" width="570" height="168" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="266" y="140" fill="#166534" font-size="11" font-weight="700">UDP 数据报</text>
+
+<!-- UDP header -->
+<rect x="270" y="150" width="150" height="120" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.2"/>
+<text x="345" y="174" fill="#166534" font-size="10" font-weight="600" text-anchor="middle">UDP 头</text>
+<text x="345" y="192" fill="#64748b" font-size="8" text-anchor="middle">8字节</text>
+<text x="345" y="212" fill="#64748b" font-size="8" text-anchor="middle">源端口</text>
+<text x="345" y="228" fill="#64748b" font-size="8" text-anchor="middle">目的端口=3478</text>
+<text x="345" y="246" fill="#64748b" font-size="8" text-anchor="middle">长度 / 校验和</text>
+
+<!-- STUN message (UDP payload) -->
+<rect x="440" y="150" width="360" height="120" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="620" y="174" fill="#5b21b6" font-size="11" font-weight="700" text-anchor="middle">STUN 消息 (UDP Payload)</text>
+<text x="620" y="194" fill="#64748b" font-size="8" text-anchor="middle">= UDP 数据部分，无额外封装</text>
+
+<rect x="455" y="204" width="150" height="50" rx="4" fill="#ffffff" stroke="#7c3aed" stroke-width="1"/>
+<text x="530" y="224" fill="#5b21b6" font-size="8" font-weight="600" text-anchor="middle">STUN 头 20字节</text>
+<text x="530" y="240" fill="#64748b" font-size="7" text-anchor="middle">Type+Len+TxnID</text>
+
+<rect x="615" y="204" width="170" height="50" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+<text x="700" y="224" fill="#92400e" font-size="8" font-weight="600" text-anchor="middle">STUN 属性 (TLV)</text>
+<text x="700" y="240" fill="#64748b" font-size="7" text-anchor="middle">MAPPED-ADDRESS 等</text>
+
+<!-- ===== 线性字节序列 ===== -->
+<text x="60" y="346" fill="#0f172a" font-size="11" font-weight="700">线性字节排列 (从左到右)</text>
+
+<rect x="60" y="360" width="150" height="50" rx="0" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="135" y="382" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">IP 头</text>
+<text x="135" y="398" fill="#64748b" font-size="8" text-anchor="middle">20 B</text>
+
+<rect x="210" y="360" width="130" height="50" rx="0" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+<text x="275" y="382" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">UDP 头</text>
+<text x="275" y="398" fill="#64748b" font-size="8" text-anchor="middle">8 B</text>
+
+<rect x="340" y="360" width="160" height="50" rx="0" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.2"/>
+<text x="420" y="382" fill="#5b21b6" font-size="9" font-weight="600" text-anchor="middle">STUN 头</text>
+<text x="420" y="398" fill="#64748b" font-size="8" text-anchor="middle">20 B</text>
+
+<rect x="500" y="360" width="340" height="50" rx="0" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+<text x="670" y="382" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">STUN 属性 (变长)</text>
+<text x="670" y="398" fill="#64748b" font-size="8" text-anchor="middle">0 .. N 个 TLV</text>
+
+<!-- braces -->
+<path d="M340,418 L340,426 L500,426 L500,418" fill="none" stroke="#7c3aed" stroke-width="1"/>
+<text x="420" y="442" fill="#5b21b6" font-size="8" text-anchor="middle">UDP 头里的"长度"</text>
+
+<path d="M340,452 L340,460 L840,460 L840,452" fill="none" stroke="#7c3aed" stroke-width="1"/>
+<text x="590" y="476" fill="#5b21b6" font-size="8" text-anchor="middle">↑ 这整块 = UDP Payload = 完整的 STUN 消息</text>
+
+<!-- ===== 关键说明 ===== -->
+<rect x="60" y="496" width="780" height="104" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="80" y="518" fill="#0f172a" font-size="10" font-weight="700">关键点</text>
+<text x="80" y="538" fill="#475569" font-size="9">1. STUN 没有自己的传输层 — 它直接"坐"在 UDP 的数据区里 (RFC 3489 只用 UDP)</text>
+<text x="80" y="556" fill="#475569" font-size="9">2. IP 头的源IP / UDP 头的源端口，在经过 NAT 时会被改写 → 这正是 STUN 要探测的对象</text>
+<text x="80" y="574" fill="#475569" font-size="9">3. 服务器读取的"源地址"来自 IP/UDP 头 (NAT改写后的)，再写进 STUN 的 MAPPED-ADDRESS 回给客户端</text>
+<text x="80" y="592" fill="#64748b" font-size="8">注: RFC 5389 起 STUN 还可跑在 TCP / TLS-over-TCP 上，此时位于 TCP payload；但 RFC 3489 仅 UDP</text>
+</svg>
