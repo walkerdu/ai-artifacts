@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 1120">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<!-- Title -->
+<text x="520" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">RFC 5389 STUN 协议消息结构</text>
+<text x="520" y="52" fill="#64748b" font-size="9" text-anchor="middle">Session Traversal Utilities for NAT | 红色标注 = 相对 RFC 3489 的变化</text>
+
+<!-- ===== Message Header ===== -->
+<text x="60" y="78" fill="#0f172a" font-size="11" font-weight="700">一、消息头 (20 bytes)</text>
+<text x="80" y="98" fill="#64748b" font-size="8">bit:</text>
+<text x="118" y="98" fill="#64748b" font-size="8">0 1</text>
+<text x="350" y="98" fill="#64748b" font-size="8">15</text>
+<text x="510" y="98" fill="#64748b" font-size="8">16</text>
+<text x="900" y="98" fill="#64748b" font-size="8">31</text>
+
+<!-- Row 1: 00 + Type + Length -->
+<rect x="120" y="104" width="40" height="44" rx="0" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+<text x="140" y="128" fill="#991b1b" font-size="9" font-weight="700" text-anchor="middle">00</text>
+<text x="140" y="142" fill="#991b1b" font-size="7" text-anchor="middle">2b</text>
+
+<rect x="160" y="104" width="200" height="44" rx="0" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="260" y="126" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">STUN Message Type</text>
+<text x="260" y="141" fill="#64748b" font-size="8" text-anchor="middle">14 bits</text>
+
+<rect x="510" y="104" width="410" height="44" rx="0" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+<text x="715" y="126" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Message Length (16b)</text>
+<text x="715" y="141" fill="#64748b" font-size="8" text-anchor="middle">属性总字节数，必须是4的倍数</text>
+
+<text x="930" y="130" fill="#475569" font-size="8">byte 0-3</text>
+
+<!-- Row 2: Magic Cookie -->
+<rect x="120" y="152" width="800" height="38" rx="0" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="520" y="176" fill="#92400e" font-size="10" font-weight="700" text-anchor="middle">Magic Cookie = 0x2112A442 (32 bits) ★ RFC 5389 新增</text>
+<text x="930" y="176" fill="#475569" font-size="8">byte 4-7</text>
+
+<!-- Row 3: Transaction ID 96bit -->
+<rect x="120" y="194" width="800" height="60" rx="0" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.2"/>
+<text x="520" y="222" fill="#5b21b6" font-size="10" font-weight="700" text-anchor="middle">Transaction ID (96 bits = 12 bytes)</text>
+<text x="520" y="240" fill="#dc2626" font-size="8" text-anchor="middle">★ 从 RFC 3489 的 128 bits 缩短为 96 bits (高32位被 Magic Cookie 占用)</text>
+<text x="930" y="226" fill="#475569" font-size="8">byte 8-19</text>
+
+<!-- changes callout -->
+<rect x="120" y="262" width="800" height="46" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="135" y="282" fill="#991b1b" font-size="9" font-weight="600">头部三大变化:</text>
+<text x="135" y="299" fill="#475569" font-size="8">① 最高2位强制为0 (区分STUN与RTP等，支持同端口多路复用)  ② 新增Magic Cookie  ③ TxnID 128→96bit</text>
+
+<!-- ===== Message Type 编码 ===== -->
+<text x="60" y="344" fill="#0f172a" font-size="11" font-weight="700">二、Message Type 14位 = Method(方法) + Class(类别) 交错编码</text>
+
+<rect x="60" y="358" width="920" height="120" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="80" y="380" fill="#0f172a" font-size="9" font-weight="600">Class (2 bits) — 与 RFC 3489 的固定消息类型不同，5389 把"方法"和"类别"解耦</text>
+
+<text x="100" y="402" fill="#1e40af" font-size="9">0b00 = Request (请求)</text>
+<text x="360" y="402" fill="#475569" font-size="9">0b01 = Indication (指示，无需响应)</text>
+
+<text x="100" y="422" fill="#166534" font-size="9">0b10 = Success Response (成功响应)</text>
+<text x="360" y="422" fill="#991b1b" font-size="9">0b11 = Error Response (错误响应)</text>
+
+<line x1="80" y1="436" x2="960" y2="436" stroke="#e2e8f0" stroke-width="1"/>
+<text x="80" y="456" fill="#0f172a" font-size="9" font-weight="600">Method (12 bits):</text>
+<text x="240" y="456" fill="#475569" font-size="9">本规范只定义 Binding = 0x001 | 其余 method 由扩展定义(如 TURN 的 Allocate)</text>
+<text x="80" y="472" fill="#64748b" font-size="8">例: Binding Request = 0x0001, Binding Success Response = 0x0101 (由 method+class 拼出)</text>
+
+<!-- ===== 属性 ===== -->
+<text x="60" y="512" fill="#0f172a" font-size="11" font-weight="700">三、属性 TLV 结构 (同 3489: Type+Length+Value, 32位对齐)</text>
+
+<rect x="120" y="526" width="200" height="36" rx="0" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="220" y="549" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Type (16b)</text>
+<rect x="320" y="526" width="200" height="36" rx="0" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+<text x="420" y="549" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Length (16b)</text>
+<rect x="520" y="526" width="400" height="36" rx="0" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+<text x="720" y="549" fill="#92400e" font-size="9" font-weight="600" text-anchor="middle">Value (变长，补齐4字节)</text>
+
+<text x="60" y="588" fill="#64748b" font-size="8">★ 属性类型分两段: 0x0000-0x7FFF = 强制理解(comprehension-required) | 0x8000-0xFFFF = 可选理解(comprehension-optional)</text>
+
+<!-- ===== 属性对比 ===== -->
+<text x="60" y="620" fill="#0f172a" font-size="11" font-weight="700">四、属性变化 (相对 RFC 3489)</text>
+
+<!-- New attributes -->
+<rect x="60" y="634" width="450" height="230" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<text x="285" y="656" fill="#166534" font-size="10" font-weight="700" text-anchor="middle">★ 新增 / 推荐属性</text>
+<text x="80" y="680" fill="#16a34a" font-size="9" font-weight="600">XOR-MAPPED-ADDRESS</text>
+<text x="290" y="680" fill="#475569" font-size="8">0x0020</text>
+<text x="80" y="696" fill="#64748b" font-size="8">反射地址，端口/IP与Magic Cookie异或，防ALG篡改</text>
+
+<text x="80" y="718" fill="#16a34a" font-size="9" font-weight="600">FINGERPRINT</text>
+<text x="290" y="718" fill="#475569" font-size="8">0x8028</text>
+<text x="80" y="734" fill="#64748b" font-size="8">CRC-32校验，区分STUN与其他协议，必须最后</text>
+
+<text x="80" y="756" fill="#16a34a" font-size="9" font-weight="600">SOFTWARE</text>
+<text x="290" y="756" fill="#475569" font-size="8">0x8022</text>
+<text x="80" y="772" fill="#64748b" font-size="8">软件标识(调试用)</text>
+
+<text x="80" y="794" fill="#16a34a" font-size="9" font-weight="600">ALTERNATE-SERVER</text>
+<text x="290" y="794" fill="#475569" font-size="8">0x8023</text>
+<text x="80" y="810" fill="#64748b" font-size="8">服务器重定向</text>
+
+<text x="80" y="832" fill="#16a34a" font-size="9" font-weight="600">REALM / NONCE</text>
+<text x="290" y="832" fill="#475569" font-size="8">0x0014/0x0015</text>
+<text x="80" y="848" fill="#64748b" font-size="8">长期凭证机制 (摘要挑战)</text>
+
+<!-- Removed attributes -->
+<rect x="530" y="634" width="450" height="230" rx="8" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="755" y="656" fill="#991b1b" font-size="10" font-weight="700" text-anchor="middle">✗ 移除的属性 (3489有，5389删)</text>
+<text x="550" y="680" fill="#dc2626" font-size="9" font-weight="600">RESPONSE-ADDRESS (0x0002)</text>
+<text x="550" y="696" fill="#64748b" font-size="8">易被滥用为 DDoS 反射器 → 删除</text>
+
+<text x="550" y="720" fill="#dc2626" font-size="9" font-weight="600">CHANGE-REQUEST (0x0003)</text>
+<text x="550" y="736" fill="#64748b" font-size="8">NAT类型探测核心 → 不再探测类型，删除</text>
+
+<text x="550" y="760" fill="#dc2626" font-size="9" font-weight="600">CHANGED-ADDRESS (0x0005)</text>
+<text x="550" y="776" fill="#64748b" font-size="8">配合探测的备用地址 → 删除</text>
+
+<text x="550" y="800" fill="#dc2626" font-size="9" font-weight="600">SOURCE-ADDRESS (0x0004)</text>
+<text x="550" y="816" fill="#64748b" font-size="8">可从传输层获取 → 删除</text>
+
+<text x="550" y="840" fill="#dc2626" font-size="9" font-weight="600">PASSWORD (0x0007) + Shared Secret 机制</text>
+<text x="550" y="856" fill="#64748b" font-size="8">改用短期/长期凭证 → 删除</text>
+
+<!-- ===== 保留属性 ===== -->
+<rect x="60" y="876" width="920" height="50" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="80" y="898" fill="#0f172a" font-size="9" font-weight="700">保留 (两版都有):</text>
+<text x="80" y="916" fill="#475569" font-size="9">MAPPED-ADDRESS(0x0001, 仅向后兼容) | USERNAME(0x0006) | MESSAGE-INTEGRITY(0x0008) | ERROR-CODE(0x0009) | UNKNOWN-ATTRIBUTES(0x000a)</text>
+
+<!-- ===== 传输层 ===== -->
+<text x="60" y="958" fill="#0f172a" font-size="11" font-weight="700">五、传输层与服务发现</text>
+<rect x="60" y="972" width="920" height="120" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+
+<text x="80" y="994" fill="#0f172a" font-size="9" font-weight="600">传输</text>
+<text x="280" y="994" fill="#0f172a" font-size="9" font-weight="600">默认端口</text>
+<text x="450" y="994" fill="#0f172a" font-size="9" font-weight="600">SRV 服务名</text>
+<text x="680" y="994" fill="#0f172a" font-size="9" font-weight="600">说明</text>
+<line x1="80" y1="1002" x2="960" y2="1002" stroke="#e2e8f0" stroke-width="1"/>
+
+<text x="80" y="1022" fill="#16a34a" font-size="9">UDP</text>
+<text x="280" y="1022" fill="#475569" font-size="9">3478</text>
+<text x="450" y="1022" fill="#475569" font-size="9">_stun._udp</text>
+<text x="680" y="1022" fill="#475569" font-size="9">需应用层重传 (RTO&gt;500ms, Rc=7)</text>
+
+<text x="80" y="1042" fill="#2563eb" font-size="9">TCP ★新增</text>
+<text x="280" y="1042" fill="#475569" font-size="9">3478</text>
+<text x="450" y="1042" fill="#475569" font-size="9">_stun._tcp</text>
+<text x="680" y="1042" fill="#475569" font-size="9">可复用连接，依赖TCP可靠性</text>
+
+<text x="80" y="1062" fill="#7c3aed" font-size="9">TLS/TCP ★新增</text>
+<text x="280" y="1062" fill="#475569" font-size="9">5349</text>
+<text x="450" y="1062" fill="#475569" font-size="9">_stuns._tcp</text>
+<text x="680" y="1062" fill="#475569" font-size="9">加密通道</text>
+
+<text x="80" y="1084" fill="#64748b" font-size="8">服务发现: 先查 DNS SRV → 失败则 A/AAAA 查询 → 用默认端口连接</text>
+</svg>
