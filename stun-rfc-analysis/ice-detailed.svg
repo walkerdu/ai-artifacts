@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 1780">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="530" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">ICE 协议详解 — RFC 8445</text>
+<text x="530" y="52" fill="#64748b" font-size="9" text-anchor="middle">Interactive Connectivity Establishment | 不产生自己的报文格式，是纯客户端本地算法+状态机</text>
+
+<!-- ===== 阶段 1: 收集候选 ===== -->
+<rect x="40" y="68" width="980" height="250" rx="10" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<rect x="40" y="68" width="980" height="30" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="530" y="88" fill="#166534" font-size="11" font-weight="700" text-anchor="middle">阶段 1: 收集候选 (Candidate Gathering)</text>
+
+<text x="60" y="118" fill="#0f172a" font-size="10" font-weight="600">每个端点本地执行，收集所有可能用于通信的地址:</text>
+
+<rect x="60" y="132" width="300" height="80" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+<text x="80" y="152" fill="#16a34a" font-size="9" font-weight="700">Host Candidate (主机)</text>
+<text x="80" y="170" fill="#475569" font-size="8">读本机网卡绑定的地址</text>
+<text x="80" y="186" fill="#475569" font-size="8">如: 192.168.1.100:5000</text>
+<text x="80" y="202" fill="#64748b" font-size="7">无需外部服务器 | 优先级最高</text>
+
+<rect x="380" y="132" width="300" height="80" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="400" y="152" fill="#1e40af" font-size="9" font-weight="700">Server Reflexive (srflx)</text>
+<text x="400" y="170" fill="#475569" font-size="8">向 STUN Server 发 Binding Request</text>
+<text x="400" y="186" fill="#475569" font-size="8">如: 203.0.113.5:62000</text>
+<text x="400" y="202" fill="#64748b" font-size="7">需 STUN Server | 优先级中</text>
+
+<rect x="700" y="132" width="300" height="80" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+<text x="720" y="152" fill="#991b1b" font-size="9" font-weight="700">Relayed (relay)</text>
+<text x="720" y="170" fill="#475569" font-size="8">向 TURN Server 发 Allocate Request</text>
+<text x="720" y="186" fill="#475569" font-size="8">如: 198.51.100.10:50000</text>
+<text x="720" y="202" fill="#64748b" font-size="7">需 TURN Server | 优先级最低</text>
+
+<text x="60" y="234" fill="#0f172a" font-size="9" font-weight="600">每个候选的属性:</text>
+<text x="60" y="252" fill="#475569" font-size="8">transport address (IP:Port) | type (host/srflx/relay) | base (关联的本地端口) | priority (计算出的优先级) | foundation (分组标识)</text>
+
+<text x="60" y="274" fill="#7c3aed" font-size="9" font-weight="600">优先级计算公式 (RFC 8445 §5.1.2):</text>
+<text x="60" y="292" fill="#475569" font-size="8">priority = (2^24 × type_pref) + (2^8 × local_pref) + (2^0 × 256 - component_id)</text>
+<text x="60" y="308" fill="#64748b" font-size="7">type_pref: host=126 &gt; srflx=100 &gt; relay=0 | local_pref: 网卡偏好 | component_id: RTP=1, RTCP=2</text>
+
+<!-- ===== 阶段 2: 交换候选 ===== -->
+<rect x="40" y="328" width="980" height="150" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+<rect x="40" y="328" width="980" height="30" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="530" y="348" fill="#1e40af" font-size="11" font-weight="700" text-anchor="middle">阶段 2: 交换候选 (SDP Offer/Answer via Signaling)</text>
+
+<text x="60" y="378" fill="#0f172a" font-size="10" font-weight="600">通过信令通道 (WebSocket/SIP等) 将候选列表发给对方。ICE 不管信令怎么传。</text>
+
+<text x="60" y="400" fill="#475569" font-size="9">SDP 中的 ICE 候选格式示例 (WebRTC):</text>
+<rect x="60" y="408" width="960" height="56" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="80" y="426" fill="#475569" font-size="8">a=candidate:1 1 UDP 2130706431 192.168.1.100 5000 typ host</text>
+<text x="80" y="442" fill="#475569" font-size="8">a=candidate:2 1 UDP 1694498815 203.0.113.5 62000 typ srflx raddr 192.168.1.100 rport 5000</text>
+<text x="80" y="458" fill="#475569" font-size="8">a=candidate:3 1 UDP 16777215 198.51.100.10 50000 typ relay raddr 203.0.113.5 rport 62000</text>
+
+<text x="60" y="474" fill="#64748b" font-size="7">格式: foundation | component-id | 传输 | 优先级 | IP | Port | typ 类型 [raddr 相关地址 rport 相关端口]</text>
+
+<!-- ===== 阶段 3: 配对 ===== -->
+<rect x="40" y="488" width="980" height="200" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+<rect x="40" y="488" width="980" height="30" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="530" y="508" fill="#5b21b6" font-size="11" font-weight="700" text-anchor="middle">阶段 3: 配对 (Forming Check List)</text>
+
+<text x="60" y="538" fill="#0f172a" font-size="10" font-weight="600">本地候选 × 远端候选 = 候选对 (Candidate Pair)，按优先级排入 Check List</text>
+
+<text x="60" y="560" fill="#475569" font-size="9">配对规则: 只配相同 component-id 且相同传输协议的候选</text>
+<text x="60" y="578" fill="#475569" font-size="9">示例 (A 有 3 个候选, B 有 3 个候选 → 最多 9 个配对):</text>
+
+<rect x="60" y="590" width="960" height="70" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="80" y="608" fill="#475569" font-size="8">Pair 1: A.host ↔ B.host        priority=高 (同局域网可直连)</text>
+<text x="80" y="624" fill="#475569" font-size="8">Pair 2: A.host ↔ B.srflx       priority=中高</text>
+<text x="80" y="640" fill="#475569" font-size="8">Pair 3: A.srflx ↔ B.srflx      priority=中 (双方都穿 NAT)</text>
+<text x="80" y="656" fill="#475569" font-size="8">...    A.relay ↔ B.relay       priority=最低 (双方都走中继)</text>
+
+<text x="60" y="678" fill="#7c3aed" font-size="9" font-weight="600">配对优先级公式:</text>
+<text x="60" y="694" fill="#475569" font-size="8">pair_priority = 2^32 × MIN(G,D) + 2 × MAX(G,D) + (G&gt;D ? 1 : 0)   G=controlling方, D=controlled方</text>
+
+<!-- ===== 阶段 4: 连通性检查 ===== -->
+<rect x="40" y="698" width="980" height="310" rx="10" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<rect x="40" y="698" width="980" height="30" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<text x="530" y="718" fill="#92400e" font-size="11" font-weight="700" text-anchor="middle">阶段 4: 连通性检查 (Connectivity Check) — ICE 的核心</text>
+
+<text x="60" y="748" fill="#0f172a" font-size="10" font-weight="600">对 Check List 中的每一对，按优先级从高到低发 STUN Binding Request 探测</text>
+
+<text x="60" y="772" fill="#dc2626" font-size="9" font-weight="600">关键: 这个 STUN Binding Request 不是发给 STUN Server 的！是发给对端(Peer) 的！</text>
+<text x="60" y="792" fill="#475569" font-size="9">即: A 用自己的候选地址，往 B 的候选地址发 STUN Binding Request</text>
+<text x="60" y="810" fill="#475569" font-size="9">如果 B 收到并回了 Binding Response → 这条路通了！(同时也完成了 NAT 打洞)</text>
+
+<text x="60" y="838" fill="#0f172a" font-size="10" font-weight="600">认证方式:</text>
+<text x="60" y="858" fill="#475569" font-size="9">使用 Short-Term Credential — 双方通过 SDP 交换的 ice-ufrag / ice-pwd 作为 USERNAME/PASSWORD</text>
+<text x="60" y="876" fill="#475569" font-size="9">USERNAME = "远端ufrag:本地ufrag"，KEY = 远端 ice-pwd (用于 MESSAGE-INTEGRITY)</text>
+
+<text x="60" y="904" fill="#0f172a" font-size="10" font-weight="600">检查结果 (每个 Candidate Pair 的状态流转):</text>
+<rect x="60" y="914" width="960" height="80" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+<text x="80" y="934" fill="#475569" font-size="8">Frozen → Waiting → In-Progress → Succeeded / Failed</text>
+<text x="80" y="954" fill="#64748b" font-size="7">Frozen: 等待同 foundation 的其他对先检查 (减少并发量)</text>
+<text x="80" y="970" fill="#64748b" font-size="7">Waiting: 排队等发送 | In-Progress: 已发出等响应 | Succeeded: 收到200 | Failed: 超时/错误</text>
+<text x="80" y="986" fill="#7c3aed" font-size="7" font-weight="600">Peer Reflexive 发现: 如果检查中收到来自一个之前不在候选列表里的地址的响应 → 动态新增 prflx 候选</text>
+
+<!-- ===== 阶段 5: 提名 ===== -->
+<rect x="40" y="1018" width="980" height="220" rx="10" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+<rect x="40" y="1018" width="980" height="30" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="530" y="1038" fill="#166534" font-size="11" font-weight="700" text-anchor="middle">阶段 5: 提名 (Nomination) — 由 Controlling 方决定</text>
+
+<text x="60" y="1068" fill="#0f172a" font-size="10" font-weight="600">两个角色:</text>
+<rect x="60" y="1080" width="450" height="50" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+<text x="80" y="1100" fill="#166534" font-size="9" font-weight="700">Controlling Agent (主控端)</text>
+<text x="80" y="1116" fill="#475569" font-size="8">有权提名最终路径。通常是 Offer 方 (发起呼叫者)</text>
+
+<rect x="540" y="1080" width="460" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="560" y="1100" fill="#1e40af" font-size="9" font-weight="700">Controlled Agent (受控端)</text>
+<text x="560" y="1116" fill="#475569" font-size="8">配合检查，接受提名。通常是 Answer 方 (接听者)</text>
+
+<text x="60" y="1152" fill="#0f172a" font-size="10" font-weight="600">两种提名策略:</text>
+<rect x="60" y="1164" width="450" height="64" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="80" y="1184" fill="#d97706" font-size="9" font-weight="700">Regular Nomination (常规提名)</text>
+<text x="80" y="1202" fill="#475569" font-size="8">先完成所有检查 → 从 Succeeded 对中选最优</text>
+<text x="80" y="1218" fill="#475569" font-size="8">→ 再发一个带 USE-CANDIDATE 标志的检查确认</text>
+
+<rect x="540" y="1164" width="460" height="64" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="560" y="1184" fill="#d97706" font-size="9" font-weight="700">Aggressive Nomination (激进提名)</text>
+<text x="560" y="1202" fill="#475569" font-size="8">每个检查都带 USE-CANDIDATE 标志</text>
+<text x="560" y="1218" fill="#475569" font-size="8">→ 第一个成功的就直接选定（更快但可能非最优）</text>
+
+<!-- ===== 阶段 6: 保活与故障转移 ===== -->
+<rect x="40" y="1248" width="980" height="130" rx="10" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+<rect x="40" y="1248" width="980" height="30" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="1.5"/>
+<text x="530" y="1268" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">阶段 6: 保活与故障转移 (Keep-Alive / ICE Restart)</text>
+
+<text x="60" y="1298" fill="#0f172a" font-size="10" font-weight="600">保活:</text>
+<text x="140" y="1298" fill="#475569" font-size="9">选定路径后，每 15 秒发一次 STUN Binding Indication (Indication 无需响应) 保持 NAT 绑定不过期</text>
+
+<text x="60" y="1322" fill="#0f172a" font-size="10" font-weight="600">故障转移:</text>
+<text x="140" y="1322" fill="#475569" font-size="9">如果选定路径失效（连续多次无响应），触发 ICE Restart: 重新收集候选、重新交换、重新检查</text>
+
+<text x="60" y="1346" fill="#0f172a" font-size="10" font-weight="600">Trickle ICE:</text>
+<text x="140" y="1346" fill="#475569" font-size="9">候选收集和检查并行进行 — 每收集到一个就立刻通过信令发给对方，不等全部收集完 (减少建连延迟)</text>
+<text x="140" y="1364" fill="#64748b" font-size="8">RFC 8838 定义了 Trickle ICE 的规范</text>
+
+<!-- ===== 状态机 ===== -->
+<text x="60" y="1410" fill="#0f172a" font-size="11" font-weight="700">ICE Agent 状态机</text>
+<rect x="80" y="1424" width="110" height="36" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="135" y="1446" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Running</text>
+
+<line x1="190" y1="1442" x2="238" y2="1442" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="240" y="1424" width="130" height="36" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="305" y="1446" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Completed</text>
+
+<line x1="370" y1="1442" x2="418" y2="1442" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="420" y="1424" width="110" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="475" y="1446" fill="#991b1b" font-size="9" font-weight="600" text-anchor="middle">Failed</text>
+
+<text x="135" y="1476" fill="#64748b" font-size="7" text-anchor="middle">检查进行中</text>
+<text x="305" y="1476" fill="#64748b" font-size="7" text-anchor="middle">有提名对成功</text>
+<text x="475" y="1476" fill="#64748b" font-size="7" text-anchor="middle">所有对失败</text>
+
+<!-- ===== ICE-Lite ===== -->
+<text x="60" y="1516" fill="#0f172a" font-size="11" font-weight="700">ICE-Lite vs Full ICE</text>
+<rect x="40" y="1530" width="980" height="90" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+<rect x="60" y="1544" width="450" height="60" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="80" y="1564" fill="#0f172a" font-size="9" font-weight="700">Full ICE (完整实现)</text>
+<text x="80" y="1582" fill="#475569" font-size="8">双方都收集候选、双方都主动发检查</text>
+<text x="80" y="1596" fill="#64748b" font-size="7">用于: 双方都在 NAT 后 (如两个浏览器)</text>
+
+<rect x="540" y="1544" width="460" height="60" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+<text x="560" y="1564" fill="#0f172a" font-size="9" font-weight="700">ICE-Lite (精简实现)</text>
+<text x="560" y="1582" fill="#475569" font-size="8">只提供 Host 候选，不主动发检查，只回应</text>
+<text x="560" y="1596" fill="#64748b" font-size="7">用于: 有公网 IP 的服务端 (如 SFU/MCU 媒体服务器)</text>
+
+<!-- ===== 总结 ===== -->
+<rect x="40" y="1640" width="980" height="120" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="530" y="1664" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">ICE 的核心哲学</text>
+<text x="60" y="1690" fill="#475569" font-size="9">1. 不猜 NAT 类型 — 全试。RFC 3489 的分类探测被彻底抛弃</text>
+<text x="60" y="1710" fill="#475569" font-size="9">2. 不发明新报文 — 复用 STUN Binding 做检查。网络上只有 STUN/TURN 包，没有"ICE 包"</text>
+<text x="60" y="1730" fill="#475569" font-size="9">3. 逐级回退 — Host(直连) → srflx(穿透) → relay(中继)，优先用最便宜的路</text>
+<text x="60" y="1750" fill="#475569" font-size="9">4. 对称设计 — 双方同时互相检查 (Full ICE)，谁先通谁先用，减少建连延迟</text>
+</svg>
