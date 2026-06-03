@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="500" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">ICE 工作流程 (5 个阶段)</text>
+<text x="500" y="52" fill="#64748b" font-size="9" text-anchor="middle">从收集候选到选出可用路径 | 体现"不猜，全试"的设计哲学</text>
+
+<!-- Step 1: 收集 -->
+<rect x="60" y="74" width="880" height="80" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<rect x="76" y="90" width="48" height="48" rx="24" fill="#16a34a"/>
+<text x="100" y="120" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">1</text>
+<text x="140" y="106" fill="#166534" font-size="11" font-weight="700">收集候选 (Gathering)</text>
+<text x="140" y="126" fill="#475569" font-size="9">每端收集 Host / Server Reflexive(查STUN) / Relayed(查TURN) 三类候选地址</text>
+<text x="140" y="144" fill="#64748b" font-size="8">此阶段用到 RFC 5389 STUN 的 Binding 请求</text>
+
+<line x1="500" y1="154" x2="500" y2="172" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 2: 交换 -->
+<rect x="60" y="174" width="880" height="80" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<rect x="76" y="190" width="48" height="48" rx="24" fill="#2563eb"/>
+<text x="100" y="220" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">2</text>
+<text x="140" y="206" fill="#1e40af" font-size="11" font-weight="700">交换候选 (Exchange)</text>
+<text x="140" y="226" fill="#475569" font-size="9">双方通过信令通道(如 SIP/SDP、WebSocket)交换各自的候选列表</text>
+<text x="140" y="244" fill="#64748b" font-size="8">信令通道独立于 ICE，由应用层提供 (ICE 不管信令怎么传)</text>
+
+<line x1="500" y1="254" x2="500" y2="272" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 3: 配对 -->
+<rect x="60" y="274" width="880" height="80" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<rect x="76" y="290" width="48" height="48" rx="24" fill="#7c3aed"/>
+<text x="100" y="320" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">3</text>
+<text x="140" y="306" fill="#5b21b6" font-size="11" font-weight="700">配对 (Pairing) — 生成 Candidate Pairs</text>
+<text x="140" y="326" fill="#475569" font-size="9">本地候选 × 远端候选 两两配对，按优先级排序成 Check List</text>
+<text x="140" y="344" fill="#64748b" font-size="8">如 m 个本地 × n 个远端 = m×n 个候选对，优先级高的先检查</text>
+
+<line x1="500" y1="354" x2="500" y2="372" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 4: 连通性检查 -->
+<rect x="60" y="374" width="880" height="110" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+<rect x="76" y="390" width="48" height="48" rx="24" fill="#d97706"/>
+<text x="100" y="420" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">4</text>
+<text x="140" y="406" fill="#92400e" font-size="11" font-weight="700">连通性检查 (Connectivity Check) — ICE 的核心</text>
+<text x="140" y="426" fill="#475569" font-size="9">对每个候选对，双方互发 STUN Binding Request 做"打洞探测"</text>
+<text x="140" y="444" fill="#475569" font-size="9">收到对端的成功响应 = 这条路通了 (这一步同时完成了 NAT 打洞)</text>
+<text x="140" y="464" fill="#dc2626" font-size="9" font-weight="600">关键: 不预判 NAT 类型，所有候选对并发实测，能通的留下</text>
+
+<line x1="500" y1="484" x2="500" y2="502" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Step 5: 提名 -->
+<rect x="60" y="504" width="880" height="90" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<rect x="76" y="520" width="48" height="48" rx="24" fill="#16a34a"/>
+<text x="100" y="550" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">5</text>
+<text x="140" y="536" fill="#166534" font-size="11" font-weight="700">提名与选定 (Nomination)</text>
+<text x="140" y="556" fill="#475569" font-size="9">从所有"通了"的候选对中，选优先级最高的一对作为最终通信路径</text>
+<text x="140" y="576" fill="#475569" font-size="9">由 Controlling 一方(主控端)提名，之后媒体/数据走这条选定路径</text>
+
+<!-- Bottom: STUN/TURN role -->
+<rect x="60" y="614" width="880" height="150" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="500" y="638" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">ICE 如何复用 STUN / TURN</text>
+<text x="80" y="662" fill="#16a34a" font-size="9" font-weight="600">STUN (RFC 5389):</text>
+<text x="260" y="662" fill="#475569" font-size="9">① 收集 srflx 候选 (Binding 拿反射地址)  ② 连通性检查 (Binding 做打洞探测)</text>
+<text x="80" y="686" fill="#dc2626" font-size="9" font-weight="600">TURN (RFC 5766):</text>
+<text x="260" y="686" fill="#475569" font-size="9">收集 relay 候选；当 P2P 全失败时作为中继兜底</text>
+<text x="80" y="712" fill="#7c3aed" font-size="9" font-weight="600">ICE (RFC 8445):</text>
+<text x="260" y="712" fill="#475569" font-size="9">编排上述工具 — 收集、配对、检查、提名，自己不发明新底层协议</text>
+<text x="80" y="740" fill="#0f172a" font-size="9" font-weight="700">穿透优先级:</text>
+<text x="260" y="740" fill="#475569" font-size="9">直连(Host) → P2P穿透(srflx) → 中继兜底(relay)，逐级回退，保证总能连上</text>
+</svg>

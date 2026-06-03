@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="500" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">ICE 的三类候选地址 (Candidate)</text>
+<text x="500" y="52" fill="#64748b" font-size="9" text-anchor="middle">每个端点收集多个候选，优先级从高到低排列</text>
+
+<!-- Host Candidate -->
+<rect x="60" y="76" width="880" height="130" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="80" y="100" fill="#166534" font-size="12" font-weight="700">① Host Candidate (主机候选)</text>
+<text x="800" y="100" fill="#16a34a" font-size="11" font-weight="700" text-anchor="middle">优先级最高</text>
+<text x="80" y="124" fill="#475569" font-size="9">来源: 本机网卡直接绑定的地址 (局域网IP:Port)</text>
+<text x="80" y="142" fill="#475569" font-size="9">示例: 192.168.1.100:5000</text>
+<text x="80" y="164" fill="#475569" font-size="9">用途: 同一局域网/同一主机内的对等端可直连，最快</text>
+<rect x="80" y="174" width="860" height="24" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1"/>
+<text x="100" y="190" fill="#166534" font-size="8">获取方式: 直接读本机网卡，无需任何外部服务器</text>
+
+<!-- Server Reflexive Candidate -->
+<rect x="60" y="216" width="880" height="130" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="80" y="240" fill="#1e40af" font-size="12" font-weight="700">② Server Reflexive Candidate (服务器反射候选, srflx)</text>
+<text x="800" y="240" fill="#2563eb" font-size="11" font-weight="700" text-anchor="middle">优先级中</text>
+<text x="80" y="264" fill="#475569" font-size="9">来源: 通过 STUN Binding 请求获取的 NAT 映射后公网地址</text>
+<text x="80" y="282" fill="#475569" font-size="9">示例: 203.0.113.5:62000 (NAT 外侧)</text>
+<text x="80" y="304" fill="#475569" font-size="9">用途: 穿透 Cone 类 NAT 实现 P2P 直连 (不经中继)</text>
+<rect x="80" y="314" width="860" height="24" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+<text x="100" y="330" fill="#1e40af" font-size="8">获取方式: 向 STUN Server 发 Binding Request，解析响应的 XOR-MAPPED-ADDRESS  ← 这就是 RFC 5389 的作用</text>
+
+<!-- Relayed Candidate -->
+<rect x="60" y="356" width="880" height="130" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="80" y="380" fill="#991b1b" font-size="12" font-weight="700">③ Relayed Candidate (中继候选, relay)</text>
+<text x="800" y="380" fill="#dc2626" font-size="11" font-weight="700" text-anchor="middle">优先级最低</text>
+<text x="80" y="404" fill="#475569" font-size="9">来源: 通过 TURN 服务器分配的中继地址 (流量经 TURN 转发)</text>
+<text x="80" y="422" fill="#475569" font-size="9">示例: 198.51.100.10:50000 (TURN 服务器上的地址)</text>
+<text x="80" y="444" fill="#475569" font-size="9">用途: 兜底 — 当直连和 STUN 都失败时 (如 Symmetric NAT)，保证连通</text>
+<rect x="80" y="454" width="860" height="24" rx="4" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+<text x="100" y="470" fill="#991b1b" font-size="8">获取方式: 向 TURN Server 发 Allocate 请求；流量中转有成本/延迟，所以优先级最低</text>
+
+<!-- Summary -->
+<rect x="60" y="500" width="880" height="120" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="500" y="524" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">优先级排序逻辑</text>
+<text x="80" y="548" fill="#16a34a" font-size="9">Host (直连局域网, 0跳)  &gt;  Server Reflexive (P2P穿透, 直达)  &gt;  Relayed (经TURN中转, 有成本)</text>
+<text x="80" y="570" fill="#475569" font-size="9">原则: 优先用"更直接、更便宜"的路径。能直连就不穿透，能穿透就不中继。</text>
+<text x="80" y="592" fill="#475569" font-size="9">每个候选 = 一个 (IP, Port, 类型, 优先级) 四元组，两端通过信令通道 (如SDP) 交换各自的候选列表。</text>
+<text x="80" y="611" fill="#64748b" font-size="8">注: 还有第四类 Peer Reflexive (prflx)，在连通性检查过程中动态发现，此处从略。</text>
+</svg>
