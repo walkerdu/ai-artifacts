@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 860">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', monospace; }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="500" y="34" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle">ICE 是什么 — RFC 8445 定义的连接建立框架</text>
+<text x="500" y="52" fill="#64748b" font-size="9" text-anchor="middle">Interactive Connectivity Establishment | 不是新协议，是"如何用STUN/TURN连接"的算法</text>
+
+<!-- 定位 -->
+<rect x="60" y="72" width="880" height="86" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="80" y="94" fill="#5b21b6" font-size="11" font-weight="700">ICE 的本质</text>
+<text x="80" y="116" fill="#475569" font-size="9">• 是一套规范(RFC 8445)，定义客户端如何收集地址、配对、检查、选路的完整算法与状态机</text>
+<text x="80" y="134" fill="#475569" font-size="9">• 自己不传输数据、不发明新报文 — 它"指挥" STUN(探测) 和 TURN(中继) 这两个工具协同工作</text>
+<text x="80" y="152" fill="#7c3aed" font-size="9" font-weight="600">• 类比: STUN/TURN 是工具箱里的锤子和钉子，ICE 是"装家具的说明书"</text>
+
+<!-- 三个RFC关系 -->
+<text x="60" y="186" fill="#0f172a" font-size="11" font-weight="700">三个 RFC 的协作关系</text>
+
+<rect x="60" y="200" width="270" height="120" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="195" y="224" fill="#1e40af" font-size="11" font-weight="700" text-anchor="middle">STUN</text>
+<text x="195" y="240" fill="#64748b" font-size="8" text-anchor="middle">RFC 5389 / 8489</text>
+<text x="80" y="262" fill="#475569" font-size="8">• 获取反射地址(srflx)</text>
+<text x="80" y="280" fill="#475569" font-size="8">• 连通性检查的探测包</text>
+<text x="80" y="298" fill="#475569" font-size="8">• 保活(keep-alive)</text>
+<text x="195" y="314" fill="#16a34a" font-size="8" font-weight="600" text-anchor="middle">工具①: 探测</text>
+
+<rect x="365" y="200" width="270" height="120" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="500" y="224" fill="#991b1b" font-size="11" font-weight="700" text-anchor="middle">TURN</text>
+<text x="500" y="240" fill="#64748b" font-size="8" text-anchor="middle">RFC 5766 / 8656</text>
+<text x="385" y="262" fill="#475569" font-size="8">• 分配中继地址(relay)</text>
+<text x="385" y="280" fill="#475569" font-size="8">• 转发双方流量</text>
+<text x="385" y="298" fill="#475569" font-size="8">• 是 STUN 的扩展</text>
+<text x="500" y="314" fill="#dc2626" font-size="8" font-weight="600" text-anchor="middle">工具②: 中继兜底</text>
+
+<rect x="670" y="200" width="270" height="120" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="805" y="224" fill="#5b21b6" font-size="11" font-weight="700" text-anchor="middle">ICE</text>
+<text x="805" y="240" fill="#64748b" font-size="8" text-anchor="middle">RFC 5245 / 8445</text>
+<text x="690" y="262" fill="#475569" font-size="8">• 收集所有候选</text>
+<text x="690" y="280" fill="#475569" font-size="8">• 配对 + 优先级排序</text>
+<text x="690" y="298" fill="#475569" font-size="8">• 检查 + 提名选路</text>
+<text x="805" y="314" fill="#7c3aed" font-size="8" font-weight="600" text-anchor="middle">框架: 编排者</text>
+
+<!-- 箭头: ICE 调用 STUN/TURN -->
+<line x1="640" y1="250" x2="668" y2="250" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="332" y1="250" x2="360" y2="250" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="500" y="196" fill="#7c3aed" font-size="7" text-anchor="middle">ICE 调用这两个工具 →</text>
+
+<!-- controlling/controlled -->
+<text x="60" y="352" fill="#0f172a" font-size="11" font-weight="700">两端角色: Controlling / Controlled</text>
+<rect x="60" y="366" width="430" height="90" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="275" y="388" fill="#166534" font-size="10" font-weight="700" text-anchor="middle">Controlling Agent (主控端)</text>
+<text x="80" y="410" fill="#475569" font-size="8">负责最终决定用哪个候选对 (Nomination 提名权)</text>
+<text x="80" y="428" fill="#475569" font-size="8">通常是发起呼叫的一方</text>
+<text x="80" y="446" fill="#64748b" font-size="8">检查通过后，发带 USE-CANDIDATE 标志的包确定路径</text>
+
+<rect x="510" y="366" width="430" height="90" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="725" y="388" fill="#1e40af" font-size="10" font-weight="700" text-anchor="middle">Controlled Agent (受控端)</text>
+<text x="530" y="410" fill="#475569" font-size="8">配合做连通性检查，等待主控端提名</text>
+<text x="530" y="428" fill="#475569" font-size="8">通常是接听一方</text>
+<text x="530" y="446" fill="#64748b" font-size="8">接受主控端选定的候选对</text>
+
+<!-- ICE 状态机 -->
+<text x="60" y="488" fill="#0f172a" font-size="11" font-weight="700">ICE 状态机 (简化)</text>
+<rect x="80" y="502" width="140" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+<text x="150" y="524" fill="#1e40af" font-size="9" font-weight="600" text-anchor="middle">Gathering</text>
+<text x="150" y="538" fill="#64748b" font-size="7" text-anchor="middle">收集候选中</text>
+
+<line x1="220" y1="524" x2="258" y2="524" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="260" y="502" width="140" height="44" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="330" y="524" fill="#5b21b6" font-size="9" font-weight="600" text-anchor="middle">Checking</text>
+<text x="330" y="538" fill="#64748b" font-size="7" text-anchor="middle">连通性检查中</text>
+
+<line x1="400" y1="524" x2="438" y2="524" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="440" y="502" width="140" height="44" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="510" y="524" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Connected</text>
+<text x="510" y="538" fill="#64748b" font-size="7" text-anchor="middle">至少一对通了</text>
+
+<line x1="580" y1="524" x2="618" y2="524" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="620" y="502" width="140" height="44" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+<text x="690" y="524" fill="#166534" font-size="9" font-weight="600" text-anchor="middle">Completed</text>
+<text x="690" y="538" fill="#64748b" font-size="7" text-anchor="middle">提名完成,选定路径</text>
+
+<line x1="760" y1="524" x2="798" y2="524" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="800" y="502" width="140" height="44" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="870" y="524" fill="#991b1b" font-size="9" font-weight="600" text-anchor="middle">Failed</text>
+<text x="870" y="538" fill="#64748b" font-size="7" text-anchor="middle">全部候选对失败</text>
+
+<!-- 完整实战示例 -->
+<rect x="60" y="566" width="880" height="200" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="500" y="590" fill="#0f172a" font-size="11" font-weight="700" text-anchor="middle">实战: WebRTC 视频通话如何用 ICE 建连</text>
+
+<text x="80" y="614" fill="#16a34a" font-size="9" font-weight="600">1. 收集</text>
+<text x="180" y="614" fill="#475569" font-size="9">浏览器收集 Host(局域网IP) + srflx(查STUN) + relay(查TURN) 三类候选</text>
+
+<text x="80" y="638" fill="#2563eb" font-size="9" font-weight="600">2. 交换</text>
+<text x="180" y="638" fill="#475569" font-size="9">通过信令服务器(WebSocket)用 SDP 交换候选列表</text>
+
+<text x="80" y="662" fill="#7c3aed" font-size="9" font-weight="600">3. 检查</text>
+<text x="180" y="662" fill="#475569" font-size="9">所有候选对并发互发 STUN Binding，能收到响应的标记为"可用"</text>
+
+<text x="80" y="686" fill="#d97706" font-size="9" font-weight="600">4. 选路</text>
+<text x="180" y="686" fill="#475569" font-size="9">优先选 Host(同局域网) → 否则 srflx(P2P穿透) → 都不行才用 relay(TURN中继)</text>
+
+<text x="80" y="710" fill="#dc2626" font-size="9" font-weight="600">5. 通信</text>
+<text x="180" y="710" fill="#475569" font-size="9">视频流走选定路径；期间持续用 STUN 保活，路径失效则重新检查</text>
+
+<text x="80" y="740" fill="#0f172a" font-size="9" font-weight="700">结论:</text>
+<text x="180" y="740" fill="#475569" font-size="9">ICE 让应用"无需关心 NAT 类型"，自动在直连/穿透/中继间选出最优可用路径</text>
+</svg>
