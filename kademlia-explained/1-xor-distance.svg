@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+<marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+</marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">Kademlia 核心结构 1/3 — Node ID 与 XOR 距离</text>
+<text x="30" y="56" fill="#64748b" font-size="9" font-weight="400">每个节点随机生成 160-bit ID，节点间"距离"用 XOR 定义</text>
+
+<rect x="30" y="80" width="840" height="200" rx="12" fill="none" stroke="#60a5fa" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="30" y="80" width="120" height="22" rx="6" fill="#eff6ff" stroke="#60a5fa" stroke-width="1"/>
+<text x="90" y="95" fill="#2563eb" font-size="9" font-weight="600" text-anchor="middle">XOR 计算示例</text>
+
+<rect x="60" y="116" width="360" height="140" rx="8" fill="#ffffff"/>
+<rect x="60" y="116" width="360" height="140" rx="8" fill="rgba(37,99,235,0.06)" stroke="#93c5fd" stroke-width="1"/>
+<text x="80" y="140" fill="#1e40af" font-size="11" font-weight="600">示例 A: 距离近</text>
+<text x="80" y="162" fill="#334155" font-size="11" font-weight="400">节点 A  = 0 1 0 1</text>
+<text x="80" y="180" fill="#334155" font-size="11" font-weight="400">节点 B  = 0 1 1 0</text>
+<line x1="80" y1="188" x2="300" y2="188" stroke="#93c5fd" stroke-width="1"/>
+<text x="80" y="206" fill="#1e40af" font-size="11" font-weight="600">XOR     = 0 0 1 1  →  十进制 3</text>
+<text x="80" y="230" fill="#2563eb" font-size="10" font-weight="500">仅 2 位不同 → 距离 = 3 (近!)</text>
+<text x="80" y="248" fill="#94a3b8" font-size="9">不同的位用 XOR=1 标出</text>
+
+<rect x="480" y="116" width="360" height="140" rx="8" fill="#ffffff"/>
+<rect x="480" y="116" width="360" height="140" rx="8" fill="rgba(239,68,68,0.05)" stroke="#fca5a5" stroke-width="1"/>
+<text x="500" y="140" fill="#991b1b" font-size="11" font-weight="600">示例 B: 距离远</text>
+<text x="500" y="162" fill="#334155" font-size="11" font-weight="400">节点 A  = 0 1 0 1</text>
+<text x="500" y="180" fill="#334155" font-size="11" font-weight="400">节点 C  = 1 1 0 0</text>
+<line x1="500" y1="188" x2="720" y2="188" stroke="#fca5a5" stroke-width="1"/>
+<text x="500" y="206" fill="#991b1b" font-size="11" font-weight="600">XOR     = 1 0 0 1  →  十进制 9</text>
+<text x="500" y="230" fill="#dc2626" font-size="10" font-weight="500">高位就不同 → 距离 = 9 (远!)</text>
+<text x="500" y="248" fill="#94a3b8" font-size="9">最高位 XOR=1 意味着在空间的另一半</text>
+
+<text x="450" y="320" fill="#0f172a" font-size="14" font-weight="700" text-anchor="middle">XOR 距离的三个数学性质 (保证路由正确性)</text>
+
+<rect x="30" y="340" width="270" height="120" rx="10" fill="#ffffff"/>
+<rect x="30" y="340" width="270" height="120" rx="10" fill="rgba(16,185,129,0.06)" stroke="#6ee7b7" stroke-width="1.5"/>
+<text x="165" y="370" fill="#065f46" font-size="12" font-weight="600" text-anchor="middle">1. 对称性</text>
+<text x="165" y="396" fill="#334155" font-size="11" text-anchor="middle">d(A, B) = d(B, A)</text>
+<text x="165" y="420" fill="#64748b" font-size="9" text-anchor="middle">A 到 B 的距离 = B 到 A 的距离</text>
+<text x="165" y="438" fill="#64748b" font-size="9" text-anchor="middle">因为 XOR 本身就是对称运算</text>
+
+<rect x="320" y="340" width="270" height="120" rx="10" fill="#ffffff"/>
+<rect x="320" y="340" width="270" height="120" rx="10" fill="rgba(245,158,11,0.06)" stroke="#fcd34d" stroke-width="1.5"/>
+<text x="455" y="370" fill="#92400e" font-size="12" font-weight="600" text-anchor="middle">2. 单向唯一性</text>
+<text x="455" y="396" fill="#334155" font-size="11" text-anchor="middle">给定 A 和距离 d</text>
+<text x="455" y="420" fill="#334155" font-size="11" text-anchor="middle">有且仅有一个 B 满足 d(A,B)=d</text>
+<text x="455" y="438" fill="#64748b" font-size="9" text-anchor="middle">B = A XOR d，唯一确定</text>
+
+<rect x="610" y="340" width="270" height="120" rx="10" fill="#ffffff"/>
+<rect x="610" y="340" width="270" height="120" rx="10" fill="rgba(139,92,246,0.06)" stroke="#c4b5fd" stroke-width="1.5"/>
+<text x="745" y="370" fill="#5b21b6" font-size="12" font-weight="600" text-anchor="middle">3. 三角不等式</text>
+<text x="745" y="396" fill="#334155" font-size="11" text-anchor="middle">d(A,C) &lt;= d(A,B) + d(B,C)</text>
+<text x="745" y="420" fill="#64748b" font-size="9" text-anchor="middle">绕路不会更近</text>
+<text x="745" y="438" fill="#64748b" font-size="9" text-anchor="middle">保证迭代查找一定能收敛</text>
+
+<text x="450" y="500" fill="#0f172a" font-size="14" font-weight="700" text-anchor="middle">核心规则: XOR 距离决定"谁负责存什么"</text>
+
+<rect x="30" y="520" width="840" height="130" rx="12" fill="#ffffff"/>
+<rect x="30" y="520" width="840" height="130" rx="12" fill="rgba(239,68,68,0.04)" stroke="#fca5a5" stroke-width="1.5"/>
+
+<text x="450" y="552" fill="#991b1b" font-size="12" font-weight="600" text-anchor="middle">存储分配规则</text>
+
+<text x="60" y="580" fill="#334155" font-size="11" font-weight="400">一个 key (如 info_hash = 0xE0) 的数据，存储在 Node ID 与该 key XOR 距离最小的 K 个节点上</text>
+<text x="60" y="604" fill="#334155" font-size="11" font-weight="400">K = 8 (BT-DHT 默认值)。这 8 个节点就是该 key 的"责任人"，负责记录谁在下载这个种子</text>
+
+<text x="60" y="636" fill="#64748b" font-size="9" font-weight="400">为什么存 K 个而不是 1 个？ → 冗余容错。即使几个节点下线，剩余节点仍可应答查询</text>
+</svg>

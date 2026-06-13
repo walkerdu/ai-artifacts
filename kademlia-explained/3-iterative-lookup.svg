@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 780">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+<marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+</marker>
+<marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+</marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">Kademlia 核心结构 3/3 — 迭代查找算法</text>
+<text x="30" y="56" fill="#64748b" font-size="9" font-weight="400">iterative lookup: 通过并行查询逐步收敛到目标，O(log N) 跳完成</text>
+
+<rect x="30" y="76" width="840" height="56" rx="10" fill="rgba(37,99,235,0.06)" stroke="#93c5fd" stroke-width="1.5"/>
+<text x="50" y="100" fill="#1e40af" font-size="12" font-weight="600">输入</text>
+<text x="100" y="100" fill="#334155" font-size="11">target = info_hash (160-bit)    要找谁在下载这个种子</text>
+<text x="50" y="120" fill="#1e40af" font-size="11" font-weight="500">参数</text>
+<text x="100" y="120" fill="#334155" font-size="11">alpha = 3 (每轮并行查询数)    K = 8 (最终需要的最近节点数)</text>
+
+<rect x="30" y="152" width="840" height="68" rx="10" fill="rgba(16,185,129,0.06)" stroke="#6ee7b7" stroke-width="1"/>
+<rect x="30" y="152" width="140" height="22" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+<text x="100" y="167" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">Step 1: 播种</text>
+<text x="50" y="192" fill="#334155" font-size="11">从自己的路由表中，选出离 target XOR 距离最近的 K=8 个节点</text>
+<text x="50" y="210" fill="#64748b" font-size="10">放入候选列表 (candidate_list)，全部标记为 "未查询"</text>
+
+<rect x="30" y="240" width="840" height="154" rx="10" fill="rgba(37,99,235,0.04)" stroke="#93c5fd" stroke-width="1"/>
+<rect x="30" y="240" width="200" height="22" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+<text x="130" y="255" fill="#2563eb" font-size="10" font-weight="600" text-anchor="middle">Step 2: 并行查询 (核心)</text>
+<text x="50" y="282" fill="#334155" font-size="11">从 candidate_list 中取 alpha=3 个 "未查询" 且距离最近的节点</text>
+<text x="50" y="302" fill="#334155" font-size="11">并行向这 3 个节点发送 UDP: get_peers(target)</text>
+<text x="50" y="332" fill="#065f46" font-size="11" font-weight="600">回复 A: "我有 peers!"  →  返回 peers [IP:Port, ...]，查找成功</text>
+<text x="50" y="358" fill="#92400e" font-size="11" font-weight="600">回复 B: "我没有，但这些节点更近"  →  返回 K 个更近的节点</text>
+<text x="50" y="382" fill="#64748b" font-size="9">3 个并行请求互不等待，谁先回来就先处理，提高速度</text>
+
+<rect x="30" y="414" width="840" height="68" rx="10" fill="rgba(245,158,11,0.04)" stroke="#fcd34d" stroke-width="1"/>
+<rect x="30" y="414" width="200" height="22" rx="6" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+<text x="130" y="429" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">Step 3: 更新候选列表</text>
+<text x="50" y="456" fill="#334155" font-size="11">将回复 B 返回的新节点合并入 candidate_list (去重)</text>
+<text x="50" y="474" fill="#334155" font-size="11">按与 target 的 XOR 距离重新排序，只保留最近的 K=8 个</text>
+
+<path d="M850 482 Q880 520 850 548" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-red)"/>
+<text x="862" y="520" fill="#dc2626" font-size="9" font-weight="500">循环</text>
+
+<rect x="30" y="502" width="840" height="90" rx="10" fill="rgba(239,68,68,0.04)" stroke="#fca5a5" stroke-width="1"/>
+<rect x="30" y="502" width="200" height="22" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+<text x="130" y="517" fill="#991b1b" font-size="10" font-weight="600" text-anchor="middle">Step 4: 收敛判断</text>
+<text x="50" y="546" fill="#334155" font-size="11">如果候选列表中最近的 K 个节点全部已被查询过:</text>
+<text x="70" y="566" fill="#065f46" font-size="11">有 peers → 查找完成!    |    无 peers → 该种子无人做种</text>
+<text x="50" y="584" fill="#92400e" font-size="10">否则: 回到 Step 2 继续 (通常 3~5 轮收敛，每轮距离减半)</text>
+
+<rect x="30" y="612" width="840" height="68" rx="10" fill="rgba(139,92,246,0.05)" stroke="#c4b5fd" stroke-width="1"/>
+<rect x="30" y="612" width="200" height="22" rx="6" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+<text x="130" y="627" fill="#5b21b6" font-size="10" font-weight="600" text-anchor="middle">Step 5: announce_peer</text>
+<text x="50" y="652" fill="#334155" font-size="11">找到 peers 后，向离 target 最近的 K 个已确认节点发送:</text>
+<text x="50" y="672" fill="#5b21b6" font-size="11" font-weight="500">announce_peer(target, my_ip, my_port) → "把我也加到名单里"</text>
+
+<rect x="30" y="700" width="840" height="56" rx="10" fill="rgba(16,185,129,0.06)" stroke="#34d399" stroke-width="1.5"/>
+<text x="450" y="724" fill="#065f46" font-size="12" font-weight="600" text-anchor="middle">完成! 拿到了 peers 列表 + 注册了自己 → 后续节点也能找到我</text>
+<text x="450" y="744" fill="#64748b" font-size="9" text-anchor="middle">百万节点网络: ~20 跳 x 50ms/跳 = 1 秒内完成，
