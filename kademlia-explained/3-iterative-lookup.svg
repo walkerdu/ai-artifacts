@@ -66,4 +66,5 @@ text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif;
 
 <rect x="30" y="700" width="840" height="56" rx="10" fill="rgba(16,185,129,0.06)" stroke="#34d399" stroke-width="1.5"/>
 <text x="450" y="724" fill="#065f46" font-size="12" font-weight="600" text-anchor="middle">完成! 拿到了 peers 列表 + 注册了自己 → 后续节点也能找到我</text>
-<text x="450" y="744" fill="#64748b" font-size="9" text-anchor="middle">百万节点网络: ~20 跳 x 50ms/跳 = 1 秒内完成，
+<text x="450" y="744" fill="#64748b" font-size="9" text-anchor="middle">百万节点网络: 约 20 跳 x 50ms/跳 = 1 秒内完成，全程 UDP，无需中心服务器</text>
+</svg>
