@@ -64,4 +64,6 @@ text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif;
 <text x="670" y="632" fill="#64748b" font-size="9" text-anchor="middle">这 8 个人的路由表在那边更精确，可以接力指路</text>
 
 <rect x="30" y="668" width="840" height="72" rx="10" fill="rgba(139,92,246,0.05)" stroke="#c4b5fd" stroke-width="1"/>
-<text x="450" y="696" fill="#5b21b6" font-size
+<text x="450" y="696" fill="#5b21b6" font-size="11" font-weight="600" text-anchor="middle">为什么 log(N) 跳就能找到目标?</text>
+<text x="450" y="718" fill="#64748b" font-size="9" text-anchor="middle">每跳: 我从桶里指出一个"更近"的节点 → 它的路由表在那个区域更精细 → 每跳排除一半空间 → 类似二分查找</text>
+</svg>
