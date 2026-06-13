@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1060">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+<marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+</marker>
+<marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#1d4ed8"/>
+</marker>
+<marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#047857"/>
+</marker>
+<marker id="arrow-teal" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#0e7490"/>
+</marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">DHT Node 初始化流程</text>
+<text x="30" y="56" fill="#64748b" font-size="9">DHT 与站点/Tracker 完全独立，BT 客户端启动即自动加入全球 DHT 网络</text>
+
+<rect x="30" y="76" width="420" height="860" rx="16" fill="none" stroke="#1d4ed8" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="30" y="76" width="140" height="22" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+<text x="100" y="91" fill="#1e3a5f" font-size="9" font-weight="600" text-anchor="middle">首次启动 (冷启动)</text>
+
+<rect x="60" y="114" width="360" height="56" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+<text x="80" y="138" fill="#1e3a5f" font-size="11" font-weight="600">Step 1: 生成身份</text>
+<text x="80" y="158" fill="#334155" font-size="9">随机生成 160-bit Node ID，永久保存到本地配置</text>
+
+<line x1="240" y1="170" x2="240" y2="192" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+<rect x="60" y="192" width="360" height="56" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+<text x="80" y="216" fill="#1e3a5f" font-size="11" font-weight="600">Step 2: 初始化空路由表</text>
+<text x="80" y="236" fill="#334155" font-size="9">160 个 K-bucket，全部为空，等待填充</text>
+
+<line x1="240" y1="248" x2="240" y2="270" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+<rect x="60" y="270" width="360" height="76" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="80" y="294" fill="#064e3b" font-size="11" font-weight="600">Step 3: 连接 Bootstrap 节点</text>
+<text x="80" y="312" fill="#334155" font-size="9">router.bittorrent.com:6881</text>
+<text x="80" y="326" fill="#334155" font-size="9">router.utorrent.com:6881</text>
+<text x="80" y="340" fill="#475569" font-size="8">硬编码地址，7x24 运行，专门帮新人入网</text>
+
+<line x1="240" y1="346" x2="240" y2="368" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<rect x="60" y="368" width="360" height="76" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="80" y="392" fill="#064e3b" font-size="11" font-weight="600">Step 4: find_node(我的 ID)</text>
+<text x="80" y="410" fill="#334155" font-size="9">向 Bootstrap 发 UDP: "谁离我最近?"</text>
+<text x="80" y="428" fill="#334155" font-size="9">Bootstrap 返回 K=8 个最近节点</text>
+<text x="80" y="440" fill="#475569" font-size="8">把它们加入路由表对应的桶</text>
+
+<line x1="240" y1="444" x2="240" y2="466" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<rect x="60" y="466" width="360" height="76" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="80" y="490" fill="#064e3b" font-size="11" font-weight="600">Step 5: 递归填充路由表</text>
+<text x="80" y="508" fill="#334155" font-size="9">继续向新节点发 find_node(我的 ID)</text>
+<text x="80" y="526" fill="#334155" font-size="9">它们又返回更多节点 → 路由表逐渐丰满</text>
+<text x="80" y="538" fill="#475569" font-size="8">重复 3~5 轮，"我附近"的桶被填满</text>
+
+<path d="M400 538 Q430 500 400 466" fill="none" stroke="#047857" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-green)"/>
+<text x="436" y="504" fill="#047857" font-size="8">递归</text>
+
+<line x1="240" y1="542" x2="240" y2="564" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<rect x="60" y="564" width="360" height="76" rx="8" fill="#e0f2fe" stroke="#0e7490" stroke-width="1"/>
+<text x="80" y="588" fill="#0c4a6e" font-size="11" font-weight="600">Step 6: 刷新远处的桶</text>
+<text x="80" y="606" fill="#334155" font-size="9">对每个还空的桶，随机生成该范围的 ID</text>
+<text x="80" y="624" fill="#334155" font-size="9">执行 find_node(随机 ID) → 填入对应桶</text>
+<text x="80" y="636" fill="#475569" font-size="8">确保远处的桶也有代表节点可以指路</text>
+
+<line x1="240" y1="640" x2="240" y2="662" stroke="#0e7490" stroke-width="1.5" marker-end="url(#arrow-teal)"/>
+
+<rect x="60" y="662" width="360" height="76" rx="8" fill="#d1fae5" stroke="#047857" stroke-width="1.5"/>
+<text x="80" y="686" fill="#064e3b" font-size="11" font-weight="600">Step 7: 初始化完成</text>
+<text x="80" y="704" fill="#334155" font-size="9">路由表有几百个节点，保存到磁盘 (dht.dat)</text>
+<text x="80" y="722" fill="#334155" font-size="9">可以正常响应和发起 DHT 查询</text>
+<text x="80" y="734" fill="#475569" font-size="8">整个过程约 10~30 秒</text>
+
+<line x1="240" y1="738" x2="240" y2="762" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="60" y="762" width="360" height="152" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+<text x="80" y="786" fill="#1e293b" font-size="11" font-weight="600">日常自动维护 (持续运行)</text>
+<line x1="80" y1="796" x2="400" y2="796" stroke="#e2e8f0" stroke-width="0.5"/>
+<text x="80" y="816" fill="#334155" font-size="9">被动学习: 收到请求 → 加入发送者</text>
+<text x="80" y="836" fill="#334155" font-size="9">查询附带: find/get_peers 中间节点入表</text>
+<text x="80" y="856" fill="#334155" font-size="9">桶刷新: 15 分钟无活动 → 随机 find_node</text>
+<text x="80" y="876" fill="#334155" font-size="9">ping 探活: 桶满 + 新节点 → ping 最老的</text>
+<text x="80" y="896" fill="#334155" font-size="9">定期保存: 路由表持久化到磁盘</text>
+
+<rect x="490" y="76" width="380" height="300" rx="16" fill="none" stroke="#047857" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="490" y="76" width="140" height="22" rx="6" fill="#d1fae5" stroke="#047857" stroke-width="1"/>
+<text x="560" y="91" fill="#064e3b" font-size="9" font-weight="600" text-anchor="middle">后续启动 (热启动)</text>
+
+<rect x="520" y="114" width="320" height="56" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="540" y="138" fill="#064e3b" font-size="11" font-weight="600">1. 读取 dht.dat</text>
+<text x="540" y="158" fill="#334155" font-size="9">从磁盘加载上次保存的路由表</text>
+
+<line x1="680" y1="170" x2="680" y2="192" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<rect x="520" y="192" width="320" height="56" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="540" y="216" fill="#064e3b" font-size="11" font-weight="600">2. 批量 ping 验活</text>
+<text x="540" y="236" fill="#334155" font-size="9">活的保留，死的踢掉</text>
+
+<line x1="680" y1="248" x2="680" y2="270" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+<rect x="520" y="270" width="320" height="56" rx="8" fill="#d1fae5" stroke="#047857" stroke-width="1.5"/>
+<text x="540" y="294" fill="#064e3b" font-size="11" font-weight="600">3. 立即可用</text>
+<text x="540" y="314" fill="#334155" font-size="9">不需要重新 Bootstrap，秒恢复</text>
+
+<text x="680" y="354" fill="#475569" font-size="9" text-anchor="middle">如果存活节点太少 → 回退到冷启动流程</text>
+
+<rect x="490" y="410" width="380" height="226" rx="16" fill="none" stroke="#b45309" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="490" y="410" width="180" height="22" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<text x="580" y="425" fill="#78350f" font-size="9" font-weight="600" text-anchor="middle">DHT 与站点的关系</text>
+
+<rect x="520" y="448" width="140" height="80" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<text x="590" y="472" fill="#78350f" font-size="10" font-weight="600" text-anchor="middle">站点/Tracker</text>
+<text x="590" y="490" fill="#92400e" font-size="8" text-anchor="middle">有账号、有权限</text>
+<text x="590" y="504" fill="#92400e" font-size="8" text-anchor="middle">管理 .torrent</text>
+<text x="590" y="518" fill="#92400e" font-size="8" text-anchor="middle">有 passkey</text>
+
+<rect x="700" y="448" width="140" height="80" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="770" y="472" fill="#064e3b" font-size="10" font-weight="600" text-anchor="middle">DHT 网络</text>
+<text x="770" y="490" fill="#047857" font-size="8" text-anchor="middle">无账号、无权限</text>
+<text x="770" y="504" fill="#047857" font-size="8" text-anchor="middle">完全独立 P2P</text>
+<text x="770" y="518" fill="#047857" font-size="8" text-anchor="middle">只靠 Node ID</text>
+
+<rect x="520" y="548" width="320" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+<text x="680" y="570" fill="#991b1b" font-size="10" font-weight="500" text-anchor="middle">private=1 → 禁用 DHT/PEX，只走 Tracker</text>
+
+<rect x="520" y="598" width="320" height="30" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="680" y="618" fill="#064e3b" font-size="10" font-weight="500" text-anchor="middle">private=0 → Tracker + DHT + PEX 全部并行</text>
+</svg>
