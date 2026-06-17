@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+<marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+</marker>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">XOR 距离的两个关键性质 (8-bit 空间证明)</text>
+<text x="30" y="56" fill="#64748b" font-size="9">我 X = 00000000，用实际二进制推导</text>
+
+<rect x="30" y="76" width="840" height="470" rx="16" fill="none" stroke="#dc2626" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="30" y="76" width="360" height="22" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+<text x="210" y="91" fill="#991b1b" font-size="10" font-weight="600" text-anchor="middle">性质 1: 不同桶的节点之间一定远</text>
+
+<text x="50" y="122" fill="#1e293b" font-size="11" font-weight="600">设定</text>
+<rect x="50" y="132" width="800" height="80" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.5"/>
+<text x="70" y="154" fill="#1e293b" font-size="11">X = 00000000  (我)</text>
+<text x="70" y="174" fill="#047857" font-size="11">M = 00000010  (近节点，在我的 Bucket 1，d(X,M)=2)</text>
+<text x="70" y="194" fill="#dc2626" font-size="11">N = 11000000  (远节点，在我的 Bucket 7，d(X,N)=192)</text>
+
+<text x="50" y="232" fill="#1e293b" font-size="11" font-weight="600">推导: 看第 7 位 (Bucket 7 的决定位)</text>
+
+<rect x="50" y="244" width="800" height="180" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+
+<text x="70" y="270" fill="#1e293b" font-size="11">X XOR N 的第 7 位 = 1   (因为 N 在 Bucket 7，最高位1就在第7位)</text>
+<text x="70" y="292" fill="#1e293b" font-size="11">→ 所以 N 的第 7 位 ≠ X 的第 7 位</text>
+<text x="70" y="312" fill="#dc2626" font-size="11" font-weight="500">→ N 的第 7 位 = 1      (因为 X 的第 7 位 = 0)</text>
+
+<text x="70" y="342" fill="#1e293b" font-size="11">X XOR M 的第 7 位 = 0   (因为 M 在 Bucket 1，最高位1才在第1位)</text>
+<text x="70" y="362" fill="#1e293b" font-size="11">→ 所以 M 的第 7 位 = X 的第 7 位</text>
+<text x="70" y="382" fill="#047857" font-size="11" font-weight="500">→ M 的第 7 位 = 0      (因为 X 的第 7 位 = 0)</text>
+
+<text x="70" y="412" fill="#1e293b" font-size="11" font-weight="500">所以: N 第 7 位 = 1，M 第 7 位 = 0 → 第 7 位不同!</text>
+
+<rect x="50" y="436" width="800" height="92" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+<text x="70" y="462" fill="#1e293b" font-size="11" font-weight="600">结论</text>
+<text x="70" y="484" fill="#1e293b" font-size="11">M XOR N 的第 7 位 = 1 (因为 0 XOR 1 = 1)</text>
+<text x="70" y="506" fill="#991b1b" font-size="12" font-weight="600">→ d(M, N) &gt;= 2^7 = 128    一定远!</text>
+<text x="70" y="522" fill="#64748b" font-size="9">通用规则: 近桶(i) 和 远桶(j) 的节点距离 &gt;= 2^j，其中 j &gt; i</text>
+
+<rect x="30" y="576" width="840" height="496" rx="16" fill="none" stroke="#047857" stroke-width="1" stroke-dasharray="8,4"/>
+<rect x="30" y="576" width="360" height="22" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="210" y="591" fill="#064e3b" font-size="10" font-weight="600" text-anchor="middle">性质 2: 同一个桶的节点之间可以很近</text>
+
+<text x="50" y="622" fill="#1e293b" font-size="11" font-weight="600">设定</text>
+<rect x="50" y="632" width="800" height="80" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.5"/>
+<text x="70" y="654" fill="#1e293b" font-size="11">X = 00000000  (我)</text>
+<text x="70" y="674" fill="#6d28d9" font-size="11">N = 11000000  (在我的 Bucket 7，d(X,N)=192)</text>
+<text x="70" y="694" fill="#6d28d9" font-size="11">P = 11000001  (也在我的 Bucket 7，d(X,P)=193)</text>
+
+<text x="50" y="732" fill="#1e293b" font-size="11" font-weight="600">推导: 看高位的一致性</text>
+
+<rect x="50" y="744" width="800" height="180" rx="8" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+
+<text x="70" y="770" fill="#1e293b" font-size="11">N 和 P 都在我的 Bucket 7</text>
+<text x="70" y="792" fill="#1e293b" font-size="11">→ X XOR N 最高位1在第 7 位 → N 的第 7 位 = 1</text>
+<text x="70" y="812" fill="#1e293b" font-size="11">→ X XOR P 最高位1在第 7 位 → P 的第 7 位 = 1</text>
+<text x="70" y="840" fill="#6d28d9" font-size="11" font-weight="500">N 和 P 的第 7 位都是 1 → N XOR P 的第 7 位 = 0</text>
+
+<text x="70" y="870" fill="#1e293b" font-size="11">同理，第 8 位(不存在，但对 160-bit 空间就是更高位):</text>
+<text x="70" y="892" fill="#1e293b" font-size="11">所有高于第 7 位的位，N 和 P 都与 X 相同 → N 和 P 也相同</text>
+<text x="70" y="912" fill="#6d28d9" font-size="11" font-weight="500">→ N XOR P 的所有高位都是 0，只有第 7 位以下可能不同</text>
+
+<rect x="50" y="936" width="800" height="56" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="70" y="960" fill="#1e293b" font-size="11" font-weight="600">结论</text>
+<text x="70" y="980" fill="#065f46" font-size="12" font-weight="600">d(N, P) &lt; 2^7 = 128    距离上限被锁定!</text>
+
+<rect x="50" y="1004" width="800" height="52" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<text x="70" y="1026" fill="#78350f" font-size="11" font-weight="600">实际例子验证</text>
+<text x="70" y="1046" fill="#1e293b" font-size="11">N=11000000 XOR P=11000001 = 00000001 = 1    (极近!)</text>
+</svg>
