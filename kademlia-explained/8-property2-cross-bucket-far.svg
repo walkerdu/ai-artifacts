@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">性质 2: 不同桶的节点之间一定远，且距离落在远桶的量级</text>
+<text x="30" y="56" fill="#64748b" font-size="9">Bucket i 和 Bucket j (i&lt;j) 的节点距离恰好落在 [2^j, 2^(j+1)-1]</text>
+
+<text x="50" y="96" fill="#1e293b" font-size="12" font-weight="600">设定 (8-bit 空间)</text>
+<rect x="50" y="108" width="800" height="80" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.5"/>
+<text x="70" y="132" fill="#1e293b" font-size="11">X = 00000000  (我)</text>
+<text x="70" y="154" fill="#047857" font-size="11">M = 00000010  (近节点，在我的 Bucket 1, d(X,M) = 2)</text>
+<text x="70" y="176" fill="#dc2626" font-size="11">N = 11000000  (远节点，在我的 Bucket 7, d(X,N) = 192)</text>
+
+<text x="50" y="216" fill="#1e293b" font-size="12" font-weight="600">推导</text>
+
+<rect x="50" y="228" width="800" height="260" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+
+<text x="70" y="256" fill="#1e293b" font-size="11" font-weight="500">Step 1: 看第 j=7 位 (远桶的决定位)</text>
+
+<text x="70" y="282" fill="#1e293b" font-size="11">N 在 Bucket 7 → X XOR N 最高位1在第 7 位 → N 的第 7 位 ≠ X 的第 7 位</text>
+<text x="70" y="302" fill="#dc2626" font-size="11" font-weight="500">→ N 的第 7 位 = 1 (因为 X 第 7 位 = 0)</text>
+
+<text x="70" y="328" fill="#1e293b" font-size="11">M 在 Bucket 1 → X XOR M 最高位1在第 1 位 → 第 7 位 XOR = 0</text>
+<text x="70" y="348" fill="#047857" font-size="11" font-weight="500">→ M 的第 7 位 = X 的第 7 位 = 0</text>
+
+<text x="70" y="378" fill="#1e293b" font-size="11" font-weight="500">Step 2: M 第 7 位 = 0, N 第 7 位 = 1 → M XOR N 第 7 位 = 1</text>
+
+<text x="70" y="408" fill="#1e293b" font-size="11" font-weight="500">Step 3: 第 7 位以上呢?</text>
+<text x="70" y="428" fill="#1e293b" font-size="11">M 在 Bucket 1 (i=1 &lt; 7) → M 的所有高位 = X 的高位</text>
+<text x="70" y="448" fill="#1e293b" font-size="11">N 在 Bucket 7 → X XOR N 的第 7 位是最高位1 → N 的更高位 = X 的更高位</text>
+<text x="70" y="468" fill="#1e293b" font-size="11" font-weight="500">→ M 和 N 的第 7 位以上相同 → M XOR N 的更高位全 = 0</text>
+<text x="70" y="484" fill="#6d28d9" font-size="11" font-weight="500">→ M XOR N 的最高有效位恰好在第 7 位!</text>
+
+<text x="50" y="520" fill="#1e293b" font-size="12" font-weight="600">结论</text>
+<rect x="50" y="530" width="800" height="72" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+<text x="70" y="554" fill="#991b1b" font-size="12" font-weight="600">d(M, N) 的最高有效位恰在第 j 位</text>
+<text x="70" y="576" fill="#991b1b" font-size="12" font-weight="600">→ d(M, N) 落在 [2^j, 2^(j+1)-1] = Bucket j 的距离量级</text>
+<text x="70" y="594" fill="#64748b" font-size="9">不仅"一定远"，而且精确落在远桶(j)对应的距离范围内</text>
+
+<text x="50" y="630" fill="#1e293b" font-size="11" font-weight="600">验证</text>
+<rect x="50" y="638" width="800" height="28" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<text x="70" y="657" fill="#78350f" font-size="11">M=00000010 XOR N=11000000 = 11000010 = 194, 最高位在第7位, 落在 [128,255] = Bucket 7 量级</text>
+</svg>

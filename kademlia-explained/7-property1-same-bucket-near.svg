@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="0.5"/>
+</pattern>
+</defs>
+
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+
+<text x="30" y="36" fill="#0f172a" font-size="16" font-weight="700">性质 1: 同一个 Bucket 内的节点之间一定近</text>
+<text x="30" y="56" fill="#64748b" font-size="9">距离上限被桶编号锁定: d(N, P) &lt; 2^(i+1)，其中 i 为桶编号</text>
+
+<text x="50" y="96" fill="#1e293b" font-size="12" font-weight="600">设定 (8-bit 空间)</text>
+<rect x="50" y="108" width="800" height="80" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.5"/>
+<text x="70" y="132" fill="#1e293b" font-size="11">X = 00000000  (我)</text>
+<text x="70" y="154" fill="#6d28d9" font-size="11">N = 11000000  (在我的 Bucket 7, d(X,N) = 192)</text>
+<text x="70" y="176" fill="#6d28d9" font-size="11">P = 11000001  (在我的 Bucket 7, d(X,P) = 193)</text>
+
+<text x="50" y="216" fill="#1e293b" font-size="12" font-weight="600">推导</text>
+
+<rect x="50" y="228" width="800" height="228" rx="8" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+
+<text x="70" y="256" fill="#1e293b" font-size="11" font-weight="500">Step 1: N 和 P 都在 Bucket 7 → 它们与 X 的 XOR 最高有效位都在第 7 位</text>
+
+<text x="70" y="286" fill="#1e293b" font-size="11">X XOR N 的第 7 位 = 1 → N 的第 7 位 ≠ X 的第 7 位 → N 的第 7 位 = 1</text>
+<text x="70" y="306" fill="#1e293b" font-size="11">X XOR P 的第 7 位 = 1 → P 的第 7 位 ≠ X 的第 7 位 → P 的第 7 位 = 1</text>
+
+<text x="70" y="336" fill="#6d28d9" font-size="11" font-weight="500">Step 2: N 和 P 第 7 位相同(都是1) → N XOR P 的第 7 位 = 0</text>
+
+<text x="70" y="366" fill="#1e293b" font-size="11" font-weight="500">Step 3: 第 7 位以上的所有位 (8-bit 空间中不存在更高位，160-bit 中有)</text>
+<text x="70" y="386" fill="#1e293b" font-size="11">X XOR N 在第 7 位以上全为 0 → N 的高位 = X 的高位</text>
+<text x="70" y="406" fill="#1e293b" font-size="11">X XOR P 在第 7 位以上全为 0 → P 的高位 = X 的高位</text>
+<text x="70" y="426" fill="#6d28d9" font-size="11" font-weight="500">→ N 和 P 的高位相同 → N XOR P 的高位全为 0</text>
+
+<text x="70" y="450" fill="#1e293b" font-size="11" font-weight="500">Step 4: N XOR P 的第 7 位 = 0，更高位也全 = 0</text>
+
+<text x="50" y="488" fill="#1e293b" font-size="12" font-weight="600">结论</text>
+<rect x="50" y="498" width="800" height="52" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.5"/>
+<text x="70" y="520" fill="#065f46" font-size="12" font-weight="600">d(N, P) = N XOR P 的最高有效位一定低于第 i 位</text>
+<text x="70" y="540" fill="#065f46" font-size="12" font-weight="600">→ d(N, P) &lt; 2^i     同桶节点距离一定更近!</text>
+
+<text x="50" y="578" fill="#1e293b" font-size="11" font-weight="600">验证</text>
+<rect x="50" y="588" width="800" height="28" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<text x="70" y="607" fill="#78350f" font-size="11">N=11000000 XOR P=11000001 = 00000001 = 1 &lt; 2^7=128  (实际距离1, 极近!)</text>
+</svg>
