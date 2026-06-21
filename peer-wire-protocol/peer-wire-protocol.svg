@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1400">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+  </marker>
+  <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#0e7490"/>
+  </marker>
+  <marker id="arrow-emerald" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#047857"/>
+  </marker>
+  <marker id="arrow-violet" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#6d28d9"/>
+  </marker>
+  <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#b45309"/>
+  </marker>
+  <marker id="arrow-rose" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#be123c"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="#ffffff"/>
+
+<!-- ===== Title ===== -->
+<text x="550" y="40" fill="#0f172a" font-size="18" font-weight="700" text-anchor="middle">Peer Wire Protocol — BitTorrent 核心数据交换协议</text>
+<text x="550" y="62" fill="#475569" font-size="11" font-weight="400" text-anchor="middle">BEP-3 定义 | TCP 长连接 | 两个 Peer 之间传输 Piece 数据的协议</text>
+
+<!-- ===== Section 1: Handshake ===== -->
+<rect x="30" y="85" width="1040" height="155" rx="12" fill="none" stroke="#b45309" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="50" y="105" fill="#b45309" font-size="11" font-weight="600">阶段一：握手 (Handshake)</text>
+
+<!-- Peer A -->
+<rect x="80" y="120" width="140" height="45" rx="8" fill="#e0f2fe" stroke="#0e7490" stroke-width="1"/>
+<text x="150" y="140" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">Peer A (发起方)</text>
+<text x="150" y="156" fill="#475569" font-size="9" text-anchor="middle">Leecher</text>
+
+<!-- Peer B -->
+<rect x="880" y="120" width="140" height="45" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="950" y="140" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">Peer B (接收方)</text>
+<text x="950" y="156" fill="#475569" font-size="9" text-anchor="middle">Seeder</text>
+
+<!-- Handshake arrow -->
+<line x1="220" y1="142" x2="870" y2="142" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+<text x="550" y="132" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">握手消息 (68 字节固定长度)</text>
+
+<!-- Handshake format box -->
+<rect x="280" y="175" width="540" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="0.8"/>
+<text x="300" y="193" fill="#78350f" font-size="9" font-weight="600">格式:</text>
+<text x="355" y="193" fill="#0f172a" font-size="9" font-weight="400">0x13 + "BitTorrent protocol" + reserved[8] + info_hash[20] + peer_id[20]</text>
+<text x="300" y="213" fill="#475569" font-size="8" font-weight="400">reserved 字段用于声明扩展支持 (如 DHT=0x01, 扩展协议=0x100000)</text>
+
+<!-- ===== Section 2: State Machine ===== -->
+<rect x="30" y="260" width="1040" height="230" rx="12" fill="none" stroke="#6d28d9" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="50" y="280" fill="#6d28d9" font-size="11" font-weight="600">阶段二：状态机 — 每个连接维护 4 个状态位</text>
+
+<!-- State boxes - Am side -->
+<rect x="60" y="300" width="470" height="80" rx="8" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="295" y="322" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">本端状态 (我对对方)</text>
+
+<rect x="80" y="340" width="200" height="30" rx="6" fill="#ffffff" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="180" y="360" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">am_choking = 1 (初始阻塞)</text>
+
+<rect x="310" y="340" width="200" height="30" rx="6" fill="#ffffff" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="410" y="360" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">am_interested = 0 (初始无兴趣)</text>
+
+<!-- State boxes - Peer side -->
+<rect x="570" y="300" width="470" height="80" rx="8" fill="#e0f2fe" stroke="#0e7490" stroke-width="0.8"/>
+<text x="805" y="322" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">对端状态 (对方对我)</text>
+
+<rect x="590" y="340" width="200" height="30" rx="6" fill="#ffffff" stroke="#0e7490" stroke-width="0.5"/>
+<text x="690" y="360" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">peer_choking = 1 (被阻塞)</text>
+
+<rect x="820" y="340" width="200" height="30" rx="6" fill="#ffffff" stroke="#0e7490" stroke-width="0.5"/>
+<text x="920" y="360" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">peer_interested = 0 (对方无兴趣)</text>
+
+<!-- Explanation -->
+<rect x="60" y="400" width="1000" height="75" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="80" y="420" fill="#0f172a" font-size="10" font-weight="600">数据传输条件：</text>
+<text x="80" y="440" fill="#047857" font-size="9" font-weight="500">能下载：peer_choking=0 (对方没阻塞我) 且 am_interested=1 (我对对方有兴趣)</text>
+<text x="80" y="458" fill="#0e7490" font-size="9" font-weight="500">能上传：am_choking=0 (我没阻塞对方) 且 peer_interested=1 (对方对我有兴趣)</text>
+<text x="80" y="473" fill="#475569" font-size="8">choke/unchoke 机制是 BitTorrent 博弈论的核心 — 用于实现"以牙还牙" (tit-for-tat) 策略</text>
+
+<!-- ===== Section 3: Message Types ===== -->
+<rect x="30" y="510" width="1040" height="560" rx="12" fill="none" stroke="#047857" stroke-width="1.2" stroke-dasharray="8,4"/>
+<text x="50" y="530" fill="#047857" font-size="11" font-weight="600">阶段三：消息类型 — 统一格式 [长度4字节][消息ID1字节][payload]</text>
+
+<!-- Keep-alive -->
+<rect x="60" y="545" width="200" height="45" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.8"/>
+<text x="160" y="564" fill="#0f172a" font-size="10" font-weight="600" text-anchor="middle">keep-alive</text>
+<text x="160" y="580" fill="#475569" font-size="8" text-anchor="middle">len=0, 无 ID, 保活心跳</text>
+
+<!-- Category: State Messages -->
+<rect x="60" y="610" width="480" height="145" rx="8" fill="none" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="80" y="630" fill="#6d28d9" font-size="10" font-weight="600">状态消息 (控制 choke/interest)</text>
+
+<rect x="80" y="645" width="200" height="40" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="180" y="662" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">choke (ID=0)</text>
+<text x="180" y="677" fill="#475569" font-size="8" text-anchor="middle">阻塞对方，停止上传</text>
+
+<rect x="310" y="645" width="210" height="40" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="415" y="662" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">unchoke (ID=1)</text>
+<text x="415" y="677" fill="#475569" font-size="8" text-anchor="middle">取消阻塞，允许上传</text>
+
+<rect x="80" y="700" width="200" height="40" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="180" y="717" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">interested (ID=2)</text>
+<text x="180" y="732" fill="#475569" font-size="8" text-anchor="middle">告知对方"我想要你的数据"</text>
+
+<rect x="310" y="700" width="210" height="40" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.5"/>
+<text x="415" y="717" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">not interested (ID=3)</text>
+<text x="415" y="732" fill="#475569" font-size="8" text-anchor="middle">告知对方"我不需要你的数据"</text>
+
+<!-- Category: Data Exchange -->
+<rect x="570" y="610" width="480" height="145" rx="8" fill="none" stroke="#047857" stroke-width="0.8"/>
+<text x="590" y="630" fill="#047857" font-size="10" font-weight="600">数据传输消息</text>
+
+<rect x="590" y="645" width="200" height="40" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="0.5"/>
+<text x="690" y="662" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">request (ID=6)</text>
+<text x="690" y="677" fill="#475569" font-size="8" text-anchor="middle">请求: index + begin + length</text>
+
+<rect x="830" y="645" width="200" height="40" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="0.5"/>
+<text x="930" y="662" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">piece (ID=7)</text>
+<text x="930" y="677" fill="#475569" font-size="8" text-anchor="middle">数据: index + begin + block</text>
+
+<rect x="590" y="700" width="200" height="40" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="0.5"/>
+<text x="690" y="717" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">cancel (ID=8)</text>
+<text x="690" y="732" fill="#475569" font-size="8" text-anchor="middle">取消之前的 request</text>
+
+<rect x="830" y="700" width="200" height="40" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="0.5"/>
+<text x="930" y="717" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">port (ID=9)</text>
+<text x="930" y="732" fill="#475569" font-size="8" text-anchor="middle">通知 DHT 监听端口</text>
+
+<!-- Category: Piece Availability -->
+<rect x="60" y="775" width="990" height="100" rx="8" fill="none" stroke="#0e7490" stroke-width="0.8"/>
+<text x="80" y="795" fill="#0e7490" font-size="10" font-weight="600">Piece 可用性通告</text>
+
+<rect x="80" y="810" width="280" height="50" rx="6" fill="#e0f2fe" stroke="#0e7490" stroke-width="0.5"/>
+<text x="220" y="830" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">bitfield (ID=5)</text>
+<text x="220" y="847" fill="#475569" font-size="8" text-anchor="middle">握手后立即发送，位图表示拥有哪些 Piece</text>
+
+<rect x="400" y="810" width="280" height="50" rx="6" fill="#e0f2fe" stroke="#0e7490" stroke-width="0.5"/>
+<text x="540" y="830" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">have (ID=4)</text>
+<text x="540" y="847" fill="#475569" font-size="8" text-anchor="middle">增量通知：刚下载完某个 Piece</text>
+
+<rect x="720" y="810" width="310" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="0.5"/>
+<text x="875" y="830" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">have all / have none (Fast Extension)</text>
+<text x="875" y="847" fill="#475569" font-size="8" text-anchor="middle">BEP-6 快速扩展: 替代整个 bitfield</text>
+
+<!-- Request/Piece detail -->
+<rect x="60" y="895" width="990" height="75" rx="6" fill="#f0fdf4" stroke="#047857" stroke-width="0.8"/>
+<text x="80" y="915" fill="#047857" font-size="10" font-weight="600">数据分块细节:</text>
+<text x="80" y="935" fill="#0f172a" font-size="9">文件 &#8594; Piece (通常 256KB~4MB) &#8594; Block (通常 16KB，request 的最小单位)</text>
+<text x="80" y="953" fill="#0f172a" font-size="9">request 消息: index=第几个 Piece, begin=Piece 内偏移, length=请求字节数 (通常 2^14=16384)</text>
+<text x="80" y="968" fill="#475569" font-size="8">每个 Piece 下载完后进行 SHA-1 校验 (与 .torrent 文件中的 pieces 字段比对)</text>
+
+<!-- Extension Protocol -->
+<rect x="60" y="990" width="990" height="65" rx="6" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="80" y="1010" fill="#6d28d9" font-size="10" font-weight="600">扩展协议 (BEP-10, ID=20):</text>
+<text x="80" y="1030" fill="#0f172a" font-size="9">通过 Extended Handshake 协商子扩展 &#8594; ut_pex (PEX), ut_metadata (磁力链接), lt_donthave 等</text>
+<text x="80" y="1048" fill="#475569" font-size="8">所有 BEP-10 扩展共用 message ID=20，靠内部 sub-ID 区分</text>
+
+<!-- ===== Section 4: Typical Flow (Sequence) ===== -->
+<text x="550" y="1100" fill="#0f172a" font-size="14" font-weight="700" text-anchor="middle">典型交互流程</text>
+
+<!-- Actors -->
+<rect x="100" y="1115" width="130" height="40" rx="8" fill="#e0f2fe" stroke="#0e7490" stroke-width="1"/>
+<text x="165" y="1140" fill="#0f172a" font-size="10" font-weight="600" text-anchor="middle">Leecher A</text>
+
+<rect x="820" y="1115" width="130" height="40" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1"/>
+<text x="885" y="1140" fill="#0f172a" font-size="10" font-weight="600" text-anchor="middle">Seeder B</text>
+
+<!-- Lifelines -->
+<line x1="165" y1="1155" x2="165" y2="1380" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="6,4"/>
+<line x1="885" y1="1155" x2="885" y2="1380" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="6,4"/>
+
+<!-- Step numbering + messages -->
+<circle cx="90" cy="1180" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1183" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">1</text>
+<line x1="165" y1="1180" x2="875" y2="1180" stroke="#b45309" stroke-width="1.2" marker-end="url(#arrow-amber)"/>
+<text x="525" y="1172" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">Handshake (info_hash + peer_id)</text>
+
+<circle cx="90" cy="1210" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1213" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">2</text>
+<line x1="885" y1="1210" x2="175" y2="1210" stroke="#047857" stroke-width="1.2" marker-end="url(#arrow-emerald)"/>
+<text x="525" y="1202" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">bitfield (B 拥有所有 Piece)</text>
+
+<circle cx="90" cy="1240" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1243" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">3</text>
+<line x1="165" y1="1240" x2="875" y2="1240" stroke="#0e7490" stroke-width="1.2" marker-end="url(#arrow-cyan)"/>
+<text x="525" y="1232" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">interested (A 对 B 感兴趣)</text>
+
+<circle cx="90" cy="1270" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1273" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">4</text>
+<line x1="885" y1="1270" x2="175" y2="1270" stroke="#047857" stroke-width="1.2" marker-end="url(#arrow-emerald)"/>
+<text x="525" y="1262" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">unchoke (B 允许 A 下载)</text>
+
+<circle cx="90" cy="1300" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1303" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">5</text>
+<line x1="165" y1="1300" x2="875" y2="1300" stroke="#0e7490" stroke-width="1.2" marker-end="url(#arrow-cyan)"/>
+<text x="525" y="1292" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">request (index=0, begin=0, length=16384)</text>
+
+<circle cx="90" cy="1330" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1333" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">6</text>
+<line x1="885" y1="1330" x2="175" y2="1330" stroke="#047857" stroke-width="1.2" marker-end="url(#arrow-emerald)"/>
+<text x="525" y="1322" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">piece (index=0, begin=0, block=16KB 数据)</text>
+
+<circle cx="90" cy="1360" r="9" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
+<text x="90" y="1363" fill="#6d28d9" font-size="7" font-weight="700" text-anchor="middle">7</text>
+<line x1="165" y1="1360" x2="875" y2="1360" stroke="#0e7490" stroke-width="1.2" marker-end="url(#arrow-cyan)"/>
+<text x="525" y="1352" fill="#0f172a" font-size="9" font-weight="500" text-anchor="middle">have (index=0) &#8594; 通知其他 Peer 我也有这个 Piece 了</text>
+
+<!-- Bottom legend -->
+<rect x="30" y="1385" width="1040" height="12" rx="0" fill="none"/>
+<text x="550" y="1397" fill="#475569" font-size="9" font-weight="400" text-anchor="middle">Peer Wire Protocol 是所有 BT 扩展 (PEX/DHT/磁力链接/加密) 的传输基础 | BEP-3 (核心) + BEP-6 (Fast) + BEP-10 (扩展框架)</text>
+</svg>
