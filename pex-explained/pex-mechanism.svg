@@ -26,11 +26,11 @@
 
 <!-- Title -->
 <text x="500" y="40" fill="#0f172a" font-size="18" font-weight="700" text-anchor="middle">P2P Peer Exchange (PEX) - BEP-11</text>
-<text x="500" y="62" fill="#475569" font-size="11" font-weight="400" text-anchor="middle">per-torrent scope: only peers sharing the same info_hash are exchanged</text>
+<text x="500" y="62" fill="#475569" font-size="11" font-weight="400" text-anchor="middle">作用域：仅交换同一 info_hash（同一 Torrent 文件）的 Peer</text>
 
 <!-- ===== Section 1: Scope Boundary ===== -->
 <rect x="30" y="80" width="940" height="200" rx="12" fill="none" stroke="#0e7490" stroke-width="1.2" stroke-dasharray="8,4"/>
-<text x="50" y="100" fill="#0e7490" font-size="10" font-weight="600">SCOPE: Single Torrent (info_hash: a1b2c3...)</text>
+<text x="50" y="100" fill="#0e7490" font-size="10" font-weight="600">作用域：单个 Torrent (info_hash: a1b2c3...)</text>
 
 <!-- Torrent File Info -->
 <rect x="60" y="115" width="200" height="55" rx="8" fill="#e0f2fe" stroke="#0e7490" stroke-width="1"/>
@@ -51,7 +51,7 @@
 <text x="715" y="148" fill="#475569" font-size="9" text-anchor="middle">9.10.11.12:6881</text>
 
 <rect x="820" y="110" width="130" height="50" rx="8" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
-<text x="885" y="132" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">New Peer X</text>
+<text x="885" y="132" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">新 Peer X</text>
 <text x="885" y="148" fill="#475569" font-size="9" text-anchor="middle">13.14.15.16:6881</text>
 
 <!-- Arrow from torrent to peers -->
@@ -59,15 +59,15 @@
 
 <!-- Isolation note -->
 <rect x="60" y="185" width="380" height="40" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="0.8"/>
-<text x="80" y="205" fill="#78350f" font-size="9" font-weight="500">Other Torrent (movie.mkv) &#8594; completely isolated Peer pool</text>
-<text x="80" y="220" fill="#78350f" font-size="9" font-weight="400">PEX never crosses info_hash boundaries</text>
+<text x="80" y="205" fill="#78350f" font-size="9" font-weight="500">其他 Torrent (movie.mkv) &#8594; 完全隔离的 Peer 池</text>
+<text x="80" y="220" fill="#78350f" font-size="9" font-weight="400">PEX 永远不会跨越 info_hash 边界</text>
 
 <!-- ===== Section 2: Sequence Diagram ===== -->
-<text x="500" y="310" fill="#0f172a" font-size="15" font-weight="700" text-anchor="middle">PEX Message Exchange Flow (ut_pex extension)</text>
+<text x="500" y="310" fill="#0f172a" font-size="15" font-weight="700" text-anchor="middle">PEX 消息交换流程 (ut_pex 扩展)</text>
 
 <!-- Actors -->
 <rect x="80" y="330" width="130" height="45" rx="8" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.2"/>
-<text x="145" y="350" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">New Peer X</text>
+<text x="145" y="350" fill="#0f172a" font-size="11" font-weight="600" text-anchor="middle">新 Peer X</text>
 <text x="145" y="366" fill="#475569" font-size="9" text-anchor="middle">13.14.15.16</text>
 
 <rect x="370" y="330" width="130" height="45" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.2"/>
@@ -87,51 +87,51 @@
 <circle cx="70" cy="410" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="413" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">1</text>
 <line x1="145" y1="410" x2="425" y2="410" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arrow-violet)"/>
-<text x="285" y="400" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">BT Handshake (info_hash + peer_id)</text>
-<text x="285" y="425" fill="#475569" font-size="8" text-anchor="middle">Extended Handshake: {m: {ut_pex: 1}}</text>
+<text x="285" y="400" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">BT 握手 (info_hash + peer_id)</text>
+<text x="285" y="425" fill="#475569" font-size="8" text-anchor="middle">扩展握手声明: {m: {ut_pex: 1}}</text>
 
 <!-- Step 2: PEX support confirmed -->
 <circle cx="70" cy="465" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="468" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">2</text>
 <line x1="435" y1="465" x2="155" y2="465" stroke="#047857" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-emerald)"/>
-<text x="290" y="455" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">Extended Handshake ACK</text>
-<text x="290" y="480" fill="#475569" font-size="8" text-anchor="middle">Confirms both sides support ut_pex</text>
+<text x="290" y="455" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">扩展握手确认</text>
+<text x="290" y="480" fill="#475569" font-size="8" text-anchor="middle">双方确认均支持 ut_pex</text>
 
 <!-- Step 3: Timer fires, PEX message -->
 <circle cx="70" cy="530" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="533" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">3</text>
 <line x1="435" y1="530" x2="155" y2="530" stroke="#047857" stroke-width="1.5" marker-end="url(#arrow-emerald)"/>
-<text x="290" y="518" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">PEX Message (every ~60s)</text>
+<text x="290" y="518" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">发送 PEX 消息 (每 ~60 秒)</text>
 
 <!-- PEX message content box -->
-<rect x="155" y="545" width="280" height="70" rx="6" fill="#f0fdf4" stroke="#047857" stroke-width="0.8"/>
-<text x="170" y="562" fill="#047857" font-size="9" font-weight="600">Payload (bencode dict):</text>
+<rect x="155" y="545" width="310" height="70" rx="6" fill="#f0fdf4" stroke="#047857" stroke-width="0.8"/>
+<text x="170" y="562" fill="#047857" font-size="9" font-weight="600">消息体 (bencode 字典):</text>
 <text x="170" y="578" fill="#0f172a" font-size="9" font-weight="400">  added: B(5.6.7.8:6881), C(9.10.11.12:6881)</text>
-<text x="170" y="594" fill="#0f172a" font-size="9" font-weight="400">  added.f: [0x02, 0x00] (flags: encrypt, seed..)</text>
-<text x="170" y="610" fill="#94a3b8" font-size="9" font-weight="400">  dropped: D(20.21.22.23:6881) // left swarm</text>
+<text x="170" y="594" fill="#0f172a" font-size="9" font-weight="400">  added.f: [0x02, 0x00] (标志: 加密, 做种..)</text>
+<text x="170" y="610" fill="#94a3b8" font-size="9" font-weight="400">  dropped: D(20.21.22.23:6881) // 已离开群组</text>
 
 <!-- Step 4: X sends back its known peers -->
 <circle cx="70" cy="640" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="643" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">4</text>
 <line x1="145" y1="640" x2="425" y2="640" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#arrow-violet)"/>
-<text x="285" y="630" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">X replies with its own PEX message</text>
-<text x="285" y="655" fill="#475569" font-size="8" text-anchor="middle">(bidirectional exchange)</text>
+<text x="285" y="630" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">X 回复自己知道的 Peer 列表</text>
+<text x="285" y="655" fill="#475569" font-size="8" text-anchor="middle">(双向交换)</text>
 
 <!-- Step 5: X connects to B -->
 <circle cx="70" cy="695" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="698" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">5</text>
 <line x1="145" y1="695" x2="715" y2="695" stroke="#0e7490" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
-<text x="430" y="685" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">X connects to B using received address</text>
-<text x="430" y="710" fill="#475569" font-size="8" text-anchor="middle">New BT Handshake &#8594; ut_pex &#8594; more peers discovered</text>
+<text x="430" y="685" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">X 用收到的地址连接 Peer B</text>
+<text x="430" y="710" fill="#475569" font-size="8" text-anchor="middle">新 BT 握手 &#8594; ut_pex &#8594; 发现更多节点</text>
 
 <!-- Step 6: B shares its peers with X -->
 <circle cx="70" cy="750" r="10" fill="#ede9fe" stroke="#6d28d9" stroke-width="1"/>
 <text x="70" y="753" fill="#6d28d9" font-size="8" font-weight="700" text-anchor="middle">6</text>
 <line x1="725" y1="750" x2="155" y2="750" stroke="#0e7490" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-cyan)"/>
-<text x="430" y="740" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">B sends PEX: {added: E, F, G...}</text>
-<text x="430" y="765" fill="#475569" font-size="8" text-anchor="middle">Peer pool grows exponentially</text>
+<text x="430" y="740" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">B 发送 PEX: {added: E, F, G...}</text>
+<text x="430" y="765" fill="#475569" font-size="8" text-anchor="middle">Peer 池指数级增长</text>
 
 <!-- ===== Legend / Key Details ===== -->
 <rect x="30" y="785" width="940" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
-<text x="50" y="805" fill="#475569" font-size="9" font-weight="500">Key: max ~50 peers/msg | interval ~60s | added.f flags: 0x01=prefers encryption, 0x02=is seed | per info_hash only | BEP-11 (libtorrent ut_pex extension)</text>
+<text x="50" y="805" fill="#475569" font-size="9" font-weight="500">要点: 每条消息最多 ~50 个 Peer | 间隔 ~60 秒 | added.f 标志: 0x01=支持加密, 0x02=做种 | 仅限同一 info_hash | BEP-11 (libtorrent ut_pex 扩展)</text>
 </svg>
