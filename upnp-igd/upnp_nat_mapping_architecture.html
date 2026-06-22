@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UPnP 映射 vs NAT 动态映射 · 路由器架构对比</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{
+  colors:{
+    background:'#FAFAFA',foreground:'#0F172A',muted:'#64748B',
+    card:'#FFFFFF',border:'#E2E8F0',
+    upnp:'#4F46E5',upnpsoft:'#EEF2FF',
+    nat:'#D97706',natsoft:'#FEF3C7',
+    statc:'#DC2626',statcsoft:'#FEE2E2',
+    kernel:'#0F766E',kernelsoft:'#CCFBF1'
+  },
+  fontFamily:{sans:['Inter','PingFang SC','Microsoft YaHei','sans-serif'],mono:['JetBrains Mono','ui-monospace','monospace']}
+}}}
+</script>
+</head>
+<body class="bg-background text-foreground font-sans overflow-x-hidden antialiased">
+
+<div class="mx-auto" style="max-width:1440px">
+
+  <!-- HERO -->
+  <header class="px-5 md:px-10 pt-16 md:pt-24 pb-10">
+    <div class="flex items-center gap-2 text-xs font-mono text-muted mb-6 tracking-wider">
+      <span class="inline-block w-8 h-px bg-muted"></span>
+      ROUTER · NETFILTER · IGD
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
+      UPnP 映射 <span class="text-muted font-light">vs</span> NAT 动态映射
+    </h1>
+    <p class="mt-4 text-lg md:text-xl text-muted max-w-3xl">
+      路由器内部如何分别记录、调度、并解决冲突 —— 一张图看懂应用层 / 内核层的协作关系。
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3 text-sm">
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-statcsoft text-statc font-medium"><span class="w-2 h-2 rounded-full bg-statc"></span>静态映射 (Priority 1)</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-upnpsoft text-upnp font-medium"><span class="w-2 h-2 rounded-full bg-upnp"></span>UPnP 映射 (Priority 2)</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-natsoft text-nat font-medium"><span class="w-2 h-2 rounded-full bg-nat"></span>动态 NAT (Priority 3)</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kernelsoft text-kernel font-medium"><span class="w-2 h-2 rounded-full bg-kernel"></span>内核 conntrack</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: 核心架构图 -->
+  <section class="px-5 md:px-10 py-10 reveal">
+    <div class="mb-6">
+      <div class="text-xs font-mono text-muted tracking-wider mb-2">01 / ARCHITECTURE</div>
+      <h2 class="text-2xl md:text-3xl font-bold">分层架构 &amp; 数据流</h2>
+      <p class="text-muted mt-2 max-w-3xl">UPnP 由应用层 <code class="font-mono text-upnp">miniupnpd</code> 独立管理，动态 NAT 由内核 PAT 引擎自动生成；两者最终都落到共享的 <code class="font-mono text-kernel">nf_conntrack</code> 表中执行报文转换。三条数据流分色标注、互不交叉。</p>
+    </div>
+
+    <!-- 数据流图例 -->
+    <div class="flex flex-wrap gap-5 mb-5 text-sm">
+      <span class="inline-flex items-center gap-2"><svg width="34" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#4F46E5" stroke-width="2.5" stroke-dasharray="5 4"/></svg><span class="text-upnp font-medium">① UPnP 控制流</span></span>
+      <span class="inline-flex items-center gap-2"><svg width="34" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#4F46E5" stroke-width="2.5"/></svg><span class="text-upnp font-medium">② 入站转发流</span></span>
+      <span class="inline-flex items-center gap-2"><svg width="34" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#D97706" stroke-width="2.5" stroke-dasharray="3 3"/></svg><span class="text-nat font-medium">③ 出站伪装流</span></span>
+      <span class="inline-flex items-center gap-2"><svg width="34" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#0F766E" stroke-width="2.5"/></svg><span class="text-kernel font-medium">规则落地 conntrack</span></span>
+    </div>
+
+    <div class="bg-card border border-border rounded-2xl p-4 md:p-8 shadow-sm">
+      <svg viewBox="0 0 1200 760" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+        <defs>
+          <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4F46E5"/></marker>
+          <marker id="arrN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#D97706"/></marker>
+          <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0F766E"/></marker>
+          <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#DC2626"/></marker>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#EEF2F6" stroke-width="1"/></pattern>
+        </defs>
+        <rect width="1200" height="760" fill="url(#grid)"/>
+
+        <!-- ===== 左侧端点 ===== -->
+        <!-- LAN client -->
+        <g>
+          <rect x="30" y="120" width="150" height="120" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="1.5"/>
+          <text x="105" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">LAN 客户端</text>
+          <text x="105" y="168" text-anchor="middle" font-size="10.5" font-family="JetBrains Mono" fill="#64748B">192.168.1.10</text>
+          <line x1="50" y1="180" x2="160" y2="180" stroke="#E2E8F0"/>
+          <text x="105" y="200" text-anchor="middle" font-size="10" fill="#4F46E5">SOAP AddPortMapping</text>
+          <text x="105" y="222" text-anchor="middle" font-size="10" fill="#D97706">主动出站连接</text>
+        </g>
+
+        <!-- WAN -->
+        <g>
+          <rect x="30" y="500" width="150" height="120" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="1.5"/>
+          <text x="105" y="528" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">WAN / 公网</text>
+          <text x="105" y="548" text-anchor="middle" font-size="10.5" font-family="JetBrains Mono" fill="#64748B">203.0.113.5</text>
+          <line x1="50" y1="560" x2="160" y2="560" stroke="#E2E8F0"/>
+          <text x="105" y="580" text-anchor="middle" font-size="10" fill="#4F46E5">入站 → :8080</text>
+          <text x="105" y="602" text-anchor="middle" font-size="10" fill="#0F766E">出站回包</text>
+        </g>
+
+        <!-- ===== Router 容器 ===== -->
+        <rect x="230" y="40" width="940" height="680" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4"/>
+        <text x="252" y="68" font-size="13" font-weight="700" fill="#0F172A" letter-spacing="2">ROUTER</text>
+        <text x="252" y="84" font-size="10" font-family="JetBrains Mono" fill="#94A3B8">Linux · Netfilter</text>
+
+        <!-- ---------- APPLICATION LAYER ---------- -->
+        <rect x="250" y="100" width="900" height="180" rx="14" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <text x="270" y="124" font-size="12" font-weight="700" fill="#475569" letter-spacing="1.5">APPLICATION LAYER · 控制平面</text>
+
+        <!-- miniupnpd -->
+        <g>
+          <rect x="280" y="142" width="330" height="120" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.5"/>
+          <text x="300" y="166" font-size="13" font-weight="700" fill="#4F46E5">miniupnpd</text>
+          <text x="300" y="184" font-size="10" font-family="JetBrains Mono" fill="#64748B">UPnP IGD daemon · 独立映射表</text>
+          <line x1="300" y1="194" x2="590" y2="194" stroke="#C7D2FE"/>
+          <text x="300" y="212" font-size="10.5" fill="#312E81">• 应用层映射表 UPnPMappingTable</text>
+          <text x="300" y="230" font-size="10.5" fill="#312E81">• 租期定时器 / 描述 / Enabled 状态</text>
+          <text x="300" y="248" font-size="10.5" fill="#312E81">• libiptc / libnftnl 调内核接口</text>
+        </g>
+
+        <!-- static config -->
+        <g>
+          <rect x="630" y="142" width="230" height="120" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+          <text x="650" y="166" font-size="13" font-weight="700" fill="#DC2626">静态规则</text>
+          <text x="650" y="184" font-size="10" font-family="JetBrains Mono" fill="#64748B">/etc/config/firewall</text>
+          <line x1="650" y1="194" x2="846" y2="194" stroke="#FCA5A5"/>
+          <text x="650" y="212" font-size="10.5" fill="#7F1D1D">• 用户手工配置 · 持久化</text>
+          <text x="650" y="230" font-size="10.5" fill="#7F1D1D">• 重启自动加载</text>
+          <text x="650" y="248" font-size="10.5" fill="#7F1D1D">• 优先级最高</text>
+        </g>
+
+        <!-- pat engine -->
+        <g>
+          <rect x="880" y="142" width="250" height="120" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+          <text x="900" y="166" font-size="13" font-weight="700" fill="#D97706">PAT / NAPT 引擎</text>
+          <text x="900" y="184" font-size="10" font-family="JetBrains Mono" fill="#64748B">出站自动伪装</text>
+          <line x1="900" y1="194" x2="1110" y2="194" stroke="#FCD34D"/>
+          <text x="900" y="212" font-size="10.5" fill="#78350F">• 内核 SNAT / MASQUERADE</text>
+          <text x="900" y="230" font-size="10.5" fill="#78350F">• 随机选择外部端口</text>
+          <text x="900" y="248" font-size="10.5" fill="#78350F">• 无应用层元数据</text>
+        </g>
+
+        <!-- ---------- NETFILTER LAYER ---------- -->
+        <rect x="250" y="300" width="900" height="160" rx="14" fill="#F8FAFC" stroke="#E2E8F0"/>
+        <text x="270" y="324" font-size="12" font-weight="700" fill="#475569" letter-spacing="1.5">NETFILTER · iptables / nftables · 规则平面</text>
+
+        <!-- PREROUTING table -->
+        <g>
+          <rect x="280" y="342" width="400" height="104" rx="10" fill="#fff" stroke="#CBD5E1"/>
+          <text x="300" y="364" font-size="12" font-weight="700" fill="#0F172A">nat / PREROUTING（入站匹配链）</text>
+          <rect x="300" y="372" width="360" height="20" rx="4" fill="#FEE2E2"/>
+          <text x="310" y="386" font-size="10" font-family="JetBrains Mono" fill="#7F1D1D">1 → static DNAT          (priority 1)</text>
+          <rect x="300" y="396" width="360" height="20" rx="4" fill="#EEF2FF"/>
+          <text x="310" y="410" font-size="10" font-family="JetBrains Mono" fill="#312E81">2 → jump MINIUPNPD       (priority 2)</text>
+          <rect x="300" y="420" width="360" height="18" rx="4" fill="#F1F5F9"/>
+          <text x="310" y="433" font-size="9.5" font-family="JetBrains Mono" fill="#475569">3 → default / fallthrough</text>
+        </g>
+
+        <!-- MINIUPNPD chain -->
+        <g>
+          <rect x="700" y="342" width="430" height="104" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-dasharray="4 3"/>
+          <text x="720" y="364" font-size="12" font-weight="700" fill="#4F46E5">MINIUPNPD 自定义子链</text>
+          <text x="720" y="380" font-size="9.5" font-family="JetBrains Mono" fill="#64748B">隔离子链 · miniupnpd 原子更新</text>
+          <rect x="720" y="388" width="390" height="22" rx="4" fill="#fff"/>
+          <text x="730" y="403" font-size="9.5" font-family="JetBrains Mono" fill="#312E81">-p tcp --dport 8080 -j DNAT --to 192.168.1.10:80</text>
+          <rect x="720" y="414" width="390" height="22" rx="4" fill="#fff"/>
+          <text x="730" y="429" font-size="9.5" font-family="JetBrains Mono" fill="#312E81">-p udp --dport 5060 -j DNAT --to 192.168.1.20:5060</text>
+        </g>
+
+        <!-- ---------- KERNEL LAYER ---------- -->
+        <rect x="250" y="480" width="900" height="220" rx="14" fill="#F0FDFA" stroke="#5EEAD4"/>
+        <text x="270" y="504" font-size="12" font-weight="700" fill="#0F766E" letter-spacing="1.5">KERNEL LAYER · nf_conntrack（共享数据平面）</text>
+        <text x="270" y="520" font-size="10.5" fill="#0F766E">所有规则最终都在此建立五元组连接条目，UPnP 与动态 NAT 在数据平面是统一的。</text>
+
+        <g font-family="JetBrains Mono" font-size="10">
+          <rect x="280" y="532" width="850" height="22" rx="4" fill="#fff" stroke="#CCFBF1"/>
+          <text x="294" y="548" fill="#475569">PROTO</text><text x="360" y="548" fill="#475569">SRC</text><text x="500" y="548" fill="#475569">DST</text><text x="640" y="548" fill="#475569">SPORT</text><text x="720" y="548" fill="#475569">DPORT</text><text x="800" y="548" fill="#475569">STATE</text><text x="940" y="548" fill="#475569">SOURCE</text>
+
+          <rect x="280" y="556" width="850" height="22" rx="4" fill="#EEF2FF"/>
+          <text x="294" y="572" fill="#312E81">tcp</text><text x="360" y="572" fill="#312E81">203.0.113.5</text><text x="500" y="572" fill="#312E81">192.168.1.10</text><text x="640" y="572" fill="#312E81">52301</text><text x="720" y="572" fill="#312E81">80</text><text x="800" y="572" fill="#312E81">ESTABLISHED</text><text x="940" y="572" fill="#4F46E5" font-weight="700">UPnP</text>
+
+          <rect x="280" y="580" width="850" height="22" rx="4" fill="#FEF3C7"/>
+          <text x="294" y="596" fill="#78350F">tcp</text><text x="360" y="596" fill="#78350F">192.168.1.30</text><text x="500" y="596" fill="#78350F">142.250.1.1</text><text x="640" y="596" fill="#78350F">49872</text><text x="720" y="596" fill="#78350F">443</text><text x="800" y="596" fill="#78350F">ESTABLISHED</text><text x="940" y="596" fill="#D97706" font-weight="700">DYN-NAT</text>
+
+          <rect x="280" y="604" width="850" height="22" rx="4" fill="#FEE2E2"/>
+          <text x="294" y="620" fill="#7F1D1D">tcp</text><text x="360" y="620" fill="#7F1D1D">198.51.100.7</text><text x="500" y="620" fill="#7F1D1D">192.168.1.5</text><text x="640" y="620" fill="#7F1D1D">61010</text><text x="720" y="620" fill="#7F1D1D">22</text><text x="800" y="620" fill="#7F1D1D">ESTABLISHED</text><text x="940" y="620" fill="#DC2626" font-weight="700">STATIC</text>
+
+          <rect x="280" y="628" width="850" height="22" rx="4" fill="#fff" stroke="#E2E8F0"/>
+          <text x="294" y="644" fill="#64748B">udp</text><text x="360" y="644" fill="#64748B">192.168.1.40</text><text x="500" y="644" fill="#64748B">8.8.8.8</text><text x="640" y="644" fill="#64748B">53321</text><text x="720" y="644" fill="#64748B">53</text><text x="800" y="644" fill="#64748B">ASSURED</text><text x="940" y="644" fill="#D97706" font-weight="700">DYN-NAT</text>
+        </g>
+
+        <!-- ============ 数据流（互不交叉） ============ -->
+
+        <!-- ① UPnP 控制流：LAN -> miniupnpd -> 子链 -->
+        <path d="M180 165 C 220 165, 240 200, 280 200" fill="none" stroke="#4F46E5" stroke-width="2.2" stroke-dasharray="5 4" marker-end="url(#arrU)"/>
+        <text x="190" y="135" font-size="10.5" fill="#4F46E5" font-weight="600">① 申请映射</text>
+
+        <path d="M520 262 C 520 300, 760 300, 870 342" fill="none" stroke="#4F46E5" stroke-width="2.2" stroke-dasharray="5 4" marker-end="url(#arrU)"/>
+        <text x="600" y="318" font-size="10" fill="#4F46E5" font-weight="600">写入隔离子链</text>
+
+        <!-- 子链 -> conntrack 落地 -->
+        <path d="M915 446 L 915 532" fill="none" stroke="#0F766E" stroke-width="2" marker-end="url(#arrK)"/>
+        <text x="922" y="495" font-size="9.5" fill="#0F766E">规则落地</text>
+
+        <!-- ② 入站转发流：WAN -> PREROUTING -> 子链命中 -->
+        <path d="M180 545 C 215 545, 230 420, 280 405" fill="none" stroke="#4F46E5" stroke-width="2.4" marker-end="url(#arrU)"/>
+        <text x="186" y="465" font-size="10.5" fill="#4F46E5" font-weight="600">② 入站 :8080</text>
+
+        <path d="M680 400 C 690 400, 695 400, 700 400" fill="none" stroke="#4F46E5" stroke-width="2.4" marker-end="url(#arrU)"/>
+        <text x="556" y="335" font-size="9.5" fill="#4F46E5">命中 UPnP 规则</text>
+
+        <!-- 静态规则落地 conntrack -->
+        <path d="M745 262 C 745 300, 600 320, 480 372" fill="none" stroke="#DC2626" stroke-width="1.8" marker-end="url(#arrR)"/>
+        <text x="600" y="288" font-size="9.5" fill="#DC2626">写 static DNAT</text>
+
+        <!-- ③ 出站伪装流：LAN -> PAT -> conntrack -->
+        <path d="M180 200 C 760 130, 900 90, 1005 142" fill="none" stroke="#D97706" stroke-width="2.2" stroke-dasharray="3 3" marker-end="url(#arrN)"/>
+        <text x="430" y="120" font-size="10.5" fill="#D97706" font-weight="600">③ 出站连接 → PAT 自动分配端口</text>
+
+        <path d="M1005 262 C 1005 380, 1005 460, 1005 532" fill="none" stroke="#D97706" stroke-width="2.2" stroke-dasharray="3 3" marker-end="url(#arrN)"/>
+        <text x="1012" y="400" font-size="9.5" fill="#D97706">建立 conntrack</text>
+
+        <!-- conntrack -> WAN 出站回包 -->
+        <path d="M280 640 C 220 640, 210 575, 180 575" fill="none" stroke="#0F766E" stroke-width="2" marker-end="url(#arrK)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 映射条目对比表 -->
+  <section class="px-5 md:px-10 py-10 reveal">
+    <div class="mb-6">
+      <div class="text-xs font-mono text-muted tracking-wider mb-2">02 / DATA MODEL</div>
+      <h2 class="text-2xl md:text-3xl font-bold">映射条目数据结构对比</h2>
+      <p class="text-muted mt-2 max-w-3xl">UPnP 条目带有租期、描述、Enabled 等丰富元数据；动态 NAT 条目仅由内核 conntrack 状态机维护超时与连接状态。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-card border-2 border-upnp/30 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 bg-upnpsoft border-b border-upnp/20 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-mono text-upnp tracking-wider">APPLICATION LAYER</div>
+            <h3 class="text-lg font-bold text-upnp mt-0.5">UPnP 映射条目 · miniupnpd</h3>
+          </div>
+          <span class="text-xs font-mono text-upnp bg-white px-2 py-1 rounded">UPnPMappingTable</span>
+        </div>
+        <table class="w-full text-sm font-mono">
+          <thead class="bg-slate-50 text-slate-500 text-xs">
+            <tr><th class="text-left px-4 py-2 font-medium">字段</th><th class="text-left px-4 py-2 font-medium">值</th></tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="px-4 py-2 text-muted">protocol</td><td class="px-4 py-2">TCP</td></tr>
+            <tr><td class="px-4 py-2 text-muted">external_port</td><td class="px-4 py-2">8080</td></tr>
+            <tr><td class="px-4 py-2 text-muted">internal_ip</td><td class="px-4 py-2">192.168.1.10</td></tr>
+            <tr><td class="px-4 py-2 text-muted">internal_port</td><td class="px-4 py-2">80</td></tr>
+            <tr><td class="px-4 py-2 text-muted">lease_duration</td><td class="px-4 py-2 text-upnp font-semibold">3600s</td></tr>
+            <tr><td class="px-4 py-2 text-muted">description</td><td class="px-4 py-2 text-upnp font-semibold">"Skype P2P"</td></tr>
+            <tr><td class="px-4 py-2 text-muted">enabled</td><td class="px-4 py-2 text-upnp font-semibold">true</td></tr>
+            <tr><td class="px-4 py-2 text-muted">remote_host</td><td class="px-4 py-2">0.0.0.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-card border-2 border-nat/30 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 bg-natsoft border-b border-nat/20 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-mono text-nat tracking-wider">KERNEL LAYER</div>
+            <h3 class="text-lg font-bold text-nat mt-0.5">动态 NAT 条目 · nf_conntrack</h3>
+          </div>
+          <span class="text-xs font-mono text-nat bg-white px-2 py-1 rounded">/proc/net/nf_conntrack</span>
+        </div>
+        <table class="w-full text-sm font-mono">
+          <thead class="bg-slate-50 text-slate-500 text-xs">
+            <tr><th class="text-left px-4 py-2 font-medium">字段</th><th class="text-left px-4 py-2 font-medium">值</th></tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="px-4 py-2 text-muted">protocol</td><td class="px-4 py-2">TCP / UDP / ICMP</td></tr>
+            <tr><td class="px-4 py-2 text-muted">external_port</td><td class="px-4 py-2 text-nat font-semibold">49872 (随机)</td></tr>
+            <tr><td class="px-4 py-2 text-muted">internal_ip</td><td class="px-4 py-2">192.168.1.30</td></tr>
+            <tr><td class="px-4 py-2 text-muted">src_port</td><td class="px-4 py-2">49872</td></tr>
+            <tr><td class="px-4 py-2 text-muted">timeout</td><td class="px-4 py-2 text-nat font-semibold">432000s (受系统参数控制)</td></tr>
+            <tr><td class="px-4 py-2 text-muted">conn_state</td><td class="px-4 py-2 text-nat font-semibold">ESTABLISHED</td></tr>
+            <tr><td class="px-4 py-2 text-muted">description</td><td class="px-4 py-2 text-slate-300">— 无 —</td></tr>
+            <tr><td class="px-4 py-2 text-muted">lease</td><td class="px-4 py-2 text-slate-300">— 无 —</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 p-5 rounded-xl border border-border bg-card flex gap-4 items-start">
+      <div class="w-10 h-10 rounded-lg bg-kernelsoft text-kernel flex items-center justify-center font-bold flex-shrink-0">≡</div>
+      <div>
+        <div class="font-semibold">数据平面统一，控制平面分离</div>
+        <p class="text-muted text-sm mt-1">两类条目在 <span class="font-mono text-kernel">nf_conntrack</span> 中以相同的五元组形式存在；差别在于来源管理者：UPnP 由 miniupnpd 守护进程添加并负责租期回收，动态 NAT 由内核 PAT 引擎在首包到达时自动分配。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: 优先级 -->
+  <section class="px-5 md:px-10 py-10 reveal">
+    <div class="mb-6">
+      <div class="text-xs font-mono text-muted tracking-wider mb-2">03 / PRIORITY</div>
+      <h2 class="text-2xl md:text-3xl font-bold">优先级匹配顺序</h2>
+      <p class="text-muted mt-2 max-w-3xl">入站报文进入 PREROUTING 后，按 <strong>静态 → UPnP → 动态</strong> 自上而下匹配；先命中即终止。</p>
+    </div>
+
+    <div class="bg-card border border-border rounded-2xl p-4 md:p-8 shadow-sm">
+      <svg viewBox="0 0 1200 360" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+        <defs>
+          <marker id="pArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+        </defs>
+
+        <g>
+          <rect x="20" y="140" width="140" height="80" rx="12" fill="#0F172A"/>
+          <text x="90" y="170" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">入站报文</text>
+          <text x="90" y="190" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="JetBrains Mono">→ :8080</text>
+          <text x="90" y="206" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="JetBrains Mono">PREROUTING</text>
+        </g>
+        <line x1="160" y1="180" x2="220" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#pArr)"/>
+
+        <g>
+          <rect x="230" y="80" width="270" height="200" rx="14" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
+          <circle cx="262" cy="112" r="20" fill="#DC2626"/>
+          <text x="262" y="118" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">1</text>
+          <text x="294" y="118" font-size="14" font-weight="700" fill="#7F1D1D">静态映射</text>
+          <text x="248" y="156" font-size="11" fill="#7F1D1D">手工配置规则匹配？</text>
+          <rect x="248" y="170" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="258" y="190" font-size="11" font-family="JetBrains Mono" fill="#7F1D1D">match → DNAT → done ✓</text>
+          <rect x="248" y="208" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="258" y="228" font-size="11" font-family="JetBrains Mono" fill="#64748B">no match → next</text>
+          <text x="248" y="262" font-size="10" fill="#991B1B">永远胜出 · 可切断已存在 UPnP 会话</text>
+        </g>
+        <line x1="500" y1="180" x2="540" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#pArr)"/>
+
+        <g>
+          <rect x="550" y="80" width="270" height="200" rx="14" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2"/>
+          <circle cx="582" cy="112" r="20" fill="#4F46E5"/>
+          <text x="582" y="118" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">2</text>
+          <text x="614" y="118" font-size="14" font-weight="700" fill="#312E81">UPnP / NAT-PMP</text>
+          <text x="568" y="156" font-size="11" fill="#312E81">jump MINIUPNPD 子链匹配？</text>
+          <rect x="568" y="170" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="578" y="190" font-size="11" font-family="JetBrains Mono" fill="#312E81">match → DNAT → done ✓</text>
+          <rect x="568" y="208" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="578" y="228" font-size="11" font-family="JetBrains Mono" fill="#64748B">no match → fallthrough</text>
+          <text x="568" y="262" font-size="10" fill="#3730A3">仅在静态未占用时生效</text>
+        </g>
+        <line x1="820" y1="180" x2="860" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#pArr)"/>
+
+        <g>
+          <rect x="870" y="80" width="270" height="200" rx="14" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+          <circle cx="902" cy="112" r="20" fill="#D97706"/>
+          <text x="902" y="118" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">3</text>
+          <text x="934" y="118" font-size="14" font-weight="700" fill="#78350F">动态 NAT (PAT)</text>
+          <text x="888" y="156" font-size="11" fill="#78350F">conntrack 已有出站连接？</text>
+          <rect x="888" y="170" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="898" y="190" font-size="11" font-family="JetBrains Mono" fill="#78350F">match → reverse NAT ✓</text>
+          <rect x="888" y="208" width="234" height="32" rx="6" fill="#fff"/>
+          <text x="898" y="228" font-size="11" font-family="JetBrains Mono" fill="#64748B">no match → DROP / reject</text>
+          <text x="888" y="262" font-size="10" fill="#92400E">仅响应内网主动发起的连接</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECTION 4: 冲突处理 -->
+  <section class="px-5 md:px-10 py-10 reveal">
+    <div class="mb-6">
+      <div class="text-xs font-mono text-muted tracking-wider mb-2">04 / CONFLICT</div>
+      <h2 class="text-2xl md:text-3xl font-bold">冲突处理机制</h2>
+      <p class="text-muted mt-2 max-w-3xl">两类典型冲突场景下，路由器的判定与回应。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-card border border-border rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-lg bg-statc text-white flex items-center justify-center font-bold text-sm">A</span>
+          <h3 class="font-bold text-lg">静态规则覆盖已有 UPnP</h3>
+        </div>
+        <svg viewBox="0 0 560 280" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <defs><marker id="cA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#DC2626"/></marker></defs>
+
+          <rect x="20" y="40" width="220" height="80" rx="10" fill="#EEF2FF" stroke="#4F46E5"/>
+          <text x="36" y="64" font-size="12" font-weight="700" fill="#312E81">已存在 UPnP 映射</text>
+          <text x="36" y="84" font-size="11" font-family="JetBrains Mono" fill="#312E81">tcp :8080 → 192.168.1.10:80</text>
+          <text x="36" y="102" font-size="10" fill="#64748B">lease=3600s, "Skype"</text>
+
+          <rect x="320" y="40" width="220" height="80" rx="10" fill="#FEE2E2" stroke="#DC2626"/>
+          <text x="336" y="64" font-size="12" font-weight="700" fill="#7F1D1D">用户新增静态规则</text>
+          <text x="336" y="84" font-size="11" font-family="JetBrains Mono" fill="#7F1D1D">tcp :8080 → 192.168.1.99:8080</text>
+          <text x="336" y="102" font-size="10" fill="#7F1D1D">priority 1 · 立即生效</text>
+
+          <path d="M320 80 L 240 80" stroke="#DC2626" stroke-width="2.5" marker-end="url(#cA)"/>
+          <text x="245" y="35" font-size="11" fill="#DC2626" font-weight="700">切断 / 覆盖</text>
+
+          <rect x="20" y="160" width="520" height="100" rx="10" fill="#FEF2F2" stroke="#FCA5A5" stroke-dasharray="3 3"/>
+          <text x="36" y="184" font-size="12" font-weight="700" fill="#7F1D1D">结果</text>
+          <text x="36" y="206" font-size="11" fill="#7F1D1D">• miniupnpd 中的 UPnP 条目被强制清理</text>
+          <text x="36" y="224" font-size="11" fill="#7F1D1D">• nf_conntrack 中相关连接被 flush</text>
+          <text x="36" y="242" font-size="11" fill="#7F1D1D">• 后续 :8080 入站全部 DNAT 至 192.168.1.99</text>
+        </svg>
+      </div>
+
+      <div class="bg-card border border-border rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-lg bg-upnp text-white flex items-center justify-center font-bold text-sm">B</span>
+          <h3 class="font-bold text-lg">UPnP 间端口冲突 · 错误码 718</h3>
+        </div>
+        <svg viewBox="0 0 560 280" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+          <defs><marker id="cB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4F46E5"/></marker><marker id="cBx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#DC2626"/></marker></defs>
+
+          <rect x="20" y="20" width="180" height="60" rx="10" fill="#fff" stroke="#CBD5E1"/>
+          <text x="36" y="44" font-size="12" font-weight="700" fill="#0F172A">设备 X · 192.168.1.10</text>
+          <text x="36" y="62" font-size="10" font-family="JetBrains Mono" fill="#64748B">AddPortMapping :8080</text>
+
+          <rect x="20" y="200" width="180" height="60" rx="10" fill="#fff" stroke="#CBD5E1"/>
+          <text x="36" y="224" font-size="12" font-weight="700" fill="#0F172A">设备 Y · 192.168.1.20</text>
+          <text x="36" y="242" font-size="10" font-family="JetBrains Mono" fill="#64748B">AddPortMapping :8080</text>
+
+          <rect x="280" y="100" width="240" height="80" rx="10" fill="#EEF2FF" stroke="#4F46E5"/>
+          <text x="296" y="124" font-size="12" font-weight="700" fill="#312E81">miniupnpd · 先到先得</text>
+          <text x="296" y="146" font-size="11" font-family="JetBrains Mono" fill="#312E81">slot[:8080] = X (locked)</text>
+          <text x="296" y="164" font-size="10" fill="#312E81">检测到重复 → 拒绝 Y</text>
+
+          <path d="M200 50 L 280 130" stroke="#4F46E5" stroke-width="2" marker-end="url(#cB)"/>
+          <text x="210" y="95" font-size="10" fill="#4F46E5" font-weight="600">① 接受</text>
+
+          <path d="M200 230 L 280 165" stroke="#DC2626" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#cBx)"/>
+          <text x="210" y="200" font-size="10" fill="#DC2626" font-weight="600">② SOAP Fault 718</text>
+          <text x="210" y="215" font-size="9" fill="#DC2626" font-family="JetBrains Mono">ConflictInMappingEntry</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <footer class="px-5 md:px-10 py-12 mt-6 border-t border-border">
+    <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
+      <div>
+        <div class="font-bold">UPnP &amp; NAT 映射架构对比</div>
+        <p class="text-sm text-muted mt-1">基于 Linux Netfilter / miniupnpd 实现细节绘制</p>
+      </div>
+      <div class="text-xs font-mono text-muted">
+        <div>conntrack · iptables · nftables · IGD v2</div>
+        <div class="mt-1">© 2026 · technical diagram</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<style>
+html,body{scroll-behavior:smooth}
+body{font-feature-settings:"cv11","ss01"}
+.reveal{transition:opacity .7s ease,transform .7s ease}
+.js .reveal{opacity:0;transform:translateY(24px)}
+.js .reveal.in{opacity:1;transform:translateY(0)}
+svg text{user-select:none}
+table td,table th{white-space:nowrap}
+code{background:#F1F5F9;padding:1px 6px;border-radius:4px;font-size:.9em}
+</style>
+
+<script>
+document.documentElement.classList.add('js');
+document.addEventListener('DOMContentLoaded',()=>{
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+});
+</script>
+
+</body>
+</html>
