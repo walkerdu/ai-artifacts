@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小米集团(01810.HK)深度研究报告 | 研股股</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .report {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  /* 报告头 */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    color: #fff;
+    padding: 40px 50px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: #f59e0b;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+  }
+  .header .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .header .meta-item .label {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .header .meta-item .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .header .meta-item .value.buy { color: #4ade80; }
+  .header .meta-item .value.warn { color: #fbbf24; }
+  /* 主体 */
+  .content { padding: 40px 50px; }
+  .section { margin-bottom: 44px; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    border-left: 4px solid #2563eb;
+    padding-left: 12px;
+    margin-bottom: 20px;
+  }
+  .section-title .num {
+    color: #2563eb;
+    margin-right: 8px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e3a5f;
+    margin: 20px 0 12px;
+  }
+  p { margin-bottom: 12px; color: #334155; }
+  /* 摘要框 */
+  .summary-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .summary-box h3 {
+    margin-top: 0;
+    color: #1e40af;
+  }
+  .summary-box .rating-tag {
+    display: inline-block;
+    background: #16a34a;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  /* 表格 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+  th {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  th:first-child { border-top-left-radius: 6px; }
+  th:last-child { border-top-right-radius: 6px; }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+  tr:hover td { background: #eff6ff; }
+  .pos { color: #16a34a; font-weight: 600; }
+  .neg { color: #dc2626; font-weight: 600; }
+  .neutral { color: #d97706; font-weight: 600; }
+  /* 卡片网格 */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .card.bull { border-left: 4px solid #16a34a; }
+  .card.bear { border-left: 4px solid #dc2626; }
+  .card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .card.bull h4 { color: #16a34a; }
+  .card.bear h4 { color: #dc2626; }
+  .card ul { padding-left: 18px; }
+  .card li { font-size: 13px; margin-bottom: 6px; color: #475569; }
+  /* 业务分部卡片 */
+  .biz-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    background: #fff;
+  }
+  .biz-card .biz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .biz-card .biz-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e3a5f;
+  }
+  .biz-card .biz-revenue {
+    font-size: 13px;
+    color: #64748b;
+  }
+  .biz-card .biz-revenue strong {
+    color: #0f172a;
+    font-size: 16px;
+  }
+  /* 图表容器 */
+  .chart-box {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e3a5f;
+    margin-bottom: 12px;
+  }
+  /* 风险提示 */
+  .risk-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .risk-box h3 { color: #991b1b; margin-top: 0; }
+  .risk-box ul { padding-left: 20px; }
+  .risk-box li { margin-bottom: 8px; color: #7f1d1d; font-size: 13.5px; }
+  /* 页脚 */
+  .footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 30px 50px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .footer .disclaimer {
+    border-top: 1px solid #334155;
+    padding-top: 16px;
+    margin-top: 16px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+  /* 引用 */
+  .cite {
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .highlight {
+    background: #fef3c7;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .kbd {
+    background: #f1f5f9;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    border: 1px solid #e2e8f0;
+  }
+  @media (max-width: 768px) {
+    .header { padding: 24px; }
+    .content { padding: 24px; }
+    .header .meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ============ 报告头 ============ -->
+<div class="header">
+  <span class="badge">深度研究报告 · 公司分析</span>
+  <h1>小米集团-W (01810.HK)</h1>
+  <div class="subtitle">股价现状深度复盘 · "人车家全生态"业务拆解 · AI 战略与未来业务分布研判</div>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <div class="label">评级</div>
+      <div class="value buy">买入 / BUY</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">目标价（12个月）</div>
+      <div class="value">HK$ 33.0</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">现价（2026-07-03）</div>
+      <div class="value warn">HK$ 22.96</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">潜在涨幅</div>
+      <div class="value buy">+43.7%</div>
+    </div>
+  </div>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <div class="label">总市值</div>
+      <div class="value">~5,920 亿港元</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">PE (TTM)</div>
+      <div class="value">14.7x</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">PB</div>
+      <div class="value">2.0x</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">PS (TTM)</div>
+      <div class="value">1.4x</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ============ 核心摘要 ============ -->
+<div class="summary-box">
+  <h3>📋 核心投资摘要</h3>
+  <p><span class="rating-tag">变异认知</span>市场正把小米按"带风险的制造业"定价（PE 14.7x），但我们认为其本质是"消费电子+互联网平台+新能源车+AI 生态"四引擎复合体。当前股价已较 52 周高点（61.45 港元）回撤 <strong>超 65%</strong>，估值处于历史低位区间。短期盈利承压（Q1 经调整净利同比 -43.1%）主要源于存储涨价+汽车换代阵痛，<strong>并非商业逻辑崩塌</strong>。</p>
+  <p><strong>核心论点：</strong>① 汽车业务度过最艰难的产品切换期，新一代 SU7 锁单超 8 万辆，全年 55 万辆交付目标可期；② AI 战略清晰（3 年 600 亿投入），MiMo-V2-Pro 进入全球第一梯队，"人车家全生态"从互联网络升级为 AI 驱动的行动网络；③ 现金储备 2,206 亿元 + 200 亿港元回购计划提供安全垫；④ 互联网服务毛利率 76.1% 持续增长，是稳定利润压舱石。</p>
+  <p><strong>目标价 33.0 港元</strong>基于 SOTP 分部估值法中性情景，对应 2026E PE 约 16x，PEG &lt; 0.7。风险收益比已显著改善。</p>
+</div>
+
+<!-- ============ 一、股价现状 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">01</span>股价现状：从高位回撤 65%，估值跌入历史低位</div>
+
+  <p>小米股价自 2025 年高点 61.45 港元一路下行，截至 2026 年 7 月 3 日收报 <strong>22.96 港元</strong>，距高点跌幅 <span class="neg">-62.6%</span>，年初至今跌幅约 <span class="neg">-46.8%</span>，多次刷新 52 周低点（21.30 港元）。当前总市值约 5,920 亿港元，较峰值蒸发近半。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>估值指标</th>
+        <th>当前值</th>
+        <th>52周区间</th>
+        <th>历史分位</th>
+        <th>评价</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>股价（港元）</td><td>22.96</td><td>21.30 ~ 61.45</td><td>底部区域</td><td class="pos">接近52周低点</td></tr>
+      <tr><td>PE (TTM)</td><td>14.7x</td><td>10x ~ 65x</td><td>&lt;20% 分位</td><td class="pos">历史低位</td></tr>
+      <tr><td>PE (静态)</td><td>12.8x</td><td>—</td><td>低位</td><td class="pos">便宜</td></tr>
+      <tr><td>PB</td><td>2.0x</td><td>1.2x ~ 5.5x</td><td>中等偏低</td><td class="neutral">合理偏低</td></tr>
+      <tr><td>PS (TTM)</td><td>1.4x</td><td>0.5x ~ 3.5x</td><td>中等偏低</td><td class="neutral">合理偏低</td></tr>
+      <tr><td>PEG</td><td>1.49</td><td>—</td><td>—</td><td class="pos">&lt;1.5 偏低估</td></tr>
+      <tr><td>总市值（亿港元）</td><td>~5,920</td><td>峰值~14,000</td><td>—</td><td class="neg">较高点蒸发58%</td></tr>
+    </tbody>
+  </table>
+  <div class="cite">数据来源：富途牛牛、长桥证券、StockAnalysis（2026-07-03 至 07-05 检索）</div>
+
+  <h3>📉 下跌归因：三重压力叠加</h3>
+  <p>本轮深度回调并非单一因素，而是宏观、行业、公司三个层面的利空共振：</p>
+  <table>
+    <thead>
+      <tr><th>层面</th><th>核心利空</th><th>影响程度</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>宏观层面</td><td>恒指年初至今走弱，科技板块整体承压；地缘不确定性扰动全球需求</td><td class="neg">系统性压力</td></tr>
+      <tr><td>行业层面</td><td>存储芯片等核心器件价格大幅上涨；新能源车行业价格战持续内卷；国补退坡冲击 IoT</td><td class="neg">毛利率压制</td></tr>
+      <tr><td>公司层面</td><td>Q1 经调整净利同比 -43.1%；汽车业务从盈利转亏损（单季亏 31 亿）；初代 SU7 停产换代造成交付空窗</td><td class="neg">盈利恶化</td></tr>
+    </tbody>
+  </table>
+
+  <h3>📊 52 周股价走势示意图</h3>
+  <div class="chart-box">
+    <div class="chart-title">小米集团股价走势（2025-07 ~ 2026-07，港元）</div>
+    <svg viewBox="0 0 720 240" style="width:100%;height:auto;">
+      <!-- 网格 -->
+      <line x1="50" y1="30" x2="700" y2="30" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="50" y1="80" x2="700" y2="80" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="50" y1="130" x2="700" y2="130" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="50" y1="180" x2="700" y2="180" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="50" y1="200" x2="700" y2="200" stroke="#cbd5e1" stroke-width="1"/>
+      <!-- Y轴标签 -->
+      <text x="40" y="34" font-size="10" fill="#64748b" text-anchor="end">65</text>
+      <text x="40" y="84" font-size="10" fill="#64748b" text-anchor="end">50</text>
+      <text x="40" y="134" font-size="10" fill="#64748b" text-anchor="end">35</text>
+      <text x="40" y="184" font-size="10" fill="#64748b" text-anchor="end">20</text>
+      <!-- 股价曲线 -->
+      <path d="M 50,40 L 110,35 L 170,45 L 230,60 L 290,80 L 350,110 L 410,140 L 470,160 L 530,175 L 590,185 L 650,188 L 700,186"
+            fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <!-- 填充区域 -->
+      <path d="M 50,40 L 110,35 L 170,45 L 230,60 L 290,80 L 350,110 L 410,140 L 470,160 L 530,175 L 590,185 L 650,188 L 700,186 L 700,200 L 50,200 Z"
+            fill="#2563eb" opacity="0.08"/>
+      <!-- 高点标记 -->
+      <circle cx="110" cy="35" r="5" fill="#dc2626"/>
+      <text x="120" y="30" font-size="11" fill="#dc2626" font-weight="700">52周高 61.45</text>
+      <!-- 当前点 -->
+      <circle cx="700" cy="186" r="5" fill="#16a34a"/>
+      <text x="690" y="178" font-size="11" fill="#16a34a" font-weight="700" text-anchor="end">现价 22.96</text>
+      <!-- X轴标签 -->
+      <text x="50" y="220" font-size="10" fill="#64748b">25-07</text>
+      <text x="230" y="220" font-size="10" fill="#64748b">25-10</text>
+      <text x="410" y="220" font-size="10" fill="#64748b">26-01</text>
+      <text x="590" y="220" font-size="10" fill="#64748b">26-04</text>
+      <text x="700" y="220" font-size="10" fill="#64748b" text-anchor="end">26-07</text>
+      <!-- 关键事件标注 -->
+      <line x1="410" y1="30" x2="410" y2="200" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+      <text x="415" y="45" font-size="9" fill="#d97706">Q1财报发布</text>
+      <text x="415" y="57" font-size="9" fill="#d97706">净利-43%</text>
+    </svg>
+  </div>
+
+</div>
+
+<!-- ============ 二、业务深度拆解 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">02</span>业务深度拆解：四大引擎与"人车家全生态"</div>
+
+  <p>小米已从单一手机厂商演化为"<strong>手机 × AIoT × 互联网 × 智能电动汽车</strong>"四引擎复合体。2026 Q1 总营收 991.4 亿元（同比 -10.9%），但业务结构发生质变——汽车及创新业务占比已达 <strong>20.04%</strong>，互联网服务毛利率高达 76.1%。</p>
+
+  <!-- 业务分部图表 -->
+  <div class="chart-box">
+    <div class="chart-title">2026 Q1 营收结构（按业务分部，单位：亿元 RMB）</div>
+    <svg viewBox="0 0 720 280" style="width:100%;height:auto;">
+      <!-- 柱状图 -->
+      <!-- 智能手机 443 -->
+      <rect x="80" y="40" width="120" height="160" fill="#2563eb" rx="4"/>
+      <text x="140" y="35" font-size="13" fill="#1e293b" text-anchor="middle" font-weight="700">智能手机</text>
+      <text x="140" y="220" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">443亿</text>
+      <text x="140" y="238" font-size="10" fill="#64748b" text-anchor="middle">占比 44.7%</text>
+      <text x="140" y="252" font-size="10" fill="#dc2626" text-anchor="middle">同比 -12.5%</text>
+
+      <!-- IoT 247 -->
+      <rect x="240" y="95" width="120" height="105" fill="#16a34a" rx="4"/>
+      <text x="300" y="90" font-size="13" fill="#1e293b" text-anchor="middle" font-weight="700">IoT与生活消费</text>
+      <text x="300" y="220" font-size="14" fill="#16a34a" text-anchor="middle" font-weight="700">247亿</text>
+      <text x="300" y="238" font-size="10" fill="#64748b" text-anchor="middle">占比 24.9%</text>
+      <text x="300" y="252" font-size="10" fill="#dc2626" text-anchor="middle">同比 -23.7%</text>
+
+      <!-- 互联网 95 -->
+      <rect x="400" y="155" width="120" height="45" fill="#f59e0b" rx="4"/>
+      <text x="460" y="150" font-size="13" fill="#1e293b" text-anchor="middle" font-weight="700">互联网服务</text>
+      <text x="460" y="220" font-size="14" fill="#f59e0b" text-anchor="middle" font-weight="700">95亿</text>
+      <text x="460" y="238" font-size="10" fill="#64748b" text-anchor="middle">占比 9.6%</text>
+      <text x="460" y="252" font-size="10" fill="#16a34a" text-anchor="middle">同比 +4.3%</text>
+
+      <!-- 汽车 199 -->
+      <rect x="560" y="118" width="120" height="82" fill="#8b5cf6" rx="4"/>
+      <text x="620" y="113" font-size="13" fill="#1e293b" text-anchor="middle" font-weight="700">智能电动车+AI</text>
+      <text x="620" y="220" font-size="14" fill="#8b5cf6" text-anchor="middle" font-weight="700">199亿</text>
+      <text x="620" y="238" font-size="10" fill="#64748b" text-anchor="middle">占比 20.0%</text>
+      <text x="620" y="252" font-size="10" fill="#16a34a" text-anchor="middle">同比 +6.9%</text>
+    </svg>
+  </div>
+
+  <!-- 业务1：智能手机 -->
+  <div class="biz-card">
+    <div class="biz-header">
+      <span class="biz-title">📱 智能手机业务</span>
+      <span class="biz-revenue">Q1 收入 <strong>443 亿</strong> · 占比 44.7%</span>
+    </div>
+    <table>
+      <tbody>
+        <tr><td>季度收入</td><td><strong>443 亿元</strong></td><td class="neg">同比 -12.5%</td></tr>
+        <tr><td>全球出货量</td><td>3,380 万台</td><td class="neg">同比 -19.2%</td></tr>
+        <tr><td>平均售价 (ASP)</td><td><strong>1,310 元</strong>（创新高）</td><td class="pos">同比 +8.2%</td></tr>
+        <tr><td>国内高端机占比</td><td>23.5%</td><td class="pos">高端化见效</td></tr>
+        <tr><td>全球市占率</td><td>11.3%</td><td>连续23季度全球前三</td></tr>
+        <tr><td>国内3月市占率</td><td>16.0%</td><td>中国大陆第三</td></tr>
+        <tr><td>毛利率</td><td>10.1%</td><td class="pos">环比 +1.8pct（上季8.3%）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:#475569;margin-top:8px;"><strong>解读：</strong>出货量下滑是<strong>主动收缩</strong>——小米主动优化产品矩阵、减少中低端机型出货，优先保 ASP。ASP 创新高 + 高端占比提升证明高端化战略生效。毛利率环比改善显示存储涨价的冲击已被部分消化。全球 47 个国家和地区排名前三、65 个排名前五，国际化底盘稳固。</p>
+  </div>
+
+  <!-- 业务2：IoT -->
+  <div class="biz-card">
+    <div class="biz-header">
+      <span class="biz-title">🏠 IoT 与生活消费产品</span>
+      <span class="biz-revenue">Q1 收入 <strong>247 亿</strong> · 占比 24.9%</span>
+    </div>
+    <table>
+      <tbody>
+        <tr><td>季度收入</td><td><strong>247 亿元</strong></td><td class="neg">同比 -23.7%</td></tr>
+        <tr><td>毛利率</td><td>25.2%</td><td class="pos">环比 +5.1pct</td></tr>
+        <tr><td>境外 IoT 收入</td><td>近 100 亿元</td><td class="pos">历史新高</td></tr>
+        <tr><td>AIoT 平台设备数</td><td>11.187 亿台</td><td class="pos">同比 +18.5%</td></tr>
+        <tr><td>五件及以上设备用户</td><td>2,360 万</td><td class="pos">同比 +22.3%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:#475569;margin-top:8px;"><strong>解读：</strong>收入下滑主要受国内"以旧换新"国补退坡影响，但<strong>境外 IoT 创历史新高</strong>对冲部分压力。毛利率环比大幅回升 5.1pct 显示经营质量改善。AIoT 设备数突破 11 亿台、高粘性用户（5件+）增速 22.3%，是"人车家全生态"的物理底座。</p>
+  </div>
+
+  <!-- 业务3：互联网服务 -->
+  <div class="biz-card">
+    <div class="biz-header">
+      <span class="biz-title">🌐 互联网服务</span>
+      <span class="biz-revenue">Q1 收入 <strong>95 亿</strong> · 占比 9.6%</span>
+    </div>
+    <table>
+      <tbody>
+        <tr><td>季度收入</td><td><strong>95 亿元</strong></td><td class="pos">同比 +4.3%（逆势增长）</td></tr>
+        <tr><td>毛利率</td><td><strong>76.1%</strong></td><td class="pos">高水位</td></tr>
+        <tr><td>境外互联网收入</td><td>30 亿元</td><td class="pos">同比 +9.0%</td></tr>
+        <tr><td>广告业务收入</td><td>71 亿元</td><td class="pos">同比 +7.8%</td></tr>
+        <tr><td>全球月活用户</td><td>7.46 亿</td><td class="pos">同比 +3.8%</td></tr>
+        <tr><td>中国大陆月活</td><td>1.96 亿</td><td class="pos">历史新高</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:#475569;margin-top:8px;"><strong>解读：</strong>这是小米<strong>最被低估的"利润压舱石"</strong>——仅占营收 9.6%，却贡献了超高毛利。在硬件周期承压时，互联网服务逆势增长，证明用户生态的变现韧性。7.46 亿全球月活是 AI 时代的数据资产基础。</p>
+  </div>
+
+  <!-- 业务4：汽车 -->
+  <div class="biz-card" style="border-left:4px solid #8b5cf6;">
+    <div class="biz-header">
+      <span class="biz-title">🚗 智能电动汽车及 AI 等创新业务</span>
+      <span class="biz-revenue">Q1 收入 <strong>199 亿</strong> · 占比 20.0%</span>
+    </div>
+    <table>
+      <tbody>
+        <tr><td>分部总收入</td><td><strong>199 亿元</strong></td><td class="pos">同比 +6.9%</td></tr>
+        <tr><td>智能电动汽车收入</td><td>190 亿元</td><td class="pos">同比 +5.1%</td></tr>
+        <tr><td>季度交付量</td><td>80,856 辆</td><td class="pos">同比 +6.6%</td></tr>
+        <tr><td>汽车毛利率</td><td>20.1%</td><td class="neg">环比回落（上季26%）</td></tr>
+        <tr><td>经营利润</td><td><strong>-31 亿元</strong></td><td class="neg">亏损扩大（同期亏5亿）</td></tr>
+        <tr><td>新一代 SU7 锁单</td><td><strong>超 8 万辆</strong></td><td class="pos">发售48天</td></tr>
+        <tr><td>YU7 累计交付</td><td>23.2 万辆</td><td class="pos">上市10个月</td></tr>
+        <tr><td>2026 全年目标</td><td>55 万辆</td><td>1-4月已完成20%</td></tr>
+        <tr><td>24个月累计交付</td><td>65.5 万辆</td><td class="pos">行业最快</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:#475569;margin-top:8px;"><strong>解读：</strong>Q1 是汽车业务的"<span class="highlight">最艰难时刻</span>"——初代 SU7 主动停产、新品爬坡、零部件涨价三重挤压。但 4 月起交付快速回暖（突破 3.67 万辆），新一代 SU7 锁单超 8 万辆，YU7 标准版下探至 23.35 万元打开增量空间。管理层明确全年 55 万辆目标不变，年内还将上市大型 SUV。汽车业务已从"单一爆款"迈入"<strong>多车型+全球化</strong>"系统化竞争新阶段。</p>
+  </div>
+</div>
+
+<!-- ============ 三、AI 战略与未来业务分布 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">03</span>AI 战略与未来业务分布：600 亿押注"人车家全生态"</div>
+
+  <p>这是本报告最看重的部分——小米的<strong>未来业务分布</strong>正在被 AI 重构。2026 年 3 月 19 日，雷军在春季发布会宣布：<strong>未来三年 AI 投入超 600 亿元</strong>，其中 2026 年 AI 研发与资本开支已超 160 亿元。这不是蹭热点，而是战略级转型。</p>
+
+  <h3>🧠 MiMo 大模型矩阵：从"缺位"到"全球第一梯队"</h3>
+  <table>
+    <thead>
+      <tr><th>模型</th><th>定位</th><th>关键参数</th><th>应用场景</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>MiMo-V2-Pro</td><td>旗舰基座（万亿MoE）</td><td>总参数 1万亿，激活 42B，100万 token 上下文</td><td>Agent 时代核心模型，全球榜单第8</td></tr>
+      <tr><td>MiMo-V2-Omni</td><td>全模态大模型</td><td>视听推理行动一体</td><td>复杂多模态交互</td></tr>
+      <tr><td>MiMo-V2-TTS</td><td>语音大模型</td><td>语义推理+音律</td><td>语音交互</td></tr>
+      <tr><td>MiMo-Embodied</td><td>具身智能基座</td><td>首个自动驾驶+机器人统一认知架构</td><td>XLA 认知智驾</td></tr>
+      <tr><td>Hermes Agent</td><td>开源智能体推理引擎</td><td>—</td><td class="pos">登顶 OpenRouter 双榜</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🎯 三层推进路径：AI 从"问答入口"到"行动网络"</h3>
+  <p>小米 AI 落地的核心逻辑，是把 Agent 从手机端的任务执行器，扩展为贯穿<strong>手机、汽车、家庭、机器人</strong>四类物理终端的统一调度中枢。AI 不再停留在"问答式入口"，而是获得系统权限、跨端记忆、多模态感知、设备编排与物理执行能力。</p>
+
+  <div class="chart-box">
+    <div class="chart-title">小米"人车家全生态"AI 三层架构</div>
+    <svg viewBox="0 0 720 320" style="width:100%;height:auto;">
+      <!-- 第三层（顶层） -->
+      <rect x="220" y="20" width="280" height="60" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" rx="8"/>
+      <text x="360" y="45" font-size="14" fill="#5b21b6" text-anchor="middle" font-weight="700">第三层：具身执行端</text>
+      <text x="360" y="65" font-size="11" fill="#6d28d9" text-anchor="middle">Xiaomi-Robotics-0 · TacRefineNet · 工厂机器人</text>
+
+      <!-- 第二层 -->
+      <rect x="220" y="110" width="280" height="60" fill="#dbeafe" stroke="#2563eb" stroke-width="2" rx="8"/>
+      <text x="360" y="135" font-size="14" fill="#1e40af" text-anchor="middle" font-weight="700">第二层：车与家空间 Agent 化</text>
+      <text x="360" y="155" font-size="11" fill="#2563eb" text-anchor="middle">XLA 认知智驾 · Miloco 全屋智能</text>
+
+      <!-- 第一层（底层） -->
+      <rect x="220" y="200" width="280" height="60" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="8"/>
+      <text x="360" y="225" font-size="14" fill="#166534" text-anchor="middle" font-weight="700">第一层：手机 Agent 化</text>
+      <text x="360" y="245" font-size="11" fill="#16a34a" text-anchor="middle">Xiaomi miclaw（"龙虾"AI原生手机）</text>
+
+      <!-- 连接箭头 -->
+      <line x1="360" y1="80" x2="360" y2="110" stroke="#475569" stroke-width="2" marker-end="url(#arrowup)"/>
+      <line x1="360" y1="170" x2="360" y2="200" stroke="#475569" stroke-width="2" marker-end="url(#arrowup)"/>
+
+      <!-- 底座 -->
+      <rect x="80" y="285" width="560" height="30" fill="#0f172a" rx="6"/>
+      <text x="360" y="305" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">MiMo 大模型基座（万亿参数 MoE）</text>
+
+      <!-- 侧边标注 -->
+      <text x="540" y="55" font-size="10" fill="#7c3aed">物理世界执行</text>
+      <text x="540" y="145" font-size="10" fill="#2563eb">驾驶/居住空间</text>
+      <text x="540" y="235" font-size="10" fill="#16a34a">系统级执行闭环</text>
+
+      <defs>
+        <marker id="arrowup" markerWidth="10" markerHeight="10" refX="5" refY="2" orient="auto">
+          <path d="M0,0 L10,0 L5,8 Z" fill="#475569"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h3>🚀 未来业务分布的四大方向</h3>
+  <table>
+    <thead>
+      <tr><th>方向</th><th>当前状态</th><th>未来 2-3 年看点</th><th>估值期权价值</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. AI 原生手机</strong></td>
+        <td>miclaw 封测中，支持小米17等机型</td>
+        <td>AI 重构 OS 交互，从"App 矩阵"到"Agent 调度"，提升 ASP 与黏性</td>
+        <td class="pos">高（重构手机估值逻辑）</td>
+      </tr>
+      <tr>
+        <td><strong>2. 智能驾驶</strong></td>
+        <td>XLA 认知大模型，HAD 升级</td>
+        <td>统一认知架构降本，向 L4 演进；Robotaxi 期权</td>
+        <td class="pos">高（对标特斯拉 FSD）</td>
+      </tr>
+      <tr>
+        <td><strong>3. 全屋智能</strong></td>
+        <td>Miloco 方案落地，AIoT 设备 11 亿台</td>
+        <td>从"设备互联"到"AI 驱动空间"，硬件+服务双变现</td>
+        <td class="neutral">中（生态变现需时间）</td>
+      </tr>
+      <tr>
+        <td><strong>4. 具身机器人</strong></td>
+        <td>Xiaomi-Robotics-0、工厂实习机器人</td>
+        <td>工业场景先行，长期切入服务/家庭机器人</td>
+        <td class="neutral">远期期权（3-5年）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="background:#f0fdf4;padding:12px 16px;border-radius:6px;border-left:4px solid #16a34a;font-size:13.5px;">
+    <strong>关键判断：</strong>小米的 AI 战略与单纯做大模型的公司（如 OpenAI、字节）本质不同——它有<strong>四类物理终端</strong>（手机、汽车、家庭、机器人）作为落地场景，AI 不是"附加功能"而是"<strong>连接器与调度中枢</strong>"。这种"模型+端+生态"的闭环，是华兴资本所说的"操作系统级智能体入口"价值未被充分认知的核心。
+  </p>
+</div>
+
+<!-- ============ 四、估值分析 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">04</span>估值分析：SOTP 分部估值 + 可比公司对标</div>
+
+  <h3>📊 SOTP 分部估值法（核心方法）</h3>
+  <p>小米业务横跨消费电子、互联网、汽车三个估值逻辑截然不同的行业，单一倍数无法合理定价。采用分部加总法（SOTP）：</p>
+
+  <table>
+    <thead>
+      <tr><th>业务板块</th><th>2025参考数据</th><th>估值方法</th><th>倍数</th><th>估值（亿港元）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>智能手机</td><td>收入~1,910亿RMB</td><td>PE 法</td><td>12x（行业均值）</td><td>1,200 - 1,500</td></tr>
+      <tr><td>IoT 与生活消费</td><td>收入~1,232亿RMB</td><td>PE 法</td><td>15x（增速溢价）</td><td>800 - 1,000</td></tr>
+      <tr><td>互联网服务</td><td>毛利~274亿RMB</td><td>PE 法</td><td>20x（高毛利溢价）</td><td>2,200 - 2,800</td></tr>
+      <tr><td>智能电动汽车</td><td>交付41.1万辆，收入~1,000亿</td><td>PS 法</td><td>1.0-1.5x（成长车企）</td><td>1,100 - 1,600</td></tr>
+      <tr><td>净现金/投资</td><td>~1,500亿RMB</td><td>账面价值</td><td>1.0x</td><td>1,600</td></tr>
+      <tr style="background:#fef3c7;"><td colspan="4"><strong>合计（中性情景）</strong></td><td><strong>6,900 - 8,500</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="cite">注：①互联网服务毛利率高达74%+，采用20x PE 体现平台型资产稀缺性；②汽车业务尚处亏损，采用 PS 法对标理想（PS~1.3x）和比亚迪（PS~1.0x）；③净现金含类现金资产约762亿+长期投资组合约593亿。数据来源：公开财报与机构研报综合测算</div>
+
+  <p style="background:#eff6ff;padding:12px 16px;border-radius:6px;font-size:13.5px;">
+    <strong>SOTP 估值结论：</strong>中性情景下小米合理估值约 <strong>6,900-8,500 亿港元</strong>（对应股价约 <strong>26.6-32.7 港元</strong>）；乐观情景（汽车毛利率回升至 23%+、手机出货恢复增长）估值可达 <strong>9,000-10,500 亿港元</strong>；悲观情景（汽车持续亏损、手机出货再降 10%）估值约 <strong>5,000-6,000 亿港元</strong>。
+  </p>
+
+  <h3>📈 可比公司估值对标</h3>
+  <table>
+    <thead>
+      <tr><th>公司</th><th>市值（亿RMB）</th><th>PE (TTM)</th><th>PS (TTM)</th><th>毛利率</th><th>核心业务</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fef3c7;"><td><strong>小米集团</strong></td><td><strong>~5,400</strong></td><td><strong>14.6x</strong></td><td><strong>1.4x</strong></td><td><strong>22.3%</strong></td><td><strong>手机+IoT+汽车+互联网</strong></td></tr>
+      <tr><td>苹果 Apple</td><td>~260,000</td><td>28x</td><td>8x</td><td>45%</td><td>手机+服务+可穿戴</td></tr>
+      <tr><td>比亚迪</td><td>~7,200</td><td>18-21x</td><td>1.0x</td><td>20%</td><td>新能源车+电池+电子</td></tr>
+      <tr><td>理想汽车</td><td>~1,700</td><td>22x</td><td>1.3x</td><td>20%</td><td>增程新能源车</td></tr>
+      <tr><td>美的集团</td><td>~5,800</td><td>13-15x</td><td>1.5x</td><td>26%</td><td>家电+机器人</td></tr>
+      <tr><td>特斯拉 Tesla</td><td>—</td><td>60x+</td><td>—</td><td>—</td><td>新能源车+AI+FSD</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>横向比较结论：</strong></p>
+  <ul style="padding-left:20px;color:#334155;">
+    <li><strong>vs 苹果：</strong>小米 PE 仅 14.6x（苹果 28x），但苹果毛利率 45% 接近小米两倍，iOS 生态护城河更强，合理折价；但小米有苹果没有的汽车业务和 AI 终端布局。</li>
+    <li><strong>vs 比亚迪：</strong>PE 相近（14.6x vs 18-21x），小米 PS 更高（1.4x vs 1.0x）反映互联网服务溢价；汽车业务 PS 对标合理。</li>
+    <li><strong>vs 理想：</strong>汽车业务 PS 对标合理，但小米整体 PS 更高来自互联网高毛利业务贡献。</li>
+    <li><strong>vs 美的：</strong>小米 PE 略高于传统家电，但增速和汽车增长期权提供合理溢价。</li>
+    <li><strong>vs 特斯拉：</strong>小米 PE 远低于特斯拉（60x+），市场给特斯拉 AI+FSD 期权溢价，小米的 AI 期权价值尚未被定价。</li>
+  </ul>
+
+  <h3>🎯 机构目标价与评级分布</h3>
+  <table>
+    <thead>
+      <tr><th>机构</th><th>目标价（港元）</th><th>评级</th><th>核心逻辑</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>汇丰</td><td>53.4</td><td class="pos">买入</td><td>电动车业务进展优于预期</td></tr>
+      <tr><td>华兴资本</td><td>44.0</td><td class="pos">买入</td><td>基于2027E PE 15x，看好AI生态升级</td></tr>
+      <tr><td>花旗</td><td>40-42</td><td class="pos">买入</td><td>看好AI业务发展</td></tr>
+      <tr><td>高盛</td><td>—</td><td class="pos">看好</td><td>AI研发投资加速转化</td></tr>
+      <tr><td>摩根士丹利</td><td>—</td><td class="pos">看好</td><td>AI战略长期成长性</td></tr>
+      <tr style="background:#fef3c7;"><td><strong>分析师共识</strong></td><td><strong>39.93</strong></td><td class="pos"><strong>强烈买入</strong></td><td><strong>31位分析师，86.41%上涨空间</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-box">
+    <div class="chart-title">机构评级分布（31位分析师）</div>
+    <svg viewBox="0 0 720 120" style="width:100%;height:auto;">
+      <!-- 强烈买入 58.06% -->
+      <rect x="50" y="30" width="418" height="50" fill="#16a34a" rx="4"/>
+      <text x="60" y="60" font-size="14" fill="#fff" font-weight="700">强烈买入 58.06%（18人）</text>
+      <!-- 买入 12.90% -->
+      <rect x="468" y="30" width="93" height="50" fill="#4ade80" rx="4"/>
+      <text x="478" y="60" font-size="11" fill="#fff" font-weight="700">买入 12.9%</text>
+      <!-- 持有 19.35% -->
+      <rect x="561" y="30" width="139" height="50" fill="#f59e0b" rx="4"/>
+      <text x="571" y="60" font-size="12" fill="#fff" font-weight="700">持有 19.35%</text>
+      <text x="50" y="105" font-size="11" fill="#64748b">数据来源：长桥证券（2026-06-26）</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ 五、多空观点 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">05</span>多空观点平衡</div>
+
+  <div class="card-grid">
+    <div class="card bull">
+      <h4>🐂 看多逻辑</h4>
+      <ul>
+        <li><strong>估值历史低位：</strong>PE 14.6x、PB 1.8x，处于历史 &lt;20% 分位，安全边际充足</li>
+        <li><strong>汽车度过至暗时刻：</strong>新一代 SU7 锁单超 8 万辆，4 月交付回升至 3.67 万辆，全年 55 万辆目标可期</li>
+        <li><strong>AI 战略清晰：</strong>3 年 600 亿投入，MiMo-V2 进入全球第一梯队，"人车家全生态"AI 化重构估值逻辑</li>
+        <li><strong>现金储备充裕：</strong>2,206 亿元现金 + 200 亿港元回购计划托底</li>
+        <li><strong>手机高端化见效：</strong>ASP 创新高 1,310 元，高端占比 23.5%，毛利率环比改善</li>
+        <li><strong>互联网服务压舱石：</strong>毛利率 76.1%，逆势增长 4.3%，7.46 亿月活是 AI 时代数据资产</li>
+        <li><strong>机构共识看多：</strong>31 位分析师共识目标价 39.93 港元，86% 上涨空间</li>
+      </ul>
+    </div>
+    <div class="card bear">
+      <h4>🐻 看空逻辑</h4>
+      <ul>
+        <li><strong>盈利能力恶化：</strong>Q1 经调整净利同比 -43.1%，净利率跌至 4.76%，盈利反弹时点不确定</li>
+        <li><strong>存储成本压力持续：</strong>管理层表态"不要期望内存成本短期回落"，毛利率持续承压</li>
+        <li><strong>汽车业务转亏：</strong>Q1 亏损 31 亿元（同期亏 5 亿），新品爬坡+零部件涨价双压</li>
+        <li><strong>手机出货下滑：</strong>出货量同比 -19.2%，主动收缩虽保 ASP 但牺牲规模</li>
+        <li><strong>IoT 受国补退坡冲击：</strong>收入同比 -23.7%，国内需求透支后修复需时间</li>
+        <li><strong>行业价格战内卷：</strong>新能源车持续内卷，欧洲出海合规成本抬升</li>
+        <li><strong>AI 投入回报周期长：</strong>160 亿/年 AI 投入短期拖累利润，变现路径未明</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 六、投资评级与结论 ============ -->
+<div class="section">
+  <div class="section-title"><span class="num">06</span>投资评级与结论</div>
+
+  <div class="summary-box" style="background:#f0fdf4;border-color:#bbf7d0;">
+    <h3 style="color:#166534;">⚖️ 最终评级：买入 / BUY</h3>
+    <table>
+      <tbody>
+        <tr><td><strong>评级</strong></td><td><span class="pos">买入 (BUY)</span></td></tr>
+        <tr><td><strong>目标价（12个月）</strong></td><td><strong>HK$ 33.0</strong>（基于 SOTP 中性偏乐观情景）</td></tr>
+        <tr><td><strong>潜在涨幅</strong></td><td class="pos">+43.7%</td></tr>
+        <tr><td><strong>当前价</strong></td><td>HK$ 22.96（2026-07-03）</td></tr>
+        <tr><td><strong>对应 2026E PE</strong></td><td>~16x</td></tr>
+        <tr><td><strong>PEG</strong></td><td>&lt; 0.7（显著低估）</td></tr>
+        <tr><td><strong>时间维度</strong></td><td>6-12 个月</td></tr>
+        <tr><td><strong>行动建议</strong></td><td><strong>加仓 / 建仓</strong>（分批建仓，关注 Q2/Q3 财报验证汽车毛利率回升）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>📋 评级依据（变异认知）</h3>
+  <p><strong>市场错在哪里：</strong>当前市场按"带风险的制造业"给小米定价（PE 14.6x），与美的（13-15x）、比亚迪（18-21x）相当。但我们认为小米的本质是"<strong>消费电子+互联网平台+新能源车+AI 生态</strong>"四引擎复合体：</p>
+  <ul style="padding-left:20px;color:#334155;">
+    <li>互联网服务毛利率 76.1%（远超制造业），应享受平台型估值溢价</li>
+    <li>汽车业务两年从零做到千亿营收，交付速度行业最快，应享受成长车企溢价</li>
+    <li>AI 战略（600 亿投入+MiMo 第一梯队）尚未被定价，是最大的估值期权</li>
+  </ul>
+
+  <p><strong>什么能证明论点：</strong>① Q2/Q3 汽车毛利率回升至 22%+；② 手机出货量环比恢复正增长；③ AI 应用（miclaw、XLA）用户数据突破；④ 互联网服务收入持续双位数增长。</p>
+
+  <p><strong>什么能推翻论点：</strong>① 汽车毛利率持续低于 18%；② 存储成本进一步暴涨侵蚀手机毛利；③ AI 投入无法转化为产品力，沦为纯费用；④ 手机出货量连续 4 个季度下滑。</p>
+
+  <p><strong>为什么是现在：</strong>股价已较高点回撤 65%，估值处于历史低位；Q1 是盈利最差季度（产品换代+存储涨价双重冲击），后续基数效应+新品放量+成本企稳有望带来环比改善；200 亿港元回购计划提供流动性支撑。</p>
+</div>
+
+<!-- ============ 风险提示 ============ -->
+<div class="risk-box">
+  <h3>⚠️ 风险提示</h3>
+  <ul>
+    <li><strong>存储成本风险：</strong>存储芯片价格若持续上涨，手机及 IoT 毛利率将承压，影响全年盈利。</li>
+    <li><strong>汽车竞争风险：</strong>新能源车行业价格战持续内卷，YU7/SU7 面临比亚迪、特斯拉、华为系等强力竞争，毛利率回升不及预期。</li>
+    <li><strong>新品爬坡风险：</strong>新一代 SU7、YU7 GT、年内大型 SUV 量产爬坡若不及预期，影响交付目标达成。</li>
+    <li><strong>AI 投入回报不确定：</strong>每年 160 亿+ AI 投入短期拖累利润，变现路径和时点存在不确定性。</li>
+    <li><strong>宏观与地缘风险：</strong>全球需求走弱、地缘政治扰动海外业务（尤其欧洲出海合规成本）。</li>
+    <li><strong>汇率风险：</strong>港元/人民币汇率波动影响报表表现。</li>
+    <li><strong>流动性风险：</strong>虽现金储备充足，但持续大额回购+AI 投入+汽车扩产对现金流有压力。</li>
+  </ul>
+</div>
+
+</div><!-- /content -->
+
+<!-- ============ 页脚 ============ -->
+<div class="footer">
+  <div>
+    <strong>研股股 · 股票研究专家</strong> | 报告日期：2026 年 7 月 5 日<br>
+    数据截止：2026-07-03 | 财报数据：2026 Q1（截至 2026-03-31）
+  </div>
+  <div class="disclaimer">
+    <strong>免责声明：</strong>本报告仅供参考，不构成任何个人投资建议。报告所引用数据均来源于公开市场信息（小米集团财报、富途牛牛、长桥证券、StockAnalysis、证券时报、财联社、新华网、腾讯新闻、中国经营报、小米官方 IR 等），可能存在延迟，请以交易所官方数据为准。股票投资有风险，决策需谨慎。如需专业投资建议，请咨询持牌证券投资顾问机构。本报告不构成证券投资咨询服务。
+  </div>
+</div>
+
+</div><!-- /report -->
+</body>
+</html>
