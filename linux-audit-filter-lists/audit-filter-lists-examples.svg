@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1180 1020" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Linux audit filter lists 用途与规则例子</title>
+  <desc id="desc">按泳道展示 task、exit、user、exclude、filesystem、io_uring 六个 audit filter list 的触发时机、用途和具体规则例子。</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#eef2f7" stroke-width="1"/>
+    </pattern>
+    <marker id="ah" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#94a3b8"/>
+    </marker>
+    <style>
+      text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', monospace; }
+      .h1 { fill:#0f172a; font-size:27px; font-weight:700; }
+      .sub { fill:#64748b; font-size:13px; font-weight:400; }
+      .col { fill:#94a3b8; font-size:12px; font-weight:700; letter-spacing:0.5px; }
+      .name { fill:#0f172a; font-size:18px; font-weight:700; }
+      .when { fill:#334155; font-size:12.5px; font-weight:400; }
+      .use { fill:#475569; font-size:12.5px; font-weight:400; }
+      .code { fill:#0f172a; font-size:13px; font-weight:700; }
+      .note { fill:#64748b; font-size:11px; font-weight:400; }
+      .foot { fill:#334155; font-size:13px; font-weight:400; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="1020" fill="#ffffff"/>
+  <rect x="0" y="0" width="1180" height="1020" fill="url(#grid)"/>
+
+  <text x="48" y="56" class="h1">Linux audit filter lists</text>
+  <text x="48" y="82" class="sub">每一行 = 一个 list。事件从左侧入口进入 → 命中该 list → 右侧是典型规则例子。各行相互独立。</text>
+
+  <text x="70" y="122" class="col">事件入口 / 触发</text>
+  <text x="360" y="122" class="col">FILTER LIST</text>
+  <text x="700" y="122" class="col">规则例子</text>
+
+  <!-- ROW 1: task -->
+  <rect x="48" y="138" width="1084" height="108" rx="14" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+  <rect x="70" y="164" width="150" height="56" rx="9" fill="#ffffff" stroke="#f87171" stroke-width="1.4"/>
+  <text x="145" y="188" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">fork / clone</text>
+  <text x="145" y="207" text-anchor="middle" class="note">创建新 task 时</text>
+  <line x1="220" y1="192" x2="352" y2="192" stroke="#f87171" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="178" class="name">task</text>
+  <text x="352" y="200" class="use">最早决定：这个进程/线程</text>
+  <text x="352" y="219" class="use">是否参与后续审计</text>
+  <rect x="690" y="160" width="422" height="34" rx="7" fill="#ffffff" stroke="#fca5a5" stroke-width="1.3"/>
+  <text x="704" y="182" class="code">-a never,task</text>
+  <text x="690" y="222" class="note">警告：命中后，后面的 execve/open 等 syscall 规则基本都记录不到</text>
+
+  <!-- ROW 2: exit -->
+  <rect x="48" y="258" width="1084" height="108" rx="14" fill="#fffbeb" stroke="#fde68a" stroke-width="1.4"/>
+  <rect x="70" y="284" width="150" height="56" rx="9" fill="#ffffff" stroke="#f59e0b" stroke-width="1.4"/>
+  <text x="145" y="308" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">syscall 返回</text>
+  <text x="145" y="327" text-anchor="middle" class="note">执行完即将退出</text>
+  <line x1="220" y1="312" x2="352" y2="312" stroke="#f59e0b" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="298" class="name">exit</text>
+  <text x="352" y="320" class="use">最常用。审计命令执行、</text>
+  <text x="352" y="339" class="use">文件打开、权限变更等</text>
+  <rect x="690" y="280" width="422" height="34" rx="7" fill="#ffffff" stroke="#fbbf24" stroke-width="1.3"/>
+  <text x="704" y="302" class="code">-a always,exit -F arch=b64 -S execve -k exec</text>
+  <text x="690" y="342" class="note">审计 exec/open/connect/chmod 都写这里，可加 -F auid&gt;=1000 等条件</text>
+
+  <!-- ROW 3: filesystem -->
+  <rect x="48" y="378" width="1084" height="108" rx="14" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.4"/>
+  <rect x="70" y="404" width="150" height="56" rx="9" fill="#ffffff" stroke="#10b981" stroke-width="1.4"/>
+  <text x="145" y="428" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">文件系统事件</text>
+  <text x="145" y="447" text-anchor="middle" class="note">带 fstype 信息</text>
+  <line x1="220" y1="432" x2="352" y2="432" stroke="#10b981" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="418" class="name">filesystem</text>
+  <text x="352" y="440" class="use">按文件系统类型整体排除，</text>
+  <text x="352" y="459" class="use">减少无意义的噪音</text>
+  <rect x="690" y="400" width="422" height="34" rx="7" fill="#ffffff" stroke="#34d399" stroke-width="1.3"/>
+  <text x="704" y="422" class="code">-a never,filesystem -F fstype=tracefs</text>
+  <text x="690" y="462" class="note">常用于跳过 tracefs / debugfs / proc 这类伪文件系统</text>
+
+  <!-- ROW 4: io_uring -->
+  <rect x="48" y="498" width="1084" height="108" rx="14" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.4"/>
+  <rect x="70" y="524" width="150" height="56" rx="9" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
+  <text x="145" y="548" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">io_uring 操作</text>
+  <text x="145" y="567" text-anchor="middle" class="note">异步 I/O 提交</text>
+  <line x1="220" y1="552" x2="352" y2="552" stroke="#059669" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="538" class="name">io_uring</text>
+  <text x="352" y="560" class="use">覆盖不走普通同步 syscall</text>
+  <text x="352" y="579" class="use">路径的异步 I/O 操作</text>
+  <rect x="690" y="520" width="422" height="34" rx="7" fill="#ffffff" stroke="#10b981" stroke-width="1.3"/>
+  <text x="704" y="542" class="code">-a always,io_uring -S openat -k async_open</text>
+  <text x="690" y="582" class="note">较新内核特性，按系统是否支持使用</text>
+
+  <!-- ROW 5: user -->
+  <rect x="48" y="618" width="1084" height="108" rx="14" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1.4"/>
+  <rect x="70" y="644" width="150" height="56" rx="9" fill="#ffffff" stroke="#db2777" stroke-width="1.4"/>
+  <text x="145" y="668" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">用户态消息</text>
+  <text x="145" y="687" text-anchor="middle" class="note">USER_* 类事件</text>
+  <line x1="220" y1="672" x2="352" y2="672" stroke="#db2777" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="658" class="name">user</text>
+  <text x="352" y="680" class="use">过滤用户态程序提交的</text>
+  <text x="352" y="699" class="use">audit 消息（非 syscall）</text>
+  <rect x="690" y="640" width="422" height="34" rx="7" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+  <text x="704" y="662" class="code">-a never,user -F msgtype=USER_AVC</text>
+  <text x="690" y="702" class="note">用于登录、认证、SELinux AVC 等用户态消息降噪</text>
+
+  <!-- ROW 6: exclude -->
+  <rect x="48" y="738" width="1084" height="108" rx="14" fill="#fef2f2" stroke="#fecaca" stroke-width="1.4"/>
+  <rect x="70" y="764" width="150" height="56" rx="9" fill="#ffffff" stroke="#dc2626" stroke-width="1.4"/>
+  <text x="145" y="788" text-anchor="middle" class="when" font-weight="700" fill="#0f172a">日志生成阶段</text>
+  <text x="145" y="807" text-anchor="middle" class="note">record 即将输出</text>
+  <line x1="220" y1="792" x2="352" y2="792" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ah)"/>
+  <text x="352" y="778" class="name">exclude</text>
+  <text x="352" y="800" class="use">在最后阶段按消息类型</text>
+  <text x="352" y="819" class="use">msgtype 丢掉整条日志</text>
+  <rect x="690" y="760" width="422" height="34" rx="7" fill="#ffffff" stroke="#ef4444" stroke-width="1.3"/>
+  <text x="704" y="782" class="code">-a never,exclude -F msgtype=CWD</text>
+  <text x="690" y="822" class="note">慎用：可能让事件上下文（如工作目录）缺失</text>
+
+  <!-- footer -->
+  <rect x="48" y="866" width="1084" height="118" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
+  <text x="72" y="898" class="name" font-size="16">选 list 口诀</text>
+  <circle cx="80" cy="924" r="3.5" fill="#f59e0b"/>
+  <text x="96" y="929" class="foot">审计命令执行 / 文件 / 网络 / 权限变更 → 放 <tspan font-weight="700">exit</tspan></text>
+  <circle cx="80" cy="950" r="3.5" fill="#10b981"/>
+  <text x="96" y="955" class="foot">屏蔽整类文件系统噪音 → 放 <tspan font-weight="700">filesystem</tspan></text>
+  <circle cx="620" cy="924" r="3.5" fill="#dc2626"/>
+  <text x="636" y="929" class="foot">按日志类型降噪 → 放 <tspan font-weight="700">exclude</tspan> / <tspan font-weight="700">user</tspan></text>
+  <circle cx="620" cy="950" r="3.5" fill="#f87171"/>
+  <text x="636" y="955" class="foot"><tspan font-weight="700">never,task</tspan> 要特别小心：它让新任务整体不参与审计，会拖垮 exec 审计</text>
+  <text x="72" y="976" class="note">注：早期的 entry list（syscall 进入时）在现代系统已不推荐，规则应改写到 exit。</text>
+</svg>
