@@ -98,7 +98,7 @@
   <text x="70" y="708" class="note">登录 / AVC 等</text>
   <rect x="66" y="716" width="114" height="24" rx="6" fill="#ffffff" stroke="#ec4899" stroke-width="1.2"/>
   <text x="76" y="732" class="code" font-size="9.5">never,user</text>
-  <line x1="198" y1="682" x2="298" y2="682" stroke="#db2777" stroke-width="1.6" marker-end="url(#ah)"/>
+  <line x1="198" y1="682" x2="214" y2="682" stroke="#db2777" stroke-width="1.6" marker-end="url(#ah)"/>
 
   <!-- ============ STAGE E: auditd ============ -->
   <rect x="212" y="818" width="176" height="60" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
