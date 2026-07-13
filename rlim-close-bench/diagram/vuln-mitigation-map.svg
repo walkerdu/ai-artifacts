@@ -1,0 +1,115 @@
+<svg viewBox="0 0 920 760" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: 'PingFang SC', 'Helvetica Neue', 'Menlo', 'SF Mono', monospace; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#0f172a"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <text x="40" y="44" fill="white" font-size="18" font-weight="700">四类 CPU 推测执行漏洞 → 内核缓解手段 → syscall 开销</text>
+  <text x="40" y="68" fill="#94a3b8" font-size="11">硬件漏洞改不了，只能靠内核软件打补丁堵；代价就是每次 syscall / 切换要多做额外动作</text>
+
+  <!-- 列标题 -->
+  <text x="60" y="100" fill="#64748b" font-size="10" font-weight="600">漏洞</text>
+  <text x="400" y="100" fill="#64748b" font-size="10" font-weight="600">缓解手段</text>
+  <text x="720" y="100" fill="#64748b" font-size="10" font-weight="600">syscall 路径开销</text>
+  <line x1="40" y1="110" x2="880" y2="110" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Row 1: Meltdown (rose = 最重) -->
+  <rect x="40" y="124" width="330" height="130" rx="8" fill="#0f172a"/>
+  <rect x="40" y="124" width="330" height="130" rx="8" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="58" y="150" fill="#fb7185" font-size="13" font-weight="700">Meltdown</text>
+  <text x="58" y="170" fill="#94a3b8" font-size="9">CVE-2017-5754 · 越权读内核内存</text>
+  <text x="58" y="196" fill="#e2e8f0" font-size="10">用户态推测读内核地址，</text>
+  <text x="58" y="214" fill="#e2e8f0" font-size="10">再靠 Cache 侧信道把值泄露出来</text>
+  <text x="58" y="240" fill="#fbbf24" font-size="10" font-weight="600">S5 实测：Mitigation: PTI（开）</text>
+
+  <rect x="390" y="124" width="290" height="130" rx="8" fill="#0f172a"/>
+  <rect x="390" y="124" width="290" height="130" rx="8" fill="rgba(30,41,59,0.55)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="408" y="152" fill="white" font-size="11" font-weight="600">KPTI 页表隔离</text>
+  <text x="408" y="176" fill="#cbd5e1" font-size="9">用户态 / 内核态用两套页表，</text>
+  <text x="408" y="192" fill="#cbd5e1" font-size="9">用户态几乎看不到内核映射</text>
+
+  <rect x="700" y="124" width="180" height="130" rx="8" fill="#0f172a"/>
+  <rect x="700" y="124" width="180" height="130" rx="8" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="716" y="160" fill="#fb7185" font-size="11" font-weight="700">最大头</text>
+  <text x="716" y="184" fill="#e2e8f0" font-size="9">每次进/出内核</text>
+  <text x="716" y="200" fill="#e2e8f0" font-size="9">切 CR3 + 冲刷 TLB</text>
+  <text x="716" y="224" fill="#fb7185" font-size="9">→ S5 慢 7 倍的主因</text>
+
+  <!-- Row 2: Spectre v2 (amber) -->
+  <rect x="40" y="268" width="330" height="118" rx="8" fill="#0f172a"/>
+  <rect x="40" y="268" width="330" height="118" rx="8" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="58" y="294" fill="#fbbf24" font-size="13" font-weight="700">Spectre v2</text>
+  <text x="58" y="314" fill="#94a3b8" font-size="9">CVE-2017-5715 · 分支预测投毒</text>
+  <text x="58" y="340" fill="#e2e8f0" font-size="10">污染间接跳转预测器，诱导内核</text>
+  <text x="58" y="358" fill="#e2e8f0" font-size="10">推测执行攻击者选定的代码</text>
+  <text x="58" y="378" fill="#f87171" font-size="9" font-weight="600">S5 实测：Vulnerable（没开）</text>
+
+  <rect x="390" y="268" width="290" height="118" rx="8" fill="#0f172a"/>
+  <rect x="390" y="268" width="290" height="118" rx="8" fill="rgba(30,41,59,0.55)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="408" y="296" fill="white" font-size="11" font-weight="600">Retpoline / IBRS / IBPB</text>
+  <text x="408" y="320" fill="#cbd5e1" font-size="9">间接跳转改写成安全形式，</text>
+  <text x="408" y="336" fill="#cbd5e1" font-size="9">切换时清空 / 隔离分支预测状态</text>
+  <text x="408" y="362" fill="#94a3b8" font-size="9">（需微码支持，S5 无微码未启用）</text>
+
+  <rect x="700" y="268" width="180" height="118" rx="8" fill="#0f172a"/>
+  <rect x="700" y="268" width="180" height="118" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="716" y="304" fill="#94a3b8" font-size="11" font-weight="600">本例不计</text>
+  <text x="716" y="328" fill="#cbd5e1" font-size="9">S5 上没开，</text>
+  <text x="716" y="344" fill="#cbd5e1" font-size="9">不产生 syscall 开销</text>
+
+  <!-- Row 3: MDS / TAA (violet) -->
+  <rect x="40" y="400" width="330" height="118" rx="8" fill="#0f172a"/>
+  <rect x="40" y="400" width="330" height="118" rx="8" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="58" y="426" fill="#a78bfa" font-size="13" font-weight="700">MDS / ZombieLoad / TAA</text>
+  <text x="58" y="446" fill="#94a3b8" font-size="9">2018-2019 · 微架构缓冲区泄露</text>
+  <text x="58" y="472" fill="#e2e8f0" font-size="10">从 Store Buffer / Line Fill Buffer</text>
+  <text x="58" y="490" fill="#e2e8f0" font-size="10">等内部缓冲区偷残留数据</text>
+  <text x="58" y="510" fill="#fbbf24" font-size="9" font-weight="600">S5 实测：Vulnerable（尝试 VERW）</text>
+
+  <rect x="390" y="400" width="290" height="118" rx="8" fill="#0f172a"/>
+  <rect x="390" y="400" width="290" height="118" rx="8" fill="rgba(30,41,59,0.55)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="408" y="428" fill="white" font-size="11" font-weight="600">返回用户态时执行 VERW</text>
+  <text x="408" y="452" fill="#cbd5e1" font-size="9">每次 syscall exit 由微码</text>
+  <text x="408" y="468" fill="#cbd5e1" font-size="9">顺带清空这些内部缓冲区</text>
+  <text x="408" y="494" fill="#94a3b8" font-size="9">（S5 无微码 → 只是「尝试」）</text>
+
+  <rect x="700" y="400" width="180" height="118" rx="8" fill="#0f172a"/>
+  <rect x="700" y="400" width="180" height="118" rx="8" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.2"/>
+  <text x="716" y="436" fill="#fbbf24" font-size="11" font-weight="600">小头</text>
+  <text x="716" y="460" fill="#e2e8f0" font-size="9">每次 exit 多一条</text>
+  <text x="716" y="476" fill="#e2e8f0" font-size="9">清空指令</text>
+
+  <!-- Row 4: L1TF (emerald = 可忽略) -->
+  <rect x="40" y="532" width="330" height="118" rx="8" fill="#0f172a"/>
+  <rect x="40" y="532" width="330" height="118" rx="8" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+  <text x="58" y="558" fill="#34d399" font-size="13" font-weight="700">L1TF / Foreshadow</text>
+  <text x="58" y="578" fill="#94a3b8" font-size="9">CVE-2018-3620 · L1 缓存泄露</text>
+  <text x="58" y="604" fill="#e2e8f0" font-size="10">构造页表项推测读 L1 缓存中</text>
+  <text x="58" y="622" fill="#e2e8f0" font-size="10">属于别的进程 / VM 的数据</text>
+  <text x="58" y="642" fill="#34d399" font-size="9" font-weight="600">S5 实测：Mitigation: PTE Inversion</text>
+
+  <rect x="390" y="532" width="290" height="118" rx="8" fill="#0f172a"/>
+  <rect x="390" y="532" width="290" height="118" rx="8" fill="rgba(30,41,59,0.55)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="408" y="560" fill="white" font-size="11" font-weight="600">PTE 反转 + 切换刷 L1D</text>
+  <text x="408" y="584" fill="#cbd5e1" font-size="9">非法 PTE 指向不存在的物理页；</text>
+  <text x="408" y="600" fill="#cbd5e1" font-size="9">切换 VM / 上下文时刷 L1 数据缓存</text>
+  <text x="408" y="626" fill="#94a3b8" font-size="9">（建议关超线程 SMT）</text>
+
+  <rect x="700" y="532" width="180" height="118" rx="8" fill="#0f172a"/>
+  <rect x="700" y="532" width="180" height="118" rx="8" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+  <text x="716" y="568" fill="#34d399" font-size="11" font-weight="600">可忽略</text>
+  <text x="716" y="592" fill="#e2e8f0" font-size="9">编译期 / 页表位处理，</text>
+  <text x="716" y="608" fill="#e2e8f0" font-size="9">裸机 syscall 几乎无开销</text>
+
+  <!-- 底部小结 -->
+  <rect x="40" y="666" width="840" height="72" rx="10" fill="rgba(136,19,55,0.2)" stroke="#fb7185" stroke-width="1.2"/>
+  <text x="60" y="694" fill="#fb7185" font-size="12" font-weight="700">对 S5 而言</text>
+  <text x="60" y="720" fill="#e2e8f0" font-size="11">压在 syscall 路径上、真正拖慢 close 的，唯有 Meltdown 的 KPTI（TLB 冲刷）；MDS 的 VERW 是小头，Spectre v2 根本没开。</text>
+</svg>
