@@ -5,20 +5,20 @@ from matplotlib.ticker import FuncFormatter
 
 plt.rcParams["font.family"] = ["Arial", "Helvetica", "DejaVu Sans"]
 
-rlim = [204800, 409600, 1048576, 1073741816]
+rlim = [204800, 409600, 1048576]
 
 # (label, cpu, ip, color, marker, naive_ms[])
 series = [
     ("SA3", "AMD EPYC Milan (2.55/3.5GHz)", "30.49.40.64",
-     "#E4572E", "o", [13.2071, 26.9422, 67.6947, 67200.3911]),
+     "#E4572E", "o", [13.2071, 26.9422, 67.6947]),
     ("SA5", "AMD EPYC Bergamo (-/3.1GHz)", "21.245.122.28",
-     "#F3A712", "s", [12.3957, 24.6781, 62.8519, 63561.2595]),
+     "#F3A712", "s", [12.3957, 24.6781, 62.8519]),
     ("S5",  "Intel Xeon Cascade Lake 8255C (2.5/3.1GHz)", "11.177.159.161",
-     "#2E86AB", "^", [95.7748, 191.6635, 499.0416, 510840.4242]),
+     "#2E86AB", "^", [95.7748, 191.6635, 499.0416]),
     ("S6",  "Intel Ice Lake (2.7/3.3GHz)", "30.49.239.225",
-     "#3CB371", "D", [14.0108, 28.0092, 71.7231, 73436.9288]),
+     "#3CB371", "D", [14.0108, 28.0092, 71.7231]),
     ("SA9", "AMD EPYC Turin-D (-/3.4GHz)", "11.152.253.72",
-     "#8E44AD", "v", [13.4291, 26.4631, 67.7505, 70065.8636]),
+     "#8E44AD", "v", [13.4291, 26.4631, 67.7505]),
 ]
 
 fig, ax = plt.subplots(figsize=(11, 7), dpi=160)
@@ -63,12 +63,6 @@ leg = ax.legend(title="Machine model · CPU", loc="upper left",
                 fontsize=9.5, title_fontsize=10.5, framealpha=0.95,
                 edgecolor="#cccccc")
 leg.get_title().set_fontweight("bold")
-
-# 标注 RLIM_INFINITY 处的巨大跳变
-ax.annotate("naive scans full soft-limit range\n→ latency explodes",
-            xy=(1073741816, 510840.4242), xytext=(2.2e7, 260000),
-            fontsize=9, color="#555555",
-            arrowprops=dict(arrowstyle="->", color="#999999", lw=1.2))
 
 fig.tight_layout()
 out = "/Users/sasalu_1/.workbuddy/ai-artifacts/rlim-close-bench/rlim_close_naive_compare.png"
