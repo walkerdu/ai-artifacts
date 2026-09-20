@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>26个字母怎么发音 + 音标符号的身世</title>
+<style>
+:root{
+  --bg:#FDFBF7; --card:#FFF; --ink:#2B2B2B; --ink2:#6B6B6B;
+  --line:#E8E2D8; --amber:#D97706;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+  padding:28px 20px 60px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto}
+
+header{text-align:center;margin-bottom:22px}
+h1{font-size:29px;font-weight:800;letter-spacing:-.5px}
+h1 span{color:var(--amber)}
+.sub{color:var(--ink2);font-size:14px;margin-top:8px}
+.tip{display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:#FFF8EC;
+  border:1px solid #F3D9A8;color:#8A5A0B;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600}
+.back{display:inline-block;margin-top:10px;font-size:13px;color:var(--amber);text-decoration:none;font-weight:600}
+.back:hover{text-decoration:underline}
+
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0 26px}
+.tab{padding:9px 18px;border:1px solid var(--line);background:#fff;border-radius:999px;
+  font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.15s}
+.tab:hover{border-color:var(--amber);color:var(--amber)}
+.tab.on{background:var(--amber);border-color:var(--amber);color:#fff}
+
+section{display:none} section.on{display:block}
+
+h2{font-size:19px;font-weight:800;margin:30px 0 6px;display:flex;align-items:center;gap:10px}
+h2:first-of-type{margin-top:0}
+h2 .bar{width:5px;height:20px;border-radius:3px;background:var(--amber)}
+h2 .cnt{font-size:13px;font-weight:600;color:var(--ink2);background:#F1EDE5;padding:2px 10px;border-radius:999px}
+.note{font-size:13px;color:var(--ink2);margin-bottom:14px;padding-left:15px}
+
+/* 辅音字母卡 */
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.lcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;
+  text-align:center;cursor:pointer;transition:.16s}
+.lcard:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.07)}
+.lcard.play{box-shadow:0 0 0 3px rgba(217,119,6,.35)}
+.lcard .L{font-family:Georgia,serif;font-size:32px;font-weight:700;line-height:1}
+.lcard .P{font-family:"Times New Roman",serif;font-size:19px;font-weight:700;margin-top:4px}
+.lcard .W{font-size:15px;font-weight:700;margin-top:6px}
+.lcard .W i{font-style:normal;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.lcard .Z{font-size:12px;color:var(--ink2)}
+.lcard .X{margin-top:7px;font-size:11px;color:#8A6A3A;background:#FAF5EA;border-radius:7px;padding:4px 6px}
+.ok{background:#F0F8F2;border-color:#9FCFB2} .ok .L{color:#2E7A52} .ok .P{color:#2E7A52} .ok .W i{color:#2E7A52}
+.ch{background:#FFF3F3;border-color:#F0A8A8} .ch .L{color:#B03535} .ch .P{color:#B03535} .ch .W i{color:#B03535}
+
+/* 变脸字母详表 */
+.vcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.vhead{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.vhead .big{font-family:Georgia,serif;font-size:40px;font-weight:700;color:var(--amber);line-height:1;
+  width:60px;height:60px;display:flex;align-items:center;justify-content:center;
+  background:#FFF6E8;border:1px solid #F0D5A8;border-radius:14px}
+.vhead .ti{font-size:15px;font-weight:700}
+.vhead .de{font-size:13px;color:var(--ink2)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:#F7F2E8;color:#6B5836;font-weight:700;padding:9px 11px;text-align:left;font-size:13px}
+td{padding:9px 11px;border-top:1px solid #F0EBE1;vertical-align:top}
+td.ip{font-family:"Times New Roman",serif;font-size:19px;font-weight:700;color:var(--amber);white-space:nowrap}
+td b{color:#B35309}
+.wd{cursor:pointer;border-bottom:1px dashed #C9BEA6}
+.wd:hover{color:var(--amber);border-color:var(--amber)}
+tr:hover td{background:#FFFCF6}
+table.box{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;margin-bottom:10px}
+
+/* 音标身世 */
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:12px}
+.ocard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.orow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.src{font-family:Georgia,serif;font-size:27px;font-weight:700;color:#8A8A8A;
+  min-width:46px;height:46px;display:flex;align-items:center;justify-content:center;
+  background:#F4F1EA;border-radius:10px;padding:0 6px}
+.src.r180{transform:rotate(180deg)}
+.src.flip{transform:scaleX(-1)}
+.ar{color:#B9AE97;font-size:17px}
+.dst{font-family:"Times New Roman",serif;font-size:27px;font-weight:700;color:var(--amber);
+  min-width:46px;height:46px;display:flex;align-items:center;justify-content:center;
+  background:#FFF6E8;border:1px solid #F0D5A8;border-radius:10px;padding:0 6px}
+.ocard .nm{font-size:13px;font-weight:700;margin-bottom:3px}
+.ocard .ds{font-size:13px;color:#555;line-height:1.55}
+.ocard .eg{font-size:12px;color:var(--ink2);margin-top:6px}
+.ocard .eg b{color:#2E7A52}
+
+.big-note{background:#FFF8EC;border:1px solid #F3D9A8;border-left:5px solid var(--amber);
+  border-radius:12px;padding:15px 18px;margin-bottom:16px;font-size:14px;color:#6B4A0B}
+.big-note b{color:#8A5A0B}
+
+footer{text-align:center;color:var(--ink2);font-size:12px;margin-top:40px;
+  border-top:1px solid var(--line);padding-top:18px}
+@media print{
+  body{padding:0;background:#fff}
+  .tabs,.tip,.back,footer{display:none}
+  section{display:block !important;page-break-before:always}
+  section:first-of-type{page-break-before:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>26个<span>字母</span>怎么发音 · 音标符号的<span>身世</span></h1>
+  <div class="sub">按字母查发音（自然拼读正方向）+ 那些奇怪符号到底从哪来的</div>
+  <div class="tip">👆 点字母卡片或带虚线的单词，会读出声音</div>
+  <div><a class="back" href="index.html">← 回到 48 个音标图解表</a></div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" data-t="a">✅ 老实的辅音字母 15个</button>
+  <button class="tab" data-t="b">⚠️ 会变脸的字母 6个</button>
+  <button class="tab" data-t="c">🅰️ 5个元音字母 × 环境</button>
+  <button class="tab" data-t="d">🔇 哑巴字母</button>
+  <button class="tab" data-t="e">🏛️ 音标符号身世</button>
+</div>
+
+<!-- ===== 老实辅音 ===== -->
+<section class="on" id="s-a">
+  <div class="big-note">
+    这 15 个字母<b>一辈子只发一个音</b>，闭着眼睛读就行。英语里辅音字母有 21 个、辅音有 28 个，
+    数量差不多，所以辅音这边基本是「一个字母一个音」，很少出事。
+  </div>
+  <h2><i class="bar"></i>看到就这么读 <span class="cnt">15个</span></h2>
+  <div class="lgrid" id="g-ok"></div>
+</section>
+
+<!-- ===== 变脸字母 ===== -->
+<section id="s-b">
+  <div class="big-note">
+    这 6 个字母会<b>看邻居的脸色</b>换读音。好消息是：换的规则很清楚，记住条件就行，不用死背单词。
+  </div>
+  <div id="g-var"></div>
+</section>
+
+<!-- ===== 元音字母 ===== -->
+<section id="s-c">
+  <div class="big-note">
+    元音字母只有 <b>5 个</b>，却要表示 <b>20 个元音</b>，平均一个字母扛四个音。
+    所以元音没法「一个字母一个音」，必须看它<b>待在什么环境里</b>。
+    下面每个字母的 4～5 种环境，覆盖了绝大多数单词。
+  </div>
+  <div id="g-vow"></div>
+</section>
+
+<!-- ===== 哑巴字母 ===== -->
+<section id="s-d">
+  <div class="big-note">
+    有些字母写出来<b>纯粹不出声</b>，是历史上读过、后来读音消失了但拼写没改。
+    它们扎堆出现在固定组合里，认组合就行。
+  </div>
+  <h2><i class="bar"></i>常见的哑巴组合</h2>
+  <table class="box" id="t-si"></table>
+</section>
+
+<!-- ===== 音标身世 ===== -->
+<section id="s-e">
+  <div class="big-note">
+    音标不是乱画的。它叫 <b>IPA（国际音标）</b>，1888 年由国际语音学协会制定，
+    目标是给<b>全世界所有语言的所有声音</b>各配一个符号。
+    人类语言有一百多个音，拉丁字母只有 26 个，根本不够用。
+    于是他们想了四招：<b>① 借希腊字母 ② 把字母转过来 ③ 挖出古英语的老字母 ④ 两个字母粘一起</b>。
+    所以每个「怪符号」都有出身，很多甚至形状就在暗示读音。
+  </div>
+  <h2><i class="bar"></i>把字母翻过来用 <span class="cnt">不够用就转圈</span></h2>
+  <div class="note">最省事的办法：现成字母旋转 180° 或左右镜像，就得到一个全新符号。</div>
+  <div class="ogrid" id="o-1"></div>
+
+  <h2><i class="bar"></i>两个字母粘成一个 <span class="cnt">形状暗示读音</span></h2>
+  <div class="note">这两个最妙——符号长什么样，音就在哪两个音之间。</div>
+  <div class="ogrid" id="o-2"></div>
+
+  <h2><i class="bar"></i>借来的外国字母 <span class="cnt">希腊语 / 古英语</span></h2>
+  <div class="note">拉丁字母表达不了的音，去邻居家借。</div>
+  <div class="ogrid" id="o-3"></div>
+
+  <h2><i class="bar"></i>改造过的拉丁字母</h2>
+  <div class="note">同一个字母的另一种写法（小型大写、手写体、花体），用来区分相近的音。</div>
+  <div class="ogrid" id="o-4"></div>
+</section>
+
+<footer>
+  按字母归类的发音表 + IPA 符号考据 · 浏览器 ⌘P 可打印成 PDF
+</footer>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const OK=[
+ ["b","/b/","<i>b</i>ag","书包","只有 mb 结尾时不发音：lamb"],
+ ["d","/d/","<i>d</i>og","小狗","动词 -ed 结尾会变 /t/ /ɪd/"],
+ ["f","/f/","<i>f</i>ish","小鱼","只有 of 读 /v/"],
+ ["j","/dʒ/","<i>j</i>ump","跳","几乎没有例外"],
+ ["k","/k/","<i>k</i>ey","钥匙","kn 开头时 k 不发音：knife"],
+ ["l","/l/","<i>l</i>ion","狮子","walk / half 里不发音"],
+ ["m","/m/","<i>m</i>oon","月亮","非常稳定"],
+ ["n","/n/","<i>n</i>ose","鼻子","ng 组合时变 /ŋ/"],
+ ["p","/p/","<i>p</i>en","钢笔","ph 组合时变 /f/"],
+ ["q","/kw/","<i>qu</i>een","女王","永远带着 u 一起出现"],
+ ["r","/r/","<i>r</i>ed","红色","英音里元音后的 r 只拉长不出声"],
+ ["t","/t/","<i>t</i>ea","茶","-tion 里读 /ʃ/"],
+ ["v","/v/","<i>v</i>ery","非常","几乎没有例外"],
+ ["w","/w/","<i>w</i>ater","水","wr 开头时不发音：write"],
+ ["z","/z/","<i>z</i>oo","动物园","非常稳定"],
+];
+
+const VAR=[
+ ["c","两副面孔，看后面跟谁","口诀：c 碰到 e i y 就变软",
+  [["/k/","后面是 a o u 或辅音、或在词尾","<b>cat</b> 猫 · <b>cup</b> 杯子 · <b>cold</b> 冷 · <b>clock</b> 钟","cat"],
+   ["/s/","后面是 e i y","<b>city</b> 城市 · <b>cent</b> 分 · <b>cycle</b> 循环 · <b>face</b> 脸","city"],
+   ["/tʃ/","和 h 组成 ch","<b>chair</b> 椅子 · <b>cheese</b> 奶酪","chair"]]],
+ ["g","和 c 一模一样的规律，但例外多一些","口诀：g 碰到 e i y 常变软（但有几个硬骨头）",
+  [["/g/","后面是 a o u 或辅音","<b>go</b> 走 · <b>gate</b> 门 · <b>glass</b> 玻璃","go"],
+   ["/dʒ/","后面是 e i y","<b>giant</b> 巨人 · <b>gym</b> 体育馆 · <b>orange</b> 橙子","giant"],
+   ["/g/","少数硬骨头，得单独记","<b>get</b> 得到 · <b>give</b> 给 · <b>girl</b> 女孩 · <b>gift</b> 礼物","get"],
+   ["不发音","gh 组合常常整个消失","<b>light</b> 光 · <b>night</b> 夜 · <b>high</b> 高","light"]]],
+ ["s","清浊两种，看位置","夹在两个元音中间容易「浊化」",
+  [["/s/","词首、清辅音旁边","<b>sun</b> 太阳 · <b>stop</b> 停 · <b>class</b> 班级","sun"],
+   ["/z/","两个元音中间、或浊音后的复数","<b>nose</b> 鼻子 · <b>dogs</b> 狗（复数）· <b>is</b> 是","nose"],
+   ["/ʃ/","少数几个词","<b>sure</b> 当然 · <b>sugar</b> 糖","sugar"]]],
+ ["x","一个字母两个音","x 其实是「两个辅音的合体」",
+  [["/ks/","绝大多数情况","<b>box</b> 盒子 · <b>six</b> 六 · <b>fox</b> 狐狸","box"],
+   ["/gz/","后面紧跟重读元音","<b>exam</b> 考试 · <b>example</b> 例子 · <b>exact</b> 准确","exam"],
+   ["/z/","出现在词首","<b>xylophone</b> 木琴 · <b>Xerox</b> 复印","xylophone"]]],
+ ["y","身兼两职：既是辅音也是元音","在词首当辅音，在词尾当元音",
+  [["/j/","词首，此时是辅音","<b>yes</b> 是 · <b>yellow</b> 黄色 · <b>you</b> 你","yellow"],
+   ["/aɪ/","单音节词的词尾","<b>my</b> 我的 · <b>fly</b> 飞 · <b>sky</b> 天空","fly"],
+   ["/ɪ/","多音节词的词尾","<b>happy</b> 快乐 · <b>baby</b> 宝宝 · <b>city</b> 城市","happy"],
+   ["/ɪ/","夹在词中间","<b>gym</b> 体育馆 · <b>system</b> 系统","gym"]]],
+ ["h","要么送气，要么消失","还常常和前面的字母组队变成新音",
+  [["/h/","词首，正常发音","<b>hat</b> 帽子 · <b>house</b> 房子 · <b>happy</b> 快乐","house"],
+   ["不发音","少数几个词","<b>hour</b> 小时 · <b>honest</b> 诚实 · <b>honor</b> 荣誉","hour"],
+   ["组队","和前一个字母合体成新音","s<b>h</b>→/ʃ/ · c<b>h</b>→/tʃ/ · t<b>h</b>→/θ/ · p<b>h</b>→/f/","ship"]]],
+];
+
+const VOW=[
+ ["a","闭音节短、开音节长，遇 r 和 l 会变",
+  [["/æ/","闭音节（后面有辅音收尾）","<b>cat</b> 猫 · <b>bag</b> 书包 · <b>map</b> 地图 · <b>hand</b> 手","cat"],
+   ["/eɪ/","开音节 / 魔法 e","<b>cake</b> 蛋糕 · <b>name</b> 名字 · <b>baby</b> 宝宝","cake"],
+   ["/ɑː/","a + r","<b>car</b> 汽车 · <b>park</b> 公园 · <b>star</b> 星星","car"],
+   ["/ɔː/","a + ll / lk / w，或在 w 后面","<b>ball</b> 球 · <b>walk</b> 走 · <b>saw</b> 锯 · <b>water</b> 水","ball"],
+   ["/ə/","不重读的位置，读得很含糊","<b>about</b> 关于 · <b>sofa</b> 沙发 · <b>banana</b> 香蕉","banana"]]],
+ ["e","最常见的元音，也最常「不出声」",
+  [["/e/","闭音节","<b>bed</b> 床 · <b>red</b> 红 · <b>pen</b> 笔 · <b>desk</b> 书桌","bed"],
+   ["/iː/","开音节 / 魔法 e","<b>he</b> 他 · <b>she</b> 她 · <b>these</b> 这些 · <b>evening</b> 傍晚","she"],
+   ["/ɜː/","e + r，且重读","<b>her</b> 她的 · <b>term</b> 学期 · <b>serve</b> 服务","her"],
+   ["/ə/","e + r，但不重读","<b>teacher</b> 老师 · <b>sister</b> 姐妹 · <b>dinner</b> 晚餐","teacher"],
+   ["不发音","词尾的魔法 e","mak<b>e</b> 做 · lov<b>e</b> 爱 · hav<b>e</b> 有","make"]]],
+ ["i","短音最常见，遇到 nd / ld 会突然变长",
+  [["/ɪ/","闭音节","<b>sit</b> 坐 · <b>pig</b> 猪 · <b>fish</b> 鱼 · <b>six</b> 六","fish"],
+   ["/aɪ/","开音节 / 魔法 e","<b>bike</b> 单车 · <b>time</b> 时间 · <b>nice</b> 好 · <b>hi</b> 嗨","bike"],
+   ["/ɜː/","i + r","<b>bird</b> 鸟 · <b>girl</b> 女孩 · <b>shirt</b> 衬衫","bird"],
+   ["/aɪ/","i + nd 或 ld（小陷阱！）","<b>find</b> 找到 · <b>kind</b> 善良 · <b>child</b> 孩子 · <b>mild</b> 温和","find"]]],
+ ["o","变化最多的一个，注意 m n v th 前的特殊读法",
+  [["/ɒ/","闭音节","<b>dog</b> 狗 · <b>box</b> 盒子 · <b>hot</b> 热 · <b>stop</b> 停","dog"],
+   ["/əʊ/","开音节 / 魔法 e / 词尾","<b>go</b> 走 · <b>home</b> 家 · <b>nose</b> 鼻子 · <b>photo</b> 照片","home"],
+   ["/ɔː/","o + r","<b>for</b> 为了 · <b>horse</b> 马 · <b>short</b> 短","horse"],
+   ["/ʌ/","o 后面是 m n v th（很常见！）","<b>come</b> 来 · <b>son</b> 儿子 · <b>love</b> 爱 · <b>mother</b> 妈妈","mother"],
+   ["/əʊ/","o + ld / st","<b>cold</b> 冷 · <b>old</b> 老 · <b>most</b> 最","cold"]]],
+ ["u","开音节时常带一个 y 的味道",
+  [["/ʌ/","闭音节","<b>cup</b> 杯子 · <b>bus</b> 公交 · <b>sun</b> 太阳 · <b>run</b> 跑","sun"],
+   ["/juː/","开音节 / 魔法 e（前面带个「伊」音）","<b>cute</b> 可爱 · <b>use</b> 使用 · <b>music</b> 音乐","cute"],
+   ["/uː/","开音节，但前面是 r l j 等","<b>rule</b> 规则 · <b>June</b> 六月 · <b>blue</b> 蓝色","blue"],
+   ["/ɜː/","u + r","<b>nurse</b> 护士 · <b>turn</b> 转 · <b>burn</b> 烧","nurse"],
+   ["/ʊ/","少数词，短促的「乌」","<b>put</b> 放 · <b>full</b> 满 · <b>push</b> 推","put"]]],
+];
+
+const SILENT=[
+ ["k","kn 开头","<b>k</b>nife 刀 · <b>k</b>now 知道 · <b>k</b>nee 膝盖 · <b>k</b>nock 敲","knife"],
+ ["w","wr 开头","<b>w</b>rite 写 · <b>w</b>rong 错 · <b>w</b>rap 包","write"],
+ ["b","mb 结尾","lam<b>b</b> 羊羔 · clim<b>b</b> 爬 · thum<b>b</b> 拇指 · com<b>b</b> 梳子","lamb"],
+ ["gh","gh 在元音后","li<b>gh</b>t 光 · ni<b>gh</b>t 夜 · hi<b>gh</b> 高 · thou<b>gh</b> 虽然","night"],
+ ["l","lk / lf / lm 组合","wa<b>l</b>k 走 · ta<b>l</b>k 说 · ha<b>l</b>f 一半 · ca<b>l</b>m 平静","walk"],
+ ["e","词尾的魔法 e","mak<b>e</b> 做 · lov<b>e</b> 爱 · hous<b>e</b> 房子","house"],
+ ["h","少数几个词","<b>h</b>our 小时 · <b>h</b>onest 诚实 · g<b>h</b>ost 鬼","hour"],
+ ["t","stl / stn / ften 组合","lis<b>t</b>en 听 · cas<b>t</b>le 城堡 · of<b>t</b>en 经常","listen"],
+];
+
+/* 音标身世：[来源字符, 变形class, 音标, 名字, 说明, 例词HTML] */
+const O1=[
+ ["e","r180","ə","schwa（施瓦）","把小写 <b>e</b> 旋转 180°。名字来自希伯来语「空、无」，因为它是最含糊、最没存在感的音——所有不重读的音节都会塌成它。","teach<b>er</b> · <b>a</b>bout · sof<b>a</b>"],
+ ["v","r180","ʌ","turned v（倒 v）","把小写 <b>v</b> 倒过来。也可以理解成「掉了横杠的 A」，因为它听起来就是个短促的「阿」。","s<b>u</b>n · c<b>u</b>p · b<b>u</b>s"],
+ ["c","flip","ɔ","open o（开口 o）","把 <b>c</b> 左右镜像，也可看成「开了个口的 o」。嘴型比 o 更张开一点。","d<b>oo</b>r · b<b>a</b>ll · h<b>or</b>se"],
+ ["ε","flip","ɜ","reversed epsilon","把希腊字母 <b>ε</b>（epsilon）左右翻转。这是英式发音里那个卷舌的长「额」。","b<b>ir</b>d · h<b>er</b> · n<b>ur</b>se"],
+ ["ɑ","flip","ɒ","turned script a","把手写体 <b>ɑ</b> 左右翻转。和 /ɑː/ 是一对：嘴型像，但这个短、那个长。","d<b>o</b>g · b<b>o</b>x · h<b>o</b>t"],
+];
+const O2=[
+ ["a+e","","æ","ash（梣木）","<b>a</b> 和 <b>e</b> 直接连写成一个字。妙在<b>形状就是答案</b>——这个音正好介于「啊」和「诶」之间，嘴要张大读「哎」。这原本是古英语的一个真字母。","c<b>a</b>t · b<b>a</b>g · <b>a</b>pple"],
+ ["n+g","","ŋ","eng（安格）","<b>n</b> 长出了 <b>g</b> 的小尾巴。同样是<b>形状即答案</b>——发音位置就是从 n 往 g 的方向挪，舌根抵住软腭的后鼻音。","si<b>ng</b> · lo<b>ng</b> · E<b>ng</b>lish"],
+];
+const O3=[
+ ["θ","","θ","theta（希腊字母）","直接从希腊语搬过来。希腊语里 θ 本来就读这个音，所以不用改造，拿来即用。咬舌头的清音。","<b>th</b>ink · <b>th</b>ree · mou<b>th</b>"],
+ ["ð","","ð","eth（古英语字母）","古英语和冰岛语的真字母，形状是 <b>d</b> 加一横。英语后来把它废了改写成 th，音标里又请了回来。咬舌头的浊音。","<b>th</b>is · <b>th</b>at · mo<b>th</b>er"],
+ ["ʊ","","ʊ","upsilon（希腊字母变体）","来自希腊字母 <b>υ</b>（upsilon）的一种写法。短促的「乌」，和长音 /uː/ 区分开。","b<b>oo</b>k · g<b>oo</b>d · p<b>u</b>t"],
+];
+const O4=[
+ ["ſ","","ʃ","long s（长写 s）","中世纪手抄本里 s 有个「长写体」<b>ſ</b>，看着像没横的 f。音标借它来表示「嘘」这个音——本质上就是被拉长了的 s。","<b>sh</b>ip · <b>sh</b>e · fi<b>sh</b>"],
+ ["z","","ʒ","花体 z","把 <b>z</b> 的尾巴往下拉长。它是 /ʃ/ 的浊音版，就像 z 是 s 的浊音版——形状和关系完全对应。","televi<b>s</b>ion · plea<b>s</b>ure"],
+ ["I","","ɪ","small capital I","大写字母 <b>I</b> 缩小成「小型大写」。和 /iː/ 区分：那个长而紧，这个短而松。","p<b>i</b>g · s<b>i</b>t · f<b>i</b>sh"],
+ ["a","","ɑ","script a（手写 a）","手写体的 <b>a</b>（单层圆圈加竖），区别于印刷体双层的 a。表示嘴巴张到最大的「啊」。","c<b>ar</b> · f<b>a</b>ther · st<b>ar</b>"],
+ ["：","","ː","长音符号","不是字母，是两个小三角点。加在任何元音后面都表示「把这个音拖长」。所以 /i/ 和 /iː/ 是同一个嘴型、不同长度。","s<b>ee</b> /siː/ · c<b>ar</b> /kɑː/"],
+ ["t+ʃ","","tʃ","两个符号连写","破擦音没有专门符号，就把两个符号<b>按发音顺序粘在一起</b>：先做 t 的爆破，紧接着滑进 ʃ 的摩擦。/dʒ/ /tr/ /dr/ 同理。","<b>ch</b>air · tea<b>ch</b>er"],
+];
+
+/* ============ 渲染 ============ */
+const $=id=>document.getElementById(id);
+
+$("g-ok").innerHTML=OK.map(d=>{
+  const w=d[2].replace(/<\/?i>/g,'');
+  return `<div class="lcard ok" data-w="${w}">
+    <div class="L">${d[0]}</div><div class="P">${d[1]}</div>
+    <div class="W">${d[2]}</div><div class="Z">${d[3]}</div>
+    <div class="X">${d[4]}</div></div>`;
+}).join('');
+
+$("g-var").innerHTML=VAR.map(v=>`
+  <div class="vcard">
+    <div class="vhead"><div class="big">${v[0]}</div>
+      <div><div class="ti">${v[1]}</div><div class="de">${v[2]}</div></div></div>
+    <table><tr><th style="width:90px">读作</th><th style="width:34%">什么时候</th><th>例词</th></tr>
+    ${v[3].map(r=>`<tr><td class="ip">${r[0]}</td><td>${r[1]}</td>
+      <td><span class="wd" data-w="${r[3]}">${r[2]}</span></td></tr>`).join('')}
+    </table></div>`).join('');
+
+$("g-vow").innerHTML=VOW.map(v=>`
+  <div class="vcard">
+    <div class="vhead"><div class="big">${v[0]}</div>
+      <div><div class="ti">元音字母 ${v[0]}</div><div class="de">${v[1]}</div></div></div>
+    <table><tr><th style="width:90px">读作</th><th style="width:36%">环境条件</th><th>例词</th></tr>
+    ${v[2].map(r=>`<tr><td class="ip">${r[0]}</td><td>${r[1]}</td>
+      <td><span class="wd" data-w="${r[3]}">${r[2]}</span></td></tr>`).join('')}
+    </table></div>`).join('');
+
+$("t-si").innerHTML=`<tr><th style="width:80px">哑巴</th><th style="width:26%">出现在</th><th>例词</th></tr>`+
+  SILENT.map(s=>`<tr><td class="ip">${s[0]}</td><td>${s[1]}</td>
+    <td><span class="wd" data-w="${s[3]}">${s[2]}</span></td></tr>`).join('');
+
+function ocards(el,arr){
+  $(el).innerHTML=arr.map(o=>`<div class="ocard">
+    <div class="orow"><div class="src ${o[1]}">${o[0]}</div><div class="ar">→</div>
+      <div class="dst">${o[2]}</div>
+      <div style="flex:1"><div class="nm">${o[3]}</div></div></div>
+    <div class="ds">${o[4]}</div><div class="eg">${o[5]}</div></div>`).join('');
+}
+ocards("o-1",O1); ocards("o-2",O2); ocards("o-3",O3); ocards("o-4",O4);
+
+/* Tab */
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); $('s-'+b.dataset.t).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* 发音 */
+let voice=null;
+function pick(){const vs=speechSynthesis.getVoices();
+  voice=vs.find(v=>/en-GB/i.test(v.lang)&&/female|Serena|Kate|Daniel/i.test(v.name))
+      ||vs.find(v=>/en-GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}
+pick(); speechSynthesis.onvoiceschanged=pick;
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.lcard,.wd'); if(!t)return;
+  const u=new SpeechSynthesisUtterance(t.dataset.w);
+  if(voice)u.voice=voice; u.lang=voice?voice.lang:'en-GB'; u.rate=.72; u.pitch=1.05;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  if(t.classList.contains('lcard')){t.classList.add('play');setTimeout(()=>t.classList.remove('play'),700);}
+});
+</script>
+</body>
+</html>
