@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>48个国际音标 + 自然拼读图解表 · 儿童学习版</title>
+<style>
+:root{
+  --bg:#FDFBF7; --card:#FFFFFF; --ink:#2B2B2B; --ink2:#6B6B6B;
+  --line:#E8E2D8; --amber:#D97706;
+  --v1:#FFF1E6; --v1b:#F4A261;   /* 单元音 */
+  --v2:#FDE8EF; --v2b:#E76F8E;   /* 双元音 */
+  --c1:#E8F2FF; --c1b:#5B8FD9;   /* 爆破 */
+  --c2:#E9F7EF; --c2b:#4FA678;   /* 摩擦 */
+  --c3:#F3ECFB; --c3b:#8E6CC4;   /* 破擦 */
+  --c4:#FFF6DB; --c4b:#D9A93A;   /* 鼻音 */
+  --c5:#E6F7F8; --c5b:#3FA3AD;   /* 半元音/边音 */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+  padding:28px 20px 60px; line-height:1.6;
+}
+.wrap{max-width:1180px;margin:0 auto}
+
+header{text-align:center;margin-bottom:26px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.5px}
+h1 span{color:var(--amber)}
+.sub{color:var(--ink2);font-size:14px;margin-top:8px}
+.tip{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  background:#FFF8EC;border:1px solid #F3D9A8;color:#8A5A0B;
+  padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;
+}
+
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0 26px}
+.tab{
+  padding:9px 18px;border:1px solid var(--line);background:#fff;border-radius:999px;
+  font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.15s;
+}
+.tab:hover{border-color:var(--amber);color:var(--amber)}
+.tab.on{background:var(--amber);border-color:var(--amber);color:#fff}
+
+section{display:none}
+section.on{display:block}
+
+h2{
+  font-size:19px;font-weight:800;margin:30px 0 6px;
+  display:flex;align-items:center;gap:10px;
+}
+h2:first-of-type{margin-top:0}
+h2 .bar{width:5px;height:20px;border-radius:3px;background:var(--amber)}
+h2 .cnt{font-size:13px;font-weight:600;color:var(--ink2);background:#F1EDE5;padding:2px 10px;border-radius:999px}
+.note{font-size:13px;color:var(--ink2);margin-bottom:14px;padding-left:15px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:14px 12px;text-align:center;cursor:pointer;transition:.16s;position:relative;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.07)}
+.card:active{transform:scale(.97)}
+.card.play{box-shadow:0 0 0 3px rgba(217,119,6,.35)}
+.emo{font-size:38px;line-height:1;display:block;margin-bottom:6px}
+.ipa{font-family:"Times New Roman",Georgia,serif;font-size:25px;font-weight:700;letter-spacing:.5px}
+.py{font-size:12px;color:var(--ink2);margin-top:2px}
+.word{font-size:16px;font-weight:700;margin-top:7px}
+.word i{font-style:normal;color:var(--amber);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.zh{font-size:12px;color:var(--ink2)}
+.ltr{
+  margin-top:8px;font-size:11px;font-weight:700;color:#7A6A50;
+  background:#F7F2E8;border-radius:8px;padding:4px 6px;word-break:break-all;
+}
+/* 分组配色 */
+.g-v1{background:var(--v1);border-color:var(--v1b)}   .g-v1 .ipa{color:#B35309}
+.g-v2{background:var(--v2);border-color:var(--v2b)}   .g-v2 .ipa{color:#C2416A}
+.g-c1{background:var(--c1);border-color:var(--c1b)}   .g-c1 .ipa{color:#2F5FA8}
+.g-c2{background:var(--c2);border-color:var(--c2b)}   .g-c2 .ipa{color:#2E7A52}
+.g-c3{background:var(--c3);border-color:var(--c3b)}   .g-c3 .ipa{color:#6844A3}
+.g-c4{background:var(--c4);border-color:var(--c4b)}   .g-c4 .ipa{color:#A37B15}
+.g-c5{background:var(--c5);border-color:var(--c5b)}   .g-c5 .ipa{color:#2A8189}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);font-size:14px;margin-bottom:8px}
+th{background:#F7F2E8;color:#6B5836;font-weight:700;padding:11px 12px;text-align:left;font-size:13px}
+td{padding:11px 12px;border-top:1px solid #F0EBE1;vertical-align:top}
+td.ip{font-family:"Times New Roman",serif;font-size:19px;font-weight:700;color:var(--amber);white-space:nowrap}
+td b{color:#B35309}
+tr:hover td{background:#FFFCF6}
+
+.rule{
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--amber);
+  border-radius:12px;padding:14px 18px;margin-bottom:12px;
+}
+.rule h3{font-size:16px;margin-bottom:6px}
+.rule p{font-size:14px;color:#4A4A4A}
+.rule .ex{margin-top:8px;font-size:14px;font-weight:700;color:#2E7A52}
+.rule .ex span{background:#E9F7EF;padding:3px 9px;border-radius:7px;margin-right:6px;display:inline-block}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.step .n{width:26px;height:26px;border-radius:50%;background:var(--amber);color:#fff;
+  font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.step h4{font-size:15px;margin-bottom:4px}
+.step p{font-size:13px;color:var(--ink2)}
+
+footer{text-align:center;color:var(--ink2);font-size:12px;margin-top:40px;
+  border-top:1px solid var(--line);padding-top:18px}
+
+@media print{
+  body{padding:0;background:#fff}
+  .tabs,.tip,footer{display:none}
+  section{display:block !important;page-break-before:always}
+  section:first-of-type{page-break-before:avoid}
+  .card:hover{transform:none;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>48个<span>国际音标</span> × <span>自然拼读</span> 图解表</h1>
+  <div class="sub">20 元音 + 28 辅音 · 每个音都有图画和例词 · 小朋友专用</div>
+  <div class="tip">👆 用鼠标点一下卡片，就会读出声音哦！（建议用 Chrome / Safari 打开）</div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" data-t="v">🅰️ 20个元音</button>
+  <button class="tab" data-t="c">🅱️ 28个辅音</button>
+  <button class="tab" data-t="p">🔤 自然拼读规则</button>
+  <button class="tab" data-t="m">📋 音标↔字母 速查</button>
+</div>
+
+<!-- ============ 元音 ============ -->
+<section class="on" id="s-v">
+  <h2><i class="bar"></i>单元音 <span class="cnt">12个</span></h2>
+  <div class="note">嘴巴保持一个形状不动就发完的音。带「ː」的要拖长，不带的要短促。</div>
+  <div class="grid" id="g1"></div>
+
+  <h2><i class="bar"></i>双元音 <span class="cnt">8个</span></h2>
+  <div class="note">两个音「滑」过去，像滑滑梯一样，中间不能停。</div>
+  <div class="grid" id="g2"></div>
+</section>
+
+<!-- ============ 辅音 ============ -->
+<section id="s-c">
+  <h2><i class="bar"></i>爆破音 <span class="cnt">6个</span></h2>
+  <div class="note">先把气憋住，再「砰」地放出来，像小炮仗。</div>
+  <div class="grid" id="g3"></div>
+
+  <h2><i class="bar"></i>摩擦音 <span class="cnt">10个</span></h2>
+  <div class="note">气流从小缝里「呼呼」挤出来，声音可以一直拖着。</div>
+  <div class="grid" id="g4"></div>
+
+  <h2><i class="bar"></i>破擦音 <span class="cnt">6个</span></h2>
+  <div class="note">先爆破再摩擦，两个动作连起来。</div>
+  <div class="grid" id="g5"></div>
+
+  <h2><i class="bar"></i>鼻音 <span class="cnt">3个</span></h2>
+  <div class="note">捏住鼻子就发不出来了，试试看！</div>
+  <div class="grid" id="g6"></div>
+
+  <h2><i class="bar"></i>半元音 + 边音 <span class="cnt">3个</span></h2>
+  <div class="note">舌头两边漏气（/l/），或者像元音一样滑动（/w/ /j/）。</div>
+  <div class="grid" id="g7"></div>
+</section>
+
+<!-- ============ 拼读规则 ============ -->
+<section id="s-p">
+  <h2><i class="bar"></i>5个元音字母的两张脸</h2>
+  <div class="note">a e i o u 在「开音节」里念自己的名字，在「闭音节」里念短音。这是自然拼读最重要的一条！</div>
+  <table>
+    <tr><th style="width:80px">字母</th><th>开音节（念字母本名）</th><th>例词</th><th>闭音节（念短音）</th><th>例词</th></tr>
+    <tr><td class="ip">a</td><td class="ip">/eɪ/</td><td><b>cake</b> 蛋糕 · <b>name</b> 名字 · face 脸</td><td class="ip">/æ/</td><td><b>cat</b> 猫 · <b>bag</b> 书包 · map 地图</td></tr>
+    <tr><td class="ip">e</td><td class="ip">/iː/</td><td><b>he</b> 他 · <b>she</b> 她 · these 这些</td><td class="ip">/e/</td><td><b>bed</b> 床 · <b>red</b> 红 · pen 笔</td></tr>
+    <tr><td class="ip">i</td><td class="ip">/aɪ/</td><td><b>bike</b> 单车 · <b>kite</b> 风筝 · nine 九</td><td class="ip">/ɪ/</td><td><b>fish</b> 鱼 · <b>pig</b> 猪 · six 六</td></tr>
+    <tr><td class="ip">o</td><td class="ip">/əʊ/</td><td><b>go</b> 走 · <b>home</b> 家 · nose 鼻子</td><td class="ip">/ɒ/</td><td><b>dog</b> 狗 · <b>box</b> 盒子 · hot 热</td></tr>
+    <tr><td class="ip">u</td><td class="ip">/juː/</td><td><b>cute</b> 可爱 · <b>use</b> 使用 · tube 管子</td><td class="ip">/ʌ/</td><td><b>bus</b> 公交 · <b>cup</b> 杯子 · sun 太阳</td></tr>
+  </table>
+
+  <h2><i class="bar"></i>4条黄金拼读规则</h2>
+  <div class="rule">
+    <h3>规则 1 · CVC 三明治（辅音-元音-辅音）→ 元音发短音</h3>
+    <p>只要单词是「辅音 + 元音 + 辅音」的夹心结构，中间那个元音一定发短音。</p>
+    <div class="ex"><span>c-a-t → cat</span><span>d-o-g → dog</span><span>s-i-t → sit</span><span>b-u-s → bus</span></div>
+  </div>
+  <div class="rule">
+    <h3>规则 2 · 魔法 e（Magic e）→ 把元音拉长，自己不出声</h3>
+    <p>词尾加一个 e，它自己不发音，却像魔法棒一样把前面的元音变成「字母本名」。</p>
+    <div class="ex"><span>cap 帽子 → cape 斗篷</span><span>kit → kite 风筝</span><span>hop → hope 希望</span></div>
+  </div>
+  <div class="rule">
+    <h3>规则 3 · 两个元音站一起 → 第一个说话，第二个不出声</h3>
+    <p>元音组合常常发新的长音，口诀：「When two vowels go walking, the first one does the talking.」</p>
+    <div class="ex"><span>ai/ay → /eɪ/ rain, play</span><span>ea/ee → /iː/ sea, tree</span><span>oa → /əʊ/ boat</span><span>oi/oy → /ɔɪ/ coin, boy</span></div>
+  </div>
+  <div class="rule">
+    <h3>规则 4 · 两个辅音手拉手 → 只发一个新音</h3>
+    <p>这些组合不能拆开读，要当成一个整体。</p>
+    <div class="ex"><span>sh → /ʃ/ 嘘</span><span>ch → /tʃ/ 吃</span><span>th → /θ/ /ð/ 咬舌</span><span>ph → /f/</span><span>ng → /ŋ/</span><span>wh → /w/</span></div>
+  </div>
+
+  <h2><i class="bar"></i>自然拼读六步走</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h4>认字母音</h4><p>26个字母的「发音」而不是「名字」，5个元音各会两种音。</p></div>
+    <div class="step"><div class="n">2</div><h4>拼两个音</h4><p>c-a → ca，a-t → at，先把两个音粘起来。</p></div>
+    <div class="step"><div class="n">3</div><h4>拼 CVC 词</h4><p>d-o-g → dog，能读出完整的单音节词。</p></div>
+    <div class="step"><div class="n">4</div><h4>拆多音节</h4><p>sw-ea-t-er → sweater，长词先切块再拼。</p></div>
+    <div class="step"><div class="n">5</div><h4>听音写词</h4><p>听到读音能自己拼出来，从「读」跨到「写」。</p></div>
+    <div class="step"><div class="n">6</div><h4>自主阅读</h4><p>词汇量爆发，可以自己读英文绘本和故事书。</p></div>
+  </div>
+</section>
+
+<!-- ============ 速查 ============ -->
+<section id="s-m">
+  <h2><i class="bar"></i>元音音标 → 常见字母组合</h2>
+  <div class="note">查一个音「可以由哪些字母拼出来」，反查更实用。</div>
+  <table id="t1"></table>
+
+  <h2><i class="bar"></i>辅音音标 → 常见字母组合</h2>
+  <table id="t2"></table>
+</section>
+
+<footer>
+  为小朋友制作 · 20元音 + 28辅音 + 自然拼读规则 · 可用浏览器「打印 / 存为 PDF」贴墙上
+</footer>
+</div>
+
+<script>
+/* ---------- 数据 ---------- */
+const V1=[
+ ["/iː/","衣（拖长）","🐝","b<i>ee</i>","蜜蜂","e · ee · ea · ie"],
+ ["/ɪ/","衣（短促）","🐷","p<i>i</i>g","小猪","i · y · ui"],
+ ["/e/","诶（短促）","🥚","<i>e</i>gg","鸡蛋","e · ea"],
+ ["/æ/","哎（大嘴）","🐱","c<i>a</i>t","小猫","a"],
+ ["/ɑː/","啊（张大嘴）","🚗","c<i>ar</i>","汽车","ar · a"],
+ ["/ɒ/","哦（短圆嘴）","🐶","d<i>o</i>g","小狗","o · a"],
+ ["/ɔː/","哦（长圆嘴）","🚪","d<i>oor</i>","门","or · al · aw · au"],
+ ["/ʊ/","乌（短促）","📖","b<i>oo</i>k","书","oo · u"],
+ ["/uː/","乌（拖长）","🌙","m<i>oo</i>n","月亮","oo · o · u · ew · ui"],
+ ["/ʌ/","阿（短促）","☀️","s<i>u</i>n","太阳","u · o · ou"],
+ ["/ɜː/","额（卷舌）","🐦","b<i>ir</i>d","小鸟","ir · er · ur · or"],
+ ["/ə/","额（轻读）","👩‍🏫","teach<i>er</i>","老师","a · e · o · er · or"],
+];
+const V2=[
+ ["/eɪ/","诶→衣","🎂","c<i>a</i>k<i>e</i>","蛋糕","a_e · ai · ay · ey"],
+ ["/aɪ/","啊→衣","🚲","b<i>i</i>k<i>e</i>","自行车","i_e · y · igh · ie"],
+ ["/ɔɪ/","哦→衣","🪙","c<i>oi</i>n","硬币","oi · oy"],
+ ["/aʊ/","啊→乌","🐮","c<i>ow</i>","奶牛","ou · ow"],
+ ["/əʊ/","额→乌","⛵","b<i>oa</i>t","小船","o_e · oa · ow"],
+ ["/ɪə/","衣→额","👂","<i>ear</i>","耳朵","ear · eer · ere"],
+ ["/eə/","诶→额","🐻","b<i>ear</i>","小熊","air · are · ear"],
+ ["/ʊə/","乌→额","🗺️","t<i>our</i>","旅行","our · ure · ua"],
+];
+const C1=[
+ ["/p/","破","✏️","<i>p</i>en","钢笔","p · pp"],
+ ["/b/","播","⚽","<i>b</i>all","皮球","b · bb"],
+ ["/t/","特","🍵","<i>t</i>ea","茶","t · tt"],
+ ["/d/","的","🦆","<i>d</i>uck","鸭子","d · dd"],
+ ["/k/","科","🔑","<i>k</i>ey","钥匙","c · k · ck · ch"],
+ ["/g/","哥","🎁","<i>g</i>ift","礼物","g · gg"],
+];
+const C2=[
+ ["/f/","夫","🐟","<i>f</i>ish","小鱼","f · ff · ph · gh"],
+ ["/v/","乌（咬下唇）","🎻","<i>v</i>iolin","小提琴","v · ve"],
+ ["/θ/","思（咬舌）","🤔","<i>th</i>ink","想","th"],
+ ["/ð/","滋（咬舌）","👉","<i>th</i>is","这个","th"],
+ ["/s/","丝","🧦","<i>s</i>ock","袜子","s · ss · c · ce"],
+ ["/z/","滋","🦓","<i>z</i>ebra","斑马","z · s · zz"],
+ ["/ʃ/","嘘","🚢","<i>sh</i>ip","轮船","sh · s · ci · ti"],
+ ["/ʒ/","日（撅嘴）","📺","televi<i>s</i>ion","电视","s · g · ge"],
+ ["/h/","喝","🎩","<i>h</i>at","帽子","h · wh"],
+ ["/r/","弱","🌈","<i>r</i>ainbow","彩虹","r · rr · wr"],
+];
+const C3=[
+ ["/tʃ/","吃","🍒","<i>ch</i>erry","樱桃","ch · tch"],
+ ["/dʒ/","知","🧃","<i>j</i>uice","果汁","j · g · dge"],
+ ["/tr/","戳","🌳","<i>tr</i>ee","大树","tr"],
+ ["/dr/","捉","🥁","<i>dr</i>um","小鼓","dr"],
+ ["/ts/","次","🐈","ca<i>ts</i>","猫（复数）","ts · tes"],
+ ["/dz/","子","🛏️","be<i>ds</i>","床（复数）","ds · des"],
+];
+const C4=[
+ ["/m/","木","👩","<i>m</i>o<i>m</i>","妈妈","m · mm"],
+ ["/n/","呢","👃","<i>n</i>ose","鼻子","n · nn · kn"],
+ ["/ŋ/","嗯（后鼻）","🎤","si<i>ng</i>","唱歌","ng · n"],
+];
+const C5=[
+ ["/w/","我","💧","<i>w</i>ater","水","w · wh"],
+ ["/j/","噎","🟡","<i>y</i>ellow","黄色","y · i"],
+ ["/l/","勒","🦁","<i>l</i>ion","狮子","l · ll"],
+];
+
+const TV=[["/iː/","e, ee, ea, ie, i","me, see, sea, thief, ski"],["/ɪ/","i, y, e, ey, ui","pig, happy, begin, monkey, build"],
+["/e/","e, ea, ie","egg, bread, friend"],["/æ/","a","cat, apple, bag"],["/ɑː/","a, ar, au, al, ear","class, car, laugh, calm, heart"],
+["/ɒ/","o, a","fox, dog, watch"],["/ɔː/","a, aw, al, or, au, oor","water, draw, ball, horse, autumn, door"],
+["/ʊ/","oo, u, o","book, bull, wolf"],["/uː/","o, oo, u, ou, ui, ew","do, moon, ruler, soup, fruit, drew"],
+["/ʌ/","u, o, ou, oo","sun, son, touch, blood"],["/ɜː/","er, ir, ur, or, ear","her, bird, nurse, word, learn"],
+["/ə/","a, e, o, er, or, ar","panda, happen, today, sister, doctor, sugar"],["/eɪ/","a_e, ai, ay, ea, eigh","cake, rain, day, great, eight"],
+["/aɪ/","i_e, y, ie, igh","kite, my, tie, light"],["/ɔɪ/","oi, oy","oil, boy"],["/aʊ/","ou, ow","house, cow"],
+["/əʊ/","o_e, oa, ow","nose, boat, snow"],["/ɪə/","ear, eer, ere","ear, deer, here"],["/eə/","air, are, ear","hair, care, bear"],
+["/ʊə/","our, ure, ua","tour, sure, usual"]];
+
+const TC=[["/p/","p, pp","pen, apple"],["/b/","b, bb","book, rabbit"],["/t/","t, tt","tea, butter"],["/d/","d, dd, ed","duck, add, smiled"],
+["/k/","c, k, ck, ch, cc","cap, key, sock, school, account"],["/g/","g, gg","get, egg"],["/f/","f, ff, ph, gh","fish, off, phone, laugh"],
+["/v/","v, ve","very, love"],["/θ/","th","think, mouth"],["/ð/","th","this, mother"],["/s/","s, ss, c, ce","sun, class, city, face"],
+["/z/","z, s, zz, se","zoo, bags, buzz, nose"],["/ʃ/","sh, s, ci, ti, ch","shop, sugar, special, nation, machine"],
+["/ʒ/","s, g, ge","usually, garage, massage"],["/h/","h, wh","hat, who"],["/r/","r, rr, wr","red, sorry, write"],
+["/tʃ/","ch, tch, t","chair, watch, picture"],["/dʒ/","j, g, dge","jump, giraffe, bridge"],["/tr/","tr","tree, train"],
+["/dr/","dr","drum, dream"],["/ts/","ts","cats, hats"],["/dz/","ds","beds, birds"],["/m/","m, mm","mom, summer"],
+["/n/","n, nn, kn","nose, dinner, knife"],["/ŋ/","ng, n","sing, think"],["/l/","l, ll","lion, ball"],["/w/","w, wh","water, white"],["/j/","y, i","yes, onion"]];
+
+/* ---------- 渲染 ---------- */
+function card(d,g){
+  const w=d[3].replace(/<\/?i>/g,'');
+  return `<div class="card g-${g}" data-w="${w}">
+    <span class="emo">${d[2]}</span>
+    <div class="ipa">${d[0]}</div><div class="py">${d[1]}</div>
+    <div class="word">${d[3]}</div><div class="zh">${d[4]}</div>
+    <div class="ltr">${d[5]}</div></div>`;
+}
+const map={g1:[V1,'v1'],g2:[V2,'v2'],g3:[C1,'c1'],g4:[C2,'c2'],g5:[C3,'c3'],g6:[C4,'c4'],g7:[C5,'c5']};
+for(const id in map){document.getElementById(id).innerHTML=map[id][0].map(d=>card(d,map[id][1])).join('')}
+
+function tbl(el,rows,h){
+  el.innerHTML=`<tr><th style="width:90px">音标</th><th style="width:34%">字母组合</th><th>例词</th></tr>`+
+  rows.map(r=>`<tr><td class="ip">${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('');
+}
+tbl(document.getElementById('t1'),TV);
+tbl(document.getElementById('t2'),TC);
+
+/* ---------- Tab ---------- */
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  document.getElementById('s-'+b.dataset.t).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- 发音 ---------- */
+let voice=null;
+function pick(){
+  const vs=speechSynthesis.getVoices();
+  voice=vs.find(v=>/en-GB/i.test(v.lang)&&/female|Serena|Kate|Daniel/i.test(v.name))
+      ||vs.find(v=>/en-GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;
+}
+pick(); speechSynthesis.onvoiceschanged=pick;
+
+document.addEventListener('click',e=>{
+  const c=e.target.closest('.card'); if(!c)return;
+  const u=new SpeechSynthesisUtterance(c.dataset.w);
+  if(voice)u.voice=voice; u.lang=voice?voice.lang:'en-GB'; u.rate=.72; u.pitch=1.05;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  c.classList.add('play'); setTimeout(()=>c.classList.remove('play'),700);
+});
+</script>
+</body>
+</html>
