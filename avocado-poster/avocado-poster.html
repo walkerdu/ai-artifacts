@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 900px; height: 1200px;
+    background: #F5F0E5;
+    font-family: "PingFang SC", "Hiragino Sans GB", sans-serif;
+    color: #2E4020;
+    position: relative;
+    overflow: hidden;
+  }
+  /* ===== 顶栏 ===== */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 26px 44px 18px;
+    border-bottom: 2px solid #2E4020;
+  }
+  .topbar .brand { font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+  .topbar .brand .green { color: #7A9B3C; }
+  .topbar .tag {
+    font-size: 15px; letter-spacing: 6px; color: #7A9B3C; font-weight: 600;
+    border: 1.5px solid #7A9B3C; border-radius: 999px; padding: 4px 14px 4px 20px;
+  }
+  /* ===== 主图（插画） ===== */
+  .hero {
+    margin: 4px 44px 0;
+    height: 360px;
+    text-align: center;
+    position: relative;
+  }
+  .hero img.main { height: 100%; }
+  .hero .ribbon {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: -8px;
+    background: #2E4020; color: #F5F0E5;
+    font-size: 16px; letter-spacing: 4px;
+    padding: 8px 22px; border-radius: 999px;
+  }
+  /* ===== 标题区 ===== */
+  .kicker {
+    text-align: center; margin-top: 30px;
+    font-size: 16px; letter-spacing: 8px; color: #7A9B3C; font-weight: 600;
+  }
+  h1 {
+    text-align: center; margin-top: 8px;
+    font-size: 70px; letter-spacing: 14px; font-weight: 800; color: #2E4020;
+  }
+  h1 .accent { color: #7A9B3C; }
+  /* ===== 饮品卡片 ===== */
+  .drinks {
+    display: flex; justify-content: center; gap: 16px;
+    margin: 28px 44px 0;
+  }
+  .drink {
+    flex: 1;
+    background: #fff;
+    border: 1.5px solid #DCE3C8;
+    border-radius: 14px;
+    padding: 13px 6px;
+    text-align: center;
+    font-size: 19px; font-weight: 600; letter-spacing: 1px;
+  }
+  .drink .dot { color: #A8C256; margin-right: 6px; }
+  /* ===== 价格区（浅色卡片） ===== */
+  .price-section {
+    margin: 32px 44px 0;
+    background: #fff;
+    border: 1.5px solid #DCE3C8;
+    border-radius: 18px;
+    padding: 24px 28px 26px;
+  }
+  .price-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 14px;
+  }
+  .price-head .t { font-size: 22px; font-weight: 700; letter-spacing: 4px; }
+  .price-head .right { display: flex; align-items: center; gap: 10px; }
+  .price-head .s { font-size: 14px; letter-spacing: 3px; color: #7A9B3C; font-weight: 600; }
+  .price-head .real {
+    width: 60px; height: 60px; border-radius: 50%;
+    object-fit: cover; border: 3px solid #A8C256;
+  }
+  .tiers { display: flex; gap: 14px; margin-top: 6px; }
+  .tier {
+    border-radius: 12px;
+    padding: 16px 18px 18px;
+  }
+  .tier-small {
+    flex: 5;
+    background: #7A9B3C;
+    color: #F5F0E5;
+    position: relative;
+  }
+  .tier-small .badge {
+    position: absolute; top: -11px; right: 14px;
+    background: #2E4020; color: #F5F0E5;
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    padding: 3px 12px; border-radius: 999px;
+  }
+  .tier-small .name { font-size: 17px; letter-spacing: 2px; color: #E9F0D2; font-weight: 600; }
+  .tier-small .weight { font-size: 13px; color: rgba(245,240,229,.8); margin-top: 3px; }
+  .tier-small .price { margin-top: 10px; font-size: 36px; font-weight: 800; color: #FFF3C4; }
+  .tier-small .price small { font-size: 15px; font-weight: 500; color: rgba(245,240,229,.9); }
+  .tier-big {
+    flex: 7;
+    background: #FAF7EE;
+    border: 1.5px solid #E4E9D2;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tier-big .rows .r {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 16px; font-weight: 600; letter-spacing: 1px;
+  }
+  .tier-big .rows .r + .r { margin-top: 8px; }
+  .tier-big .rows .w { font-size: 13px; color: #6B7C55; font-weight: 500; }
+  .tier-big .price { font-size: 34px; font-weight: 800; color: #5A7A2E; white-space: nowrap; }
+  .tier-big .price small { font-size: 14px; font-weight: 600; color: #2E4020; }
+  .gift {
+    margin-top: 14px;
+    border: 1.5px dashed #C8D96F;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 15px; letter-spacing: 3px; color: #7A9B3C; font-weight: 600;
+  }
+  /* ===== 页脚 ===== */
+  .footer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 18px 44px 26px;
+    text-align: center;
+    font-size: 16px; letter-spacing: 2px;
+    color: #2E4020;
+  }
+  .footer b { letter-spacing: 3px; color: #7A9B3C; }
+  .footer .sep { color: #A8C256; margin: 0 10px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand"><span class="green">岸咖啡</span> × 牛油果季</div>
+    <div class="tag">产地直发</div>
+  </div>
+
+  <div class="hero">
+    <img class="main" src="Flat_vector_cartoon_illustrati_2026-10-20T07-54-55.png">
+    <div class="ribbon">上新 · 牛油果咖啡</div>
+  </div>
+
+  <div class="kicker">AVOCADO SEASON</div>
+  <h1>牛油<span class="accent">果</span>季</h1>
+
+  <div class="drinks">
+    <div class="drink"><span class="dot">●</span>牛油果咖啡</div>
+    <div class="drink"><span class="dot">●</span>芭乐牛油果</div>
+    <div class="drink"><span class="dot">●</span>薄荷黑巧牛油果</div>
+  </div>
+
+  <div class="price-section">
+    <div class="price-head">
+      <div class="t">鲜果也卖 · 产地直发</div>
+      <div class="right">
+        <div class="s">FRESH FROM FARM</div>
+        <img class="real" src="avocado-cut.jpg">
+      </div>
+    </div>
+    <div class="tiers">
+      <div class="tier tier-small">
+        <div class="badge">实惠装</div>
+        <div class="name">小果</div>
+        <div class="weight">约 100g / 个</div>
+        <div class="price">10<small> 元 / 4 个</small></div>
+      </div>
+      <div class="tier tier-big">
+        <div class="rows">
+          <div class="r">中果<span class="w">约 150g / 个</span></div>
+          <div class="r">大果<span class="w">约 200g / 个</span></div>
+        </div>
+        <div class="price">23<small> 元 / 公斤</small></div>
+      </div>
+    </div>
+    <div class="gift">礼盒装 6 个 · 需提前预定</div>
+  </div>
+
+  <div class="footer">
+    <b>岸咖啡</b><span class="sep">●</span>昆明市五华区江滨西路 17 号
+  </div>
+</body>
+</html>
